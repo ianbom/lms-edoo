@@ -3,10 +3,13 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Enums\UserRole;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
@@ -32,7 +35,7 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 class User extends Authenticatable implements PasskeyUser
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable, PasskeyAuthenticatable, TwoFactorAuthenticatable;
+    use HasFactory, Notifiable, PasskeyAuthenticatable, SoftDeletes, TwoFactorAuthenticatable;
 
     /**
      * Get the attributes that should be cast.
@@ -44,7 +47,39 @@ class User extends Authenticatable implements PasskeyUser
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'role' => UserRole::class,
             'two_factor_confirmed_at' => 'datetime',
+            'last_login_at' => 'datetime',
         ];
+    }
+
+    /** @return HasMany<Course, $this> */
+    public function createdCourses(): HasMany
+    {
+        return $this->hasMany(Course::class, 'created_by');
+    }
+
+    /** @return HasMany<CourseEnrollment, $this> */
+    public function enrollments(): HasMany
+    {
+        return $this->hasMany(CourseEnrollment::class);
+    }
+
+    /** @return HasMany<LearningContentProgress, $this> */
+    public function learningContentProgress(): HasMany
+    {
+        return $this->hasMany(LearningContentProgress::class);
+    }
+
+    /** @return HasMany<CourseMaterialProgress, $this> */
+    public function courseMaterialProgress(): HasMany
+    {
+        return $this->hasMany(CourseMaterialProgress::class);
+    }
+
+    /** @return HasMany<Ebook, $this> */
+    public function createdEbooks(): HasMany
+    {
+        return $this->hasMany(Ebook::class, 'created_by');
     }
 }
