@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
-
 @import 'tailwindcss';
 
 @import 'tw-animate-css';
@@ -7,11 +5,9 @@
 @source '../views';
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 
-@custom-variant dark (&:is(.dark *));
-
 @theme {
     --font-sans:
-        'Poppins', ui-sans-serif, system-ui, sans-serif,
+        'Instrument Sans', ui-sans-serif, system-ui, sans-serif,
         'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
         'Noto Color Emoji';
 
@@ -64,74 +60,39 @@
 }
 
 :root {
-    --background: #ffffff;
-    --foreground: #0f172a;
+    --background: #fbfcff;
+    --foreground: #070b49;
     --card: #ffffff;
-    --card-foreground: #0f172a;
+    --card-foreground: #070b49;
     --popover: #ffffff;
-    --popover-foreground: #0f172a;
-    --primary: #2563eb;
+    --popover-foreground: #070b49;
+    --primary: #1054d0;
     --primary-foreground: #ffffff;
-    --secondary: #f8fafc;
-    --secondary-foreground: #0f172a;
-    --muted: #f1f5f9;
-    --muted-foreground: #64748b;
-    --accent: #eff6ff;
-    --accent-foreground: #2563eb;
-    --destructive: #dc2626;
+    --secondary: #eef6ff;
+    --secondary-foreground: #1054d0;
+    --muted: #f5f7fb;
+    --muted-foreground: #7d89a8;
+    --accent: #dcecfc;
+    --accent-foreground: #1054d0;
+    --destructive: #d83b3b;
     --destructive-foreground: #ffffff;
-    --border: #e2e8f0;
-    --input: #e2e8f0;
-    --ring: #93c5fd;
-    --chart-1: #2563eb;
-    --chart-2: #16a34a;
-    --chart-3: #f59e0b;
-    --chart-4: #1e40af;
-    --chart-5: #0f172a;
-    --radius: 1rem;
+    --border: #e3e8f2;
+    --input: #e3e8f2;
+    --ring: #2478e4;
+    --chart-1: #1054d0;
+    --chart-2: #2478e4;
+    --chart-3: #16a36a;
+    --chart-4: #f5a500;
+    --chart-5: #070b49;
+    --radius: 0.625rem;
     --sidebar: #ffffff;
-    --sidebar-foreground: #0f172a;
-    --sidebar-primary: #2563eb;
+    --sidebar-foreground: #070b49;
+    --sidebar-primary: #1054d0;
     --sidebar-primary-foreground: #ffffff;
-    --sidebar-accent: #eff6ff;
-    --sidebar-accent-foreground: #2563eb;
-    --sidebar-border: #e2e8f0;
-    --sidebar-ring: #93c5fd;
-}
-
-.dark {
-    --background: #0f172a;
-    --foreground: #f8fafc;
-    --card: #111827;
-    --card-foreground: #f8fafc;
-    --popover: #111827;
-    --popover-foreground: #f8fafc;
-    --primary: #3b82f6;
-    --primary-foreground: #ffffff;
-    --secondary: #1e293b;
-    --secondary-foreground: #f8fafc;
-    --muted: #1e293b;
-    --muted-foreground: #94a3b8;
-    --accent: #1e3a8a;
-    --accent-foreground: #dbeafe;
-    --destructive: #ef4444;
-    --destructive-foreground: #ffffff;
-    --border: #334155;
-    --input: #334155;
-    --ring: #60a5fa;
-    --chart-1: #60a5fa;
-    --chart-2: #22c55e;
-    --chart-3: #f59e0b;
-    --chart-4: #93c5fd;
-    --chart-5: #e2e8f0;
-    --sidebar: #111827;
-    --sidebar-foreground: #f8fafc;
-    --sidebar-primary: #3b82f6;
-    --sidebar-primary-foreground: #ffffff;
-    --sidebar-accent: #1e293b;
-    --sidebar-accent-foreground: #dbeafe;
-    --sidebar-border: #334155;
-    --sidebar-ring: #60a5fa;
+    --sidebar-accent: #dcecfc;
+    --sidebar-accent-foreground: #1054d0;
+    --sidebar-border: #e3e8f2;
+    --sidebar-ring: #2478e4;
 }
 
 @layer base {
@@ -139,17 +100,7 @@
         @apply border-border;
     }
 
-    html {
-        scroll-behavior: smooth;
-    }
-
     body {
-        @apply bg-background font-sans text-foreground antialiased;
-    }
-
-    ::selection {
-        background: #bfdbfe;
-        color: #0f172a;
+        @apply bg-background text-foreground;
     }
 }
-

@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { useForm } from '@inertiajs/react';
 import { LoaderCircle } from 'lucide-react';
 import {
@@ -31,43 +30,17 @@ type CourseCategoryDialogProps = {
     onOpenChange: (open: boolean) => void;
 };
 
-const slugify = (value: string): string =>
-    value
-        .toLowerCase()
-        .trim()
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/^-+|-+$/g, '');
-
 export function CourseCategoryDialog({
     category,
     open,
     onOpenChange,
 }: CourseCategoryDialogProps) {
-    const [slugIsAutomatic, setSlugIsAutomatic] = useState(true);
-    const form = useForm({ name: '', slug: '', description: '' });
+    const form = useForm({
+        name: category?.name ?? '',
+        slug: category?.slug ?? '',
+        description: category?.description ?? '',
+    });
     const isEditing = category !== null;
-
-    useEffect(() => {
-        if (!open) {
-            return;
-        }
-
-        form.clearErrors();
-
-        if (category) {
-            form.setData({
-                name: category.name,
-                slug: category.slug,
-                description: category.description ?? '',
-            });
-            setSlugIsAutomatic(false);
-
-            return;
-        }
-
-        form.reset();
-        setSlugIsAutomatic(true);
-    }, [category, form, open]);
 
     const close = (): void => {
         if (!form.processing) {
@@ -120,14 +93,9 @@ export function CourseCategoryDialog({
                         <Input
                             id="course-category-name"
                             value={form.data.name}
-                            onChange={(event) => {
-                                const name = event.target.value;
-                                form.setData('name', name);
-
-                                if (slugIsAutomatic) {
-                                    form.setData('slug', slugify(name));
-                                }
-                            }}
+                            onChange={(event) =>
+                                form.setData('name', event.target.value)
+                            }
                             autoFocus
                             required
                             aria-invalid={Boolean(form.errors.name)}
@@ -140,13 +108,10 @@ export function CourseCategoryDialog({
                         <Input
                             id="course-category-slug"
                             value={form.data.slug}
-                            onChange={(event) => {
-                                setSlugIsAutomatic(false);
-                                form.setData(
-                                    'slug',
-                                    slugify(event.target.value),
-                                );
-                            }}
+                            onChange={(event) =>
+                                form.setData('slug', event.target.value)
+                            }
+                            placeholder="web-development"
                             required
                             aria-invalid={Boolean(form.errors.slug)}
                         />

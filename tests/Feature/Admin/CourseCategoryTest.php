@@ -61,7 +61,7 @@ class CourseCategoryTest extends TestCase
         $this->actingAs($admin)
             ->post('/admin/course-categories', [
                 'name' => 'Web Development',
-                'slug' => 'Web Development',
+                'slug' => 'web-development',
                 'description' => 'Backend and frontend courses.',
             ])
             ->assertRedirect('/admin/course-categories');
@@ -89,6 +89,18 @@ class CourseCategoryTest extends TestCase
             ->assertSessionHasErrors('slug');
     }
 
+    public function test_slug_must_be_entered_by_admin(): void
+    {
+        $admin = User::factory()->create(['role' => UserRole::Admin]);
+
+        $this->actingAs($admin)
+            ->post('/admin/course-categories', [
+                'name' => 'Web Development',
+                'slug' => '',
+            ])
+            ->assertSessionHasErrors('slug');
+    }
+
     public function test_admin_can_update_course_category(): void
     {
         $admin = User::factory()->create(['role' => UserRole::Admin]);
@@ -100,7 +112,7 @@ class CourseCategoryTest extends TestCase
         $this->actingAs($admin)
             ->put("/admin/course-categories/{$category->id}", [
                 'name' => 'Backend Development',
-                'slug' => 'Backend Development',
+                'slug' => 'backend-development',
                 'description' => 'Server-side engineering.',
             ])
             ->assertRedirect('/admin/course-categories');

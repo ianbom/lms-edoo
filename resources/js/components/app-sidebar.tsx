@@ -1,7 +1,6 @@
 import { Link, usePage } from '@inertiajs/react';
-import { BookOpen, FolderGit2, LayoutGrid, Tags } from 'lucide-react';
+import { LayoutGrid, Library, Tags, UserRound, Users } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
-import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
 import {
@@ -15,36 +14,60 @@ import {
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
 import { index as courseCategories } from '@/routes/admin/course-categories';
+import { index as ebookCategories } from '@/routes/admin/ebook-categories';
+import { index as ebooks } from '@/routes/admin/ebooks';
+import { index as students } from '@/routes/admin/students';
+import { index as teachers } from '@/routes/admin/teachers';
 import type { Auth } from '@/types/auth';
-import type { NavItem } from '@/types';
-
-const footerNavItems: NavItem[] = [
-    {
-        title: 'Repository',
-        href: 'https://github.com/laravel/react-starter-kit',
-        icon: FolderGit2,
-    },
-    {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits#react',
-        icon: BookOpen,
-    },
-];
 
 export function AppSidebar() {
     const { auth } = usePage<{ auth: Auth }>().props;
-    const mainNavItems: NavItem[] = [
+    const groups = [
         {
-            title: 'Dashboard',
-            href: dashboard(),
-            icon: LayoutGrid,
+            title: 'Overview',
+            items: [{ title: 'Dashboard', href: dashboard(), icon: LayoutGrid }],
         },
         ...(auth.user.role === 'admin'
             ? [
                   {
-                      title: 'Course Categories',
-                      href: courseCategories(),
-                      icon: Tags,
+                      title: 'Learning Management',
+                      items: [
+                          {
+                              title: 'Course Categories',
+                              href: courseCategories(),
+                              icon: Tags,
+                          },
+                          {
+                              title: 'Teachers',
+                              href: teachers(),
+                              icon: UserRound,
+                          },
+                      ],
+                  },
+                  {
+                      title: 'Library',
+                      items: [
+                          {
+                              title: 'Ebook Categories',
+                              href: ebookCategories(),
+                              icon: Tags,
+                          },
+                          {
+                              title: 'Ebooks',
+                              href: ebooks(),
+                              icon: Library,
+                          },
+                      ],
+                  },
+                  {
+                      title: 'User Management',
+                      items: [
+                          {
+                              title: 'Students',
+                              href: students(),
+                              icon: Users,
+                          },
+                      ],
                   },
               ]
             : []),
@@ -65,11 +88,10 @@ export function AppSidebar() {
             </SidebarHeader>
 
             <SidebarContent>
-                <NavMain items={mainNavItems} />
+                <NavMain groups={groups} />
             </SidebarContent>
 
             <SidebarFooter>
-                <NavFooter items={footerNavItems} className="mt-auto" />
                 <NavUser />
             </SidebarFooter>
         </Sidebar>

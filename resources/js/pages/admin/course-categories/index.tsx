@@ -172,11 +172,13 @@ export default function CourseCategoriesIndex({
                 </div>
             </div>
 
-            <CourseCategoryDialog
-                category={formCategory}
-                open={formOpen}
-                onOpenChange={setFormOpen}
-            />
+            {formOpen && (
+                <CourseCategoryDialog
+                    category={formCategory}
+                    open={formOpen}
+                    onOpenChange={setFormOpen}
+                />
+            )}
             <DeleteCourseCategoryDialog
                 category={deleteCategory}
                 open={deleteCategory !== null}
