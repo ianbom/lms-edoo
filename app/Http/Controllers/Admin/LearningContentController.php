@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\LearningContentRequest;
 use App\Models\LearningContent;
 use App\Services\Admin\LearningContentService;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -13,9 +14,11 @@ class LearningContentController extends Controller
 {
     public function __construct(private LearningContentService $service) {}
 
-    public function index(): Response
+    public function index(Request $request): Response
     {
-        return Inertia::render('admin/learning-contents/index', ['contents' => $this->service->paginate(), ...$this->service->options()]);
+        $filters = $request->validate(['search' => ['nullable', 'string', 'max:255']]);
+
+        return Inertia::render('admin/learning-contents/index', ['contents' => $this->service->paginate($filters), ...$this->service->options(), 'filters' => $filters]);
     }
 
     public function store(LearningContentRequest $request)

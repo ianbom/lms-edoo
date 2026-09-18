@@ -27,13 +27,21 @@ class DashboardTest extends TestCase
         $response->assertRedirect(route('login'));
     }
 
-    public function test_students_are_redirected_to_home(): void
+    public function test_students_see_the_student_dashboard(): void
     {
         $student = User::factory()->create();
 
         $this->actingAs($student)
             ->get(route('dashboard'))
-            ->assertRedirect(route('home'));
+            ->assertOk()
+            ->assertInertia(fn (Assert $page) => $page
+                ->component('student/dashboard')
+                ->where('stats.enrolled', 0)
+                ->where('stats.active', 0)
+                ->where('stats.completed', 0)
+                ->where('stats.progress', 0)
+                ->has('activity', 30)
+                ->has('enrollments', 0));
     }
 
     public function test_admin_sees_real_dashboard_metrics_and_charts(): void

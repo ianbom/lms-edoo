@@ -4,8 +4,10 @@ use App\Enums\UserRole;
 use App\Models\Course;
 use App\Models\CourseCategory;
 use App\Models\CourseMaterial;
+use App\Models\LearningContent;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Inertia\Testing\AssertableInertia as Assert;
 use Tests\TestCase;
 
 uses(TestCase::class, RefreshDatabase::class);
@@ -68,4 +70,57 @@ test('admin can create video and textbook learning contents', function () {
 
     $this->assertDatabaseHas('learning_contents', ['course_material_id' => $material->id, 'title' => 'Video lesson', 'youtube_video_id' => 'dQw4w9WgXcQ']);
     $this->assertDatabaseHas('learning_contents', ['course_material_id' => $material->id, 'title' => 'Reading lesson', 'youtube_url' => null]);
+});
+
+test('admin can search course materials by material or course title', function () {
+    $admin = User::factory()->create(['role' => UserRole::Admin]);
+    $category = CourseCategory::create(['name' => 'Web', 'slug' => 'web']);
+    $targetCourse = Course::create(['course_category_id' => $category->id, 'title' => 'Laravel Mastery', 'slug' => 'laravel-mastery']);
+    $otherCourse = Course::create(['course_category_id' => $category->id, 'title' => 'Vue Fundamentals', 'slug' => 'vue-fundamentals']);
+    CourseMaterial::create(['course_id' => $targetCourse->id, 'title' => 'Introduction', 'position' => 0]);
+    CourseMaterial::create(['course_id' => $otherCourse->id, 'title' => 'Laravel Routing', 'position' => 0]);
+    CourseMaterial::create(['course_id' => $otherCourse->id, 'title' => 'Components', 'position' => 1]);
+
+    $this->actingAs($admin)->get('/admin/course-materials?search=Laravel')
+        ->assertOk()
+        ->assertInertia(fn (Assert $page) => $page
+            ->component('admin/course-materials/index')
+            ->where('filters.search', 'Laravel')
+            ->has('materials.data', 2));
+});
+
+test('admin can search learning contents by content material or course title', function () {
+    $admin = User::factory()->create(['role' => UserRole::Admin]);
+    $category = CourseCategory::create(['name' => 'Web', 'slug' => 'web']);
+    $targetCourse = Course::create(['course_category_id' => $category->id, 'title' => 'Laravel Mastery', 'slug' => 'laravel-mastery']);
+    $otherCourse = Course::create(['course_category_id' => $category->id, 'title' => 'Vue Fundamentals', 'slug' => 'vue-fundamentals']);
+    $targetMaterial = CourseMaterial::create(['course_id' => $targetCourse->id, 'title' => 'Introduction', 'position' => 0]);
+    $otherMaterial = CourseMaterial::create(['course_id' => $otherCourse->id, 'title' => 'Laravel Routing', 'position' => 0]);
+    $unmatchedMaterial = CourseMaterial::create(['course_id' => $otherCourse->id, 'title' => 'Components', 'position' => 1]);
+    LearningContent::create(['course_material_id' => $targetMaterial->id, 'type' => 'video', 'title' => 'Welcome', 'position' => 0]);
+    LearningContent::create(['course_material_id' => $otherMaterial->id, 'type' => 'video', 'title' => 'Routes', 'position' => 0]);
+    LearningContent::create(['course_material_id' => $unmatchedMaterial->id, 'type' => 'video', 'title' => 'Templates', 'position' => 0]);
+
+    $this->actingAs($admin)->get('/admin/learning-contents?search=Laravel')
+        ->assertOk()
+        ->assertInertia(fn (Assert $page) => $page
+            ->component('admin/learning-contents/index')
+            ->where('filters.search', 'Laravel')
+            ->has('contents.data', 2));
+});
+
+test('course material pagination retains the search query', function () {
+    $admin = User::factory()->create(['role' => UserRole::Admin]);
+    $category = CourseCategory::create(['name' => 'Web', 'slug' => 'web']);
+    $course = Course::create(['course_category_id' => $category->id, 'title' => 'Laravel Mastery', 'slug' => 'laravel-mastery']);
+
+    foreach (range(1, 16) as $position) {
+        CourseMaterial::create(['course_id' => $course->id, 'title' => "Module {$position}", 'position' => $position]);
+    }
+
+    $this->actingAs($admin)->get('/admin/course-materials?search=Module')
+        ->assertOk()
+        ->assertInertia(fn (Assert $page) => $page
+            ->has('materials.data', 15)
+            ->where('materials.next_page_url', route('admin.course-materials.index', ['search' => 'Module', 'page' => 2])));
 });

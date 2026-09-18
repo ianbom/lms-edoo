@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\CourseMaterialRequest;
 use App\Models\CourseMaterial;
 use App\Services\Admin\CourseMaterialService;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -13,9 +14,11 @@ class CourseMaterialController extends Controller
 {
     public function __construct(private CourseMaterialService $service) {}
 
-    public function index(): Response
+    public function index(Request $request): Response
     {
-        return Inertia::render('admin/course-materials/index', ['materials' => $this->service->paginate(), ...$this->service->options()]);
+        $filters = $request->validate(['search' => ['nullable', 'string', 'max:255']]);
+
+        return Inertia::render('admin/course-materials/index', ['materials' => $this->service->paginate($filters), ...$this->service->options(), 'filters' => $filters]);
     }
 
     public function store(CourseMaterialRequest $request)
