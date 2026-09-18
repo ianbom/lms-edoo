@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[Fillable([
@@ -67,6 +68,12 @@ class Course extends Model
     public function materials(): HasMany
     {
         return $this->hasMany(CourseMaterial::class)->orderBy('position');
+    }
+
+    /** @return HasManyThrough<LearningContent, CourseMaterial, $this> */
+    public function contents(): HasManyThrough
+    {
+        return $this->hasManyThrough(LearningContent::class, CourseMaterial::class);
     }
 
     /** @return HasMany<CourseEnrollment, $this> */

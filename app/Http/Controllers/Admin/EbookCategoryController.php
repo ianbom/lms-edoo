@@ -5,80 +5,38 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\EbookCategoryRequest;
 use App\Models\EbookCategory;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Storage;
+use App\Services\Admin\EbookCategoryService;
 use Inertia\Inertia;
-use Inertia\Response;
 
 class EbookCategoryController extends Controller
 {
-    public function index(): Response
+    public function __construct(private EbookCategoryService $service) {}
+
+    public function index()
     {
-        return Inertia::render('admin/ebook-categories/index', [
-            'categories' => EbookCategory::query()
-                ->withCount('ebooks')
-                ->orderBy('position')
-                ->latest('updated_at')
-                ->get([
-                    'id',
-                    'name',
-                    'slug',
-                    'description',
-                    'icon',
-                    'thumbnail_url',
-                    'is_active',
-                    'position',
-                    'updated_at',
-                ]),
-        ]);
+        return Inertia::render('admin/ebook-categories/index', ['categories' => $this->service->all()]);
     }
 
-    public function store(EbookCategoryRequest $request): RedirectResponse
+    public function store(EbookCategoryRequest $request)
     {
-        $data = $request->safe()->except('thumbnail');
-
-        if ($thumbnail = $request->file('thumbnail')) {
-            $path = $thumbnail->store('ebook-categories/thumbnails', 'public');
-            $data['thumbnail_url'] = Storage::disk('public')->url($path);
-        }
-
-        EbookCategory::create($data);
-
+        $this->service->create($request);
         Inertia::flash('toast', ['type' => 'success', 'message' => __('Ebook category created.')]);
 
         return to_route('admin.ebook-categories.index');
     }
 
-    public function update(EbookCategoryRequest $request, EbookCategory $ebookCategory): RedirectResponse
+    public function update(EbookCategoryRequest $request, EbookCategory $ebookCategory)
     {
-        $data = $request->safe()->except('thumbnail');
-
-        if ($thumbnail = $request->file('thumbnail')) {
-            $path = $thumbnail->store('ebook-categories/thumbnails', 'public');
-            $data['thumbnail_url'] = Storage::disk('public')->url($path);
-        }
-
-        $ebookCategory->update($data);
-
+        $this->service->update($request, $ebookCategory);
         Inertia::flash('toast', ['type' => 'success', 'message' => __('Ebook category updated.')]);
 
         return to_route('admin.ebook-categories.index');
     }
 
-    public function destroy(EbookCategory $ebookCategory): RedirectResponse
+    public function destroy(EbookCategory $ebookCategory)
     {
-        if ($ebookCategory->ebooks()->exists()) {
-            Inertia::flash('toast', [
-                'type' => 'error',
-                'message' => __('Ebook categories in use cannot be deleted.'),
-            ]);
-
-            return to_route('admin.ebook-categories.index');
-        }
-
-        $ebookCategory->delete();
-
-        Inertia::flash('toast', ['type' => 'success', 'message' => __('Ebook category deleted.')]);
+        $deleted = $this->service->delete($ebookCategory);
+        Inertia::flash('toast', ['type' => $deleted ? 'success' : 'error', 'message' => $deleted ? __('Ebook category deleted.') : __('Ebook categories in use cannot be deleted.')]);
 
         return to_route('admin.ebook-categories.index');
     }

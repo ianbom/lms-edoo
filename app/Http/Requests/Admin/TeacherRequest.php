@@ -16,4 +16,16 @@ class TeacherRequest extends FormRequest
             'photo' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
         ];
     }
+
+    public function messages(): array
+    {
+        return [
+            'name.required' => 'Nama teacher wajib diisi.',
+            'name.max' => 'Nama teacher maksimal 255 karakter.',
+            'expertise.max' => 'Keahlian maksimal 255 karakter.',
+            'photo.image' => 'File foto harus berupa gambar.',
+            'photo.mimes' => 'Foto hanya boleh berformat JPG, JPEG, PNG, atau WebP.',
+            'photo.max' => 'Ukuran foto maksimal 5 MB.',
+        ];
+    }
 }

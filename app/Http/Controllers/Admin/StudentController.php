@@ -2,39 +2,23 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Enums\EnrollmentStatus;
-use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StudentRequest;
-use App\Models\User;
-use Illuminate\Http\RedirectResponse;
+use App\Services\Admin\StudentService;
 use Inertia\Inertia;
-use Inertia\Response;
 
 class StudentController extends Controller
 {
-    public function index(): Response
+    public function __construct(private StudentService $service) {}
+
+    public function index()
     {
-        return Inertia::render('admin/students/index', [
-            'students' => User::query()
-                ->where('role', UserRole::Student)
-                ->withCount('enrollments')
-                ->withCount([
-                    'enrollments as completed_courses_count' => fn ($query) => $query
-                        ->where('status', EnrollmentStatus::Completed),
-                ])
-                ->latest()
-                ->paginate(15),
-        ]);
+        return Inertia::render('admin/students/index', ['students' => $this->service->paginate()]);
     }
 
-    public function store(StudentRequest $request): RedirectResponse
+    public function store(StudentRequest $request)
     {
-        User::create([
-            ...$request->validated(),
-            'role' => UserRole::Student,
-        ]);
-
+        $this->service->create($request->validated());
         Inertia::flash('toast', ['type' => 'success', 'message' => __('Student created.')]);
 
         return to_route('admin.students.index');

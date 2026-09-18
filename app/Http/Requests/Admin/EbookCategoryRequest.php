@@ -29,4 +29,17 @@ class EbookCategoryRequest extends FormRequest
             'position' => ['required', 'integer', 'min:0'],
         ];
     }
+
+    public function messages(): array
+    {
+        return [
+            'name.required' => 'Nama kategori ebook wajib diisi.',
+            'slug.required' => 'Slug kategori ebook wajib diisi.',
+            'slug.unique' => 'Slug kategori ebook sudah digunakan.',
+            'slug.alpha_dash' => 'Slug hanya boleh berisi huruf, angka, tanda hubung, dan garis bawah.',
+            'thumbnail.image' => 'Thumbnail harus berupa gambar.',
+            'thumbnail.mimes' => 'Thumbnail hanya boleh berformat JPG, JPEG, PNG, atau WebP.',
+            'thumbnail.max' => 'Ukuran thumbnail maksimal 5 MB.',
+        ];
+    }
 }

@@ -37,4 +37,26 @@ class EbookRequest extends FormRequest
             'published_at' => ['nullable', 'date'],
         ];
     }
+
+    public function messages(): array
+    {
+        return [
+            'ebook_category_id.required' => 'Kategori ebook wajib dipilih.',
+            'ebook_category_id.exists' => 'Kategori ebook tidak valid.',
+            'title.required' => 'Judul ebook wajib diisi.',
+            'slug.required' => 'Slug ebook wajib diisi.',
+            'slug.unique' => 'Slug ebook sudah digunakan.',
+            'author.max' => 'Nama penulis maksimal 255 karakter.',
+            'short_description.max' => 'Deskripsi singkat maksimal 500 karakter.',
+            'cover.image' => 'Cover harus berupa gambar.',
+            'cover.mimes' => 'Cover hanya boleh berformat JPG, JPEG, PNG, atau WebP.',
+            'cover.max' => 'Ukuran cover maksimal 5 MB.',
+            'file.required' => 'File PDF wajib diunggah sebelum ebook dipublikasikan.',
+            'file.mimes' => 'File ebook harus berformat PDF.',
+            'file.max' => 'Ukuran file ebook maksimal 20 MB.',
+            'total_pages.integer' => 'Jumlah halaman harus berupa angka bulat.',
+            'status.required' => 'Status ebook wajib dipilih.',
+            'status.enum' => 'Status ebook tidak valid.',
+        ];
+    }
 }

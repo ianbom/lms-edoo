@@ -13,6 +13,7 @@ import {
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
+import { index as courses } from '@/routes/admin/courses';
 import { index as courseCategories } from '@/routes/admin/course-categories';
 import { index as ebookCategories } from '@/routes/admin/ebook-categories';
 import { index as ebooks } from '@/routes/admin/ebooks';
@@ -31,9 +32,14 @@ export function AppSidebar() {
             ? [
                   {
                       title: 'Learning Management',
-                      items: [
-                          {
-                              title: 'Course Categories',
+                       items: [
+                           {
+                               title: 'Courses',
+                               href: courses(),
+                               icon: Library,
+                           },
+                           {
+                               title: 'Course Categories',
                               href: courseCategories(),
                               icon: Tags,
                           },

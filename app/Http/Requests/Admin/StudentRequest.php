@@ -19,4 +19,16 @@ class StudentRequest extends FormRequest
             'password' => $this->passwordRules(),
         ];
     }
+
+    public function messages(): array
+    {
+        return [
+            'name.required' => 'Nama student wajib diisi.',
+            'email.required' => 'Email student wajib diisi.',
+            'email.email' => 'Format email student tidak valid.',
+            'email.unique' => 'Email student sudah digunakan.',
+            'password.required' => 'Password wajib diisi.',
+            'password.confirmed' => 'Konfirmasi password tidak cocok.',
+        ];
+    }
 }

@@ -25,4 +25,14 @@ class CourseCategoryRequest extends FormRequest
             'description' => ['nullable', 'string'],
         ];
     }
+
+    public function messages(): array
+    {
+        return [
+            'name.required' => 'Nama kategori course wajib diisi.',
+            'slug.required' => 'Slug kategori course wajib diisi.',
+            'slug.unique' => 'Slug kategori course sudah digunakan.',
+            'slug.alpha_dash' => 'Slug hanya boleh berisi huruf, angka, tanda hubung, dan garis bawah.',
+        ];
+    }
 }

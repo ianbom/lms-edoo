@@ -5,54 +5,38 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\CourseCategoryRequest;
 use App\Models\CourseCategory;
-use Illuminate\Http\RedirectResponse;
+use App\Services\Admin\CourseCategoryService;
 use Inertia\Inertia;
-use Inertia\Response;
 
 class CourseCategoryController extends Controller
 {
-    public function index(): Response
+    public function __construct(private CourseCategoryService $service) {}
+
+    public function index()
     {
-        return Inertia::render('admin/course-categories/index', [
-            'categories' => CourseCategory::query()
-                ->withCount('courses')
-                ->latest('updated_at')
-                ->get(['id', 'name', 'slug', 'description', 'updated_at']),
-        ]);
+        return Inertia::render('admin/course-categories/index', ['categories' => $this->service->all()]);
     }
 
-    public function store(CourseCategoryRequest $request): RedirectResponse
+    public function store(CourseCategoryRequest $request)
     {
-        CourseCategory::create($request->validated());
-
+        $this->service->create($request->validated());
         Inertia::flash('toast', ['type' => 'success', 'message' => __('Course category created.')]);
 
         return to_route('admin.course-categories.index');
     }
 
-    public function update(CourseCategoryRequest $request, CourseCategory $courseCategory): RedirectResponse
+    public function update(CourseCategoryRequest $request, CourseCategory $courseCategory)
     {
-        $courseCategory->update($request->validated());
-
+        $this->service->update($courseCategory, $request->validated());
         Inertia::flash('toast', ['type' => 'success', 'message' => __('Course category updated.')]);
 
         return to_route('admin.course-categories.index');
     }
 
-    public function destroy(CourseCategory $courseCategory): RedirectResponse
+    public function destroy(CourseCategory $courseCategory)
     {
-        if ($courseCategory->courses()->exists()) {
-            Inertia::flash('toast', [
-                'type' => 'error',
-                'message' => __('Course categories in use cannot be deleted.'),
-            ]);
-
-            return to_route('admin.course-categories.index');
-        }
-
-        $courseCategory->delete();
-
-        Inertia::flash('toast', ['type' => 'success', 'message' => __('Course category deleted.')]);
+        $deleted = $this->service->delete($courseCategory);
+        Inertia::flash('toast', ['type' => $deleted ? 'success' : 'error', 'message' => $deleted ? __('Course category deleted.') : __('Course categories in use cannot be deleted.')]);
 
         return to_route('admin.course-categories.index');
     }

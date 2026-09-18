@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\Admin\CourseBuilderController;
 use App\Http\Controllers\Admin\CourseCategoryController;
+use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\EbookCategoryController;
 use App\Http\Controllers\Admin\EbookController;
@@ -18,6 +20,10 @@ Route::prefix('admin')
     ->name('admin.')
     ->middleware(['auth', 'verified', 'admin'])
     ->group(function () {
+        Route::resource('courses', CourseController::class)
+            ->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
+        Route::get('courses/{course}/builder', [CourseBuilderController::class, 'show'])->name('courses.builder');
+        Route::put('courses/{course}/builder', [CourseBuilderController::class, 'update'])->name('courses.builder.update');
         Route::resource('course-categories', CourseCategoryController::class)
             ->only(['index', 'store', 'update', 'destroy']);
         Route::resource('ebook-categories', EbookCategoryController::class)
