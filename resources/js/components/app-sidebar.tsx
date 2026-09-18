@@ -1,5 +1,5 @@
 import { Link, usePage } from '@inertiajs/react';
-import { LayoutGrid, Library, Tags, UserRound, Users } from 'lucide-react';
+import { FileText, Layers3, LayoutGrid, Library, Tags, UserRound, Users } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
@@ -37,6 +37,16 @@ export function AppSidebar() {
                                title: 'Courses',
                                href: courses(),
                                icon: Library,
+                           },
+                           {
+                               title: 'Course Materials',
+                               href: '/admin/course-materials',
+                               icon: Layers3,
+                           },
+                           {
+                               title: 'Learning Contents',
+                               href: '/admin/learning-contents',
+                               icon: FileText,
                            },
                            {
                                title: 'Course Categories',

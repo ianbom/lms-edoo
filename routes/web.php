@@ -3,14 +3,20 @@
 use App\Http\Controllers\Admin\CourseBuilderController;
 use App\Http\Controllers\Admin\CourseCategoryController;
 use App\Http\Controllers\Admin\CourseController;
+use App\Http\Controllers\Admin\CourseMaterialController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\EbookCategoryController;
 use App\Http\Controllers\Admin\EbookController;
+use App\Http\Controllers\Admin\LearningContentController;
 use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\Admin\TeacherController;
+use App\Http\Controllers\CourseCatalogController;
+use App\Http\Controllers\CourseDetailController;
 use Illuminate\Support\Facades\Route;
 
 Route::inertia('/', 'welcome')->name('home');
+Route::get('courses', CourseCatalogController::class)->name('courses.index');
+Route::get('courses/{course:slug}', CourseDetailController::class)->name('courses.show');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', DashboardController::class)->name('dashboard');
@@ -24,6 +30,10 @@ Route::prefix('admin')
             ->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
         Route::get('courses/{course}/builder', [CourseBuilderController::class, 'show'])->name('courses.builder');
         Route::put('courses/{course}/builder', [CourseBuilderController::class, 'update'])->name('courses.builder.update');
+        Route::resource('course-materials', CourseMaterialController::class)
+            ->only(['index', 'store', 'update']);
+        Route::resource('learning-contents', LearningContentController::class)
+            ->only(['index', 'store', 'update']);
         Route::resource('course-categories', CourseCategoryController::class)
             ->only(['index', 'store', 'update', 'destroy']);
         Route::resource('ebook-categories', EbookCategoryController::class)
