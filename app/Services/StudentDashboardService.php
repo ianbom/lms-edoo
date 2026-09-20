@@ -3,12 +3,10 @@
 namespace App\Services;
 
 use App\Enums\EnrollmentStatus;
-use App\Enums\CourseStatus;
 use App\Enums\EbookStatus;
 use App\Enums\ProgressStatus;
 use App\Models\CourseEnrollment;
 use App\Models\Ebook;
-use App\Models\Course;
 use App\Models\LearningContentProgress;
 use App\Models\User;
 
@@ -19,8 +17,6 @@ class StudentDashboardService
         $enrollments = CourseEnrollment::query()->where('user_id', $student->id);
         $total = (clone $enrollments)->count();
         $completed = (clone $enrollments)->where('status', EnrollmentStatus::Completed->value)->count();
-        $enrolledCourseIds = (clone $enrollments)->pluck('course_id');
-
         return [
             'stats' => [
                 'enrolled' => $total,
@@ -28,7 +24,6 @@ class StudentDashboardService
                 'completed' => $completed,
                 'progress' => round((float) ((clone $enrollments)->avg('progress_percentage') ?? 0), 1),
             ],
-            'activity' => $this->activity($student),
             'recentActivities' => $this->recentActivities($student),
             'enrollments' => (clone $enrollments)->with([
                 'course:id,course_category_id,title,slug,short_description,thumbnail_url',
@@ -51,27 +46,8 @@ class StudentDashboardService
                 'last_activity_at' => $enrollment->last_activity_at?->toDateString(),
                 'last_learning_content' => $enrollment->lastLearningContent?->title,
             ])->all(),
-            'recommendations' => $this->recommendations($enrolledCourseIds),
             'ebooks' => $this->ebooks(),
         ];
-    }
-
-    private function activity(User $student): array
-    {
-        $start = now()->subDays(29)->startOfDay();
-
-        $progress = LearningContentProgress::query()
-            ->where('user_id', $student->id)
-            ->whereBetween('last_viewed_at', [$start, now()])
-            ->get(['status', 'last_viewed_at'])
-            ->groupBy(fn (LearningContentProgress $item) => $item->last_viewed_at?->toDateString());
-
-        return collect(range(0, 29))->map(function (int $offset) use ($start, $progress): array {
-            $date = $start->copy()->addDays($offset);
-            $items = $progress->get($date->toDateString(), collect());
-
-            return ['date' => $date->format('M j'), 'studied' => $items->count(), 'completed' => $items->filter(fn (LearningContentProgress $item) => $item->status === ProgressStatus::Completed)->count()];
-        })->all();
     }
 
     private function recentActivities(User $student): array
@@ -90,29 +66,6 @@ class StudentDashboardService
                     : "Mempelajari materi {$progress->content?->title}",
                 'subtitle' => $progress->course?->title ?? 'Kelas online',
                 'time' => $progress->last_viewed_at?->diffForHumans(),
-            ])->all();
-    }
-
-    private function recommendations($enrolledCourseIds): array
-    {
-        return Course::query()
-            ->select(['id', 'course_category_id', 'title', 'slug', 'short_description', 'thumbnail_url', 'published_at'])
-            ->with(['category:id,name', 'teachers:id,name'])
-            ->withCount(['materials' => fn ($query) => $query->where('is_published', true)])
-            ->where('status', CourseStatus::Published->value)
-            ->whereNotIn('id', $enrolledCourseIds)
-            ->orderByDesc('published_at')
-            ->limit(3)
-            ->get()
-            ->map(fn (Course $course) => [
-                'id' => $course->id,
-                'title' => $course->title,
-                'slug' => $course->slug,
-                'short_description' => $course->short_description,
-                'thumbnail_url' => $course->thumbnail_url,
-                'category' => $course->category?->name,
-                'teacher' => $course->teachers->first()?->name,
-                'materials_count' => $course->materials_count,
             ])->all();
     }
 

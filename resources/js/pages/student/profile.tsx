@@ -1,12 +1,15 @@
-import { Head, useForm } from '@inertiajs/react';
+import { Head, router, useForm } from '@inertiajs/react';
 import {
     CalendarDays,
     CheckCircle2,
     KeyRound,
+    LoaderCircle,
+    LogOut,
     Save,
     UserRound,
 } from 'lucide-react';
 import type { FormEvent } from 'react';
+import { useState } from 'react';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import {
@@ -18,6 +21,15 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from '@/components/ui/dialog';
+import { logout } from '@/routes';
 
 type Profile = {
     id: number;
@@ -55,6 +67,8 @@ export default function StudentProfile({ profile }: { profile: Profile }) {
         password: '',
         password_confirmation: '',
     });
+    const [logoutOpen, setLogoutOpen] = useState(false);
+    const [logoutProcessing, setLogoutProcessing] = useState(false);
 
     const updateProfile = (event: FormEvent<HTMLFormElement>): void => {
         event.preventDefault();
@@ -67,6 +81,19 @@ export default function StudentProfile({ profile }: { profile: Profile }) {
             preserveScroll: true,
             onSuccess: () => passwordForm.reset(),
         });
+    };
+
+    const confirmLogout = (): void => {
+        router.flushAll();
+        router.post(
+            logout.url(),
+            {},
+            {
+                onStart: () => setLogoutProcessing(true),
+                onFinish: () => setLogoutProcessing(false),
+                onSuccess: () => setLogoutOpen(false),
+            },
+        );
     };
 
     const metadata = [
@@ -354,9 +381,68 @@ export default function StudentProfile({ profile }: { profile: Profile }) {
                                 ))}
                             </CardContent>
                         </Card>
+                        <Card className="border-red-100 shadow-[0_7px_20px_rgba(25,70,130,.05)]">
+                            <CardHeader>
+                                <CardTitle>Keluar dari akun</CardTitle>
+                                <CardDescription>
+                                    Akhiri sesi belajar di perangkat ini.
+                                </CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <Button
+                                    type="button"
+                                    variant="destructive"
+                                    className="w-full"
+                                    onClick={() => setLogoutOpen(true)}
+                                >
+                                    <LogOut />
+                                    Keluar
+                                </Button>
+                            </CardContent>
+                        </Card>
                     </div>
                 </div>
             </section>
+
+            <Dialog
+                open={logoutOpen}
+                onOpenChange={(open) => {
+                    if (!logoutProcessing) {
+                        setLogoutOpen(open);
+                    }
+                }}
+            >
+                <DialogContent className="sm:max-w-md">
+                    <DialogHeader>
+                        <DialogTitle>Keluar dari akun?</DialogTitle>
+                        <DialogDescription>
+                            Kamu perlu masuk kembali untuk melanjutkan proses
+                            belajar.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter>
+                        <Button
+                            type="button"
+                            variant="outline"
+                            disabled={logoutProcessing}
+                            onClick={() => setLogoutOpen(false)}
+                        >
+                            Batal
+                        </Button>
+                        <Button
+                            type="button"
+                            variant="destructive"
+                            disabled={logoutProcessing}
+                            onClick={confirmLogout}
+                        >
+                            {logoutProcessing && (
+                                <LoaderCircle className="animate-spin" />
+                            )}
+                            Ya, Keluar
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </>
     );
 }

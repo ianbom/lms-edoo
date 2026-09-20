@@ -52,21 +52,12 @@ export default function MyClass({ classes }: { classes: Classes }) {
             <div className="px-5 pb-8 sm:px-7 lg:px-8">
                 <header className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
                     <div>
-                        <p className="text-[10px] font-bold tracking-[.16em] text-[#1064db] uppercase">
-                            Pembelajaran Saya
-                        </p>
                         <h1 className="mt-2 text-[28px] leading-none font-extrabold tracking-[-.8px] text-[#101b5d]">
                             Kelas Saya
                         </h1>
                         <p className="mt-2 text-sm text-[#5972a0]">
                             Lanjutkan kelas yang sudah kamu daftarkan.
                         </p>
-                    </div>
-                    <div className="rounded-xl border border-[#dbe9fa] bg-white px-4 py-3 text-sm text-[#506b9d]">
-                        <span className="font-extrabold text-[#1064db]">
-                            {classes.total ?? classes.data.length}
-                        </span>{' '}
-                        kelas terdaftar
                     </div>
                 </header>
                 {classes.data.length > 0 ? (

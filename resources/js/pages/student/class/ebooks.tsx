@@ -22,9 +22,6 @@ export default function Ebooks({ ebooks }: { ebooks: Ebook[] }) {
                 <div className="mx-auto max-w-7xl">
                     <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
                         <div>
-                            <span className="text-primary inline-flex size-11 items-center justify-center rounded-xl bg-[#e7f3ff]">
-                                <LibraryBig size={23} />
-                            </span>
                             <h1 className="mt-4 text-3xl font-extrabold tracking-[-0.9px] text-[#071842] sm:text-[36px]">
                                 E-Books
                             </h1>
@@ -33,9 +30,7 @@ export default function Ebooks({ ebooks }: { ebooks: Ebook[] }) {
                                 belajarmu.
                             </p>
                         </div>
-                        <p className="text-sm font-semibold text-[#587099]">
-                            {ebooks.length} e-book tersedia
-                        </p>
+
                     </div>
 
                     {ebooks.length > 0 ? (

@@ -4,113 +4,29 @@ import {
     BookOpen,
     CalendarDays,
     Clock3,
-    Headphones,
     MonitorPlay,
-    Quote,
-    Star,
     UserRound,
     UsersRound,
     Video,
 } from 'lucide-react';
 
-const categories = [
-    {
-        title: 'For The Kids',
-        linkLabel: 'Kids Class Online',
-        image: '/welcome/class-for-kids.png',
-    },
-    {
-        title: 'For Summertime',
-        linkLabel: 'Summer Camp Online',
-        image: '/welcome/class-for-summertime.png',
-    },
-    {
-        title: 'For Adult Person',
-        linkLabel: 'Adult Class Online',
-        image: '/welcome/class-for-adults.png',
-    },
-];
-
-const popularCourses = [
-    {
-        category: 'Technology',
-        title: 'Full-Stack Web Development',
-        description:
-            'Build modern web applications through hands-on projects and live mentorship.',
-        instructor: 'Alex Carter',
-        role: 'Senior Software Engineer',
-        duration: '12 Weeks',
-        rating: '4.9',
-        reviews: '2.1K',
-        image: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=900&q=80',
-    },
-    {
-        category: 'Design',
-        title: 'UI/UX Design Fundamentals',
-        description:
-            'Learn how to design intuitive digital products and build a professional portfolio.',
-        instructor: 'Marcus Chen',
-        role: 'Product Designer',
-        duration: '8 Weeks',
-        rating: '4.8',
-        reviews: '1.9K',
-        image: 'https://images.unsplash.com/photo-1545235617-9465d2a55698?auto=format&fit=crop&w=900&q=80',
-    },
-    {
-        category: 'Marketing',
-        title: 'Digital Marketing Essentials',
-        description:
-            'Master content, social media, advertising, and campaign strategy.',
-        instructor: 'Sophia Lee',
-        role: 'Digital Marketing Strategist',
-        duration: '6 Weeks',
-        rating: '4.9',
-        reviews: '3.2K',
-        image: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=900&q=80',
-    },
-];
-
-const instructors = [
-    {
-        name: 'Alex Carter',
-        role: 'Senior Software Engineer',
-        specialty: 'Web Development',
-        image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=500&q=80',
-    },
-    {
-        name: 'Sophia Lee',
-        role: 'Digital Marketing Strategist',
-        specialty: 'Digital Marketing',
-        image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=500&q=80',
-    },
-    {
-        name: 'Marcus Chen',
-        role: 'Product Designer',
-        specialty: 'UI/UX Design',
-        image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=500&q=80',
-    },
-];
-
-const testimonials = [
-    {
-        quote: 'The live classes are amazing! The instructors explain everything clearly and the community is so supportive.',
-        name: 'Jessica Taylor',
-        role: 'Web Developer',
-        image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80',
-    },
-    {
-        quote: 'I gained practical skills and confidence to switch careers. The learning experience is top-notch!',
-        name: 'Michael Brown',
-        role: 'Marketing Specialist',
-        image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=300&q=80',
-    },
-    {
-        quote: 'High-quality content, great instructors, and very flexible schedule. Highly recommended!',
-        name: 'Priya Sharma',
-        role: 'UX Designer',
-        image: 'https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?auto=format&fit=crop&w=300&q=80',
-    },
-];
+type Course = {
+    id: number;
+    slug: string;
+    title: string;
+    short_description: string | null;
+    thumbnail_url: string | null;
+    estimated_duration_minutes: number | null;
+    category: { id: number; name: string; slug: string };
+    teacher: {
+        id: number;
+        name: string;
+        photo_url: string | null;
+        expertise: string | null;
+    } | null;
+    videos_count: number;
+    enrollments_count: number;
+};
 
 const primaryLinkClass =
     'inline-flex items-center gap-2 text-[13px] font-bold text-[#1054D0] transition hover:text-[#0C46B8]';
@@ -119,7 +35,22 @@ const sectionClass =
 const kickerClass =
     'relative block pl-[27px] text-[10px] font-bold tracking-[1.2px] text-[#1054D0] before:absolute before:left-0 before:top-[5px] before:h-0.5 before:w-5 before:bg-[#1054D0]';
 
-export default function Welcome() {
+const formatCount = (value: number): string =>
+    new Intl.NumberFormat('id-ID').format(value);
+
+const formatDuration = (minutes: number | null): string => {
+    if (!minutes) return 'Durasi fleksibel';
+    if (minutes < 60) return `${minutes} menit`;
+
+    const hours = Math.floor(minutes / 60);
+    const remainingMinutes = minutes % 60;
+
+    return remainingMinutes
+        ? `${hours} jam ${remainingMinutes} menit`
+        : `${hours} jam`;
+};
+
+export default function Welcome({ courses }: { courses: Course[] }) {
     return (
         <>
             <Head title="Eduo - Live Online Training" />
@@ -137,7 +68,7 @@ export default function Welcome() {
                 </h1>
                 <Link
                     className="absolute top-[58%] left-[10.3%] z-[4] h-[9%] w-[27%] rounded-full focus-visible:outline-4 focus-visible:outline-offset-4 focus-visible:outline-[#2478E4] max-[760px]:left-[8%] max-[760px]:h-[10%] max-[760px]:w-[52%]"
-                    href="#classes"
+                    href="#courses"
                     aria-label="Browse our course catalog"
                 />
             </section>
@@ -188,27 +119,34 @@ export default function Welcome() {
                                 with confidence.
                             </p>
                         </div>
-                        <a href="#courses" className={primaryLinkClass}>
-                            View All Classes <ArrowRight size={20} />
-                        </a>
+                        <Link href="/courses" className={primaryLinkClass}>
+                            Lihat Semua Kelas <ArrowRight size={20} />
+                        </Link>
                     </div>
 
-                    <div className="grid grid-cols-3 gap-[18px] max-[760px]:grid-cols-1">
-                        {popularCourses.map((course) => (
-                            <article
-                                className="overflow-hidden rounded-[11px] border border-[#E3E8F2] bg-white"
-                                key={course.title}
+                    <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
+                        {courses.map((course) => (
+                            <Link
+                                href={`/courses/${course.slug}`}
+                                className="group flex h-full flex-col overflow-hidden rounded-2xl border border-[#E3E8F2] bg-white shadow-[0_8px_28px_rgba(25,67,130,0.06)] transition duration-200 hover:-translate-y-1 hover:shadow-[0_16px_36px_rgba(25,67,130,0.12)]"
+                                key={course.id}
                             >
                                 <div className="relative flex h-[175px] items-start overflow-hidden p-[13px]">
                                     <img
                                         className="absolute inset-0 size-full object-cover"
-                                        src={course.image}
-                                        alt={`${course.title} course`}
+                                        src={
+                                            course.thumbnail_url ||
+                                            '/course-placeholder.svg'
+                                        }
+                                        alt=""
                                         loading="lazy"
-                                        referrerPolicy="no-referrer"
+                                        onError={(event) => {
+                                            event.currentTarget.src =
+                                                '/course-placeholder.svg';
+                                        }}
                                     />
                                     <span className="relative z-10 rounded-full bg-white px-[13px] py-[7px] text-[11px] font-bold text-[#1054D0]">
-                                        {course.category}
+                                        {course.category.name}
                                     </span>
                                 </div>
 
@@ -217,7 +155,8 @@ export default function Welcome() {
                                         {course.title}
                                     </h3>
                                     <p className="mb-4 min-h-[36px] text-xs leading-[1.5] text-[#59648A]">
-                                        {course.description}
+                                        {course.short_description ||
+                                            'Pelajari keterampilan baru melalui materi yang terstruktur dan mudah diikuti.'}
                                     </p>
                                     <div className="flex items-center gap-[9px]">
                                         <span className="inline-flex size-[37px] shrink-0 items-center justify-center rounded-full bg-[#DCECFC] text-[#1054D0]">
@@ -225,53 +164,64 @@ export default function Welcome() {
                                         </span>
                                         <div>
                                             <strong className="block text-xs">
-                                                {course.instructor}
+                                                {course.teacher?.name ||
+                                                    'Tim BRI Peduli'}
                                             </strong>
                                             <small className="mt-[3px] block text-[10px] text-[#7D89A8]">
-                                                {course.role}
-                                            </small>
-                                        </div>
-                                        <div className="ml-auto grid grid-cols-[auto_auto] items-center text-xs text-[#F5A500]">
-                                            <Star
-                                                size={15}
-                                                fill="currentColor"
-                                                className="row-span-2"
-                                            />
-                                            <strong className="text-[#070B49]">
-                                                {course.rating}
-                                            </strong>
-                                            <small className="text-[10px] text-[#7D89A8]">
-                                                ({course.reviews})
+                                                {course.teacher?.expertise ||
+                                                    'Instruktur pembelajaran'}
                                             </small>
                                         </div>
                                     </div>
-                                    <div className="mt-4 flex gap-2.5 border-t border-[#E3E8F2] py-[13px] text-[10px]">
+                                    <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2 border-t border-[#E3E8F2] py-[13px] text-[10px]">
                                         <span className="flex items-center gap-[5px] text-[#59648A]">
                                             <Clock3
                                                 size={16}
                                                 className="text-[#1054D0]"
                                             />
-                                            {course.duration}
+                                            {formatDuration(
+                                                course.estimated_duration_minutes,
+                                            )}
                                         </span>
                                         <span className="flex items-center gap-[5px] text-[#59648A]">
                                             <Video
                                                 size={16}
                                                 className="text-[#1054D0]"
                                             />
-                                            Live Online
+                                            {formatCount(course.videos_count)}{' '}
+                                            video
                                         </span>
-                                        <a
-                                            href="#contact"
-                                            className="ml-auto flex items-center gap-[5px] font-bold text-[#1054D0] hover:text-[#0C46B8]"
-                                        >
-                                            View Class
+                                        <span className="flex items-center gap-[5px] text-[#59648A]">
+                                            <UsersRound
+                                                size={16}
+                                                className="text-[#1054D0]"
+                                            />
+                                            {formatCount(
+                                                course.enrollments_count,
+                                            )}{' '}
+                                            siswa
+                                        </span>
+                                        <span className="ml-auto flex items-center gap-[5px] font-bold text-[#1054D0] group-hover:text-[#0C46B8]">
+                                            Lihat Kelas
                                             <ArrowRight size={16} />
-                                        </a>
+                                        </span>
                                     </div>
                                 </div>
-                            </article>
+                            </Link>
                         ))}
                     </div>
+                    {courses.length === 0 && (
+                        <div className="flex flex-col items-center rounded-2xl border border-dashed border-[#D9E5F4] px-6 py-14 text-center">
+                            <BookOpen className="size-10 text-[#9BB2D5]" />
+                            <h3 className="mt-4 text-lg font-bold text-[#071457]">
+                                Belum ada kelas tersedia
+                            </h3>
+                            <p className="mt-2 max-w-md text-sm text-[#61719B]">
+                                Kelas baru akan muncul di sini setelah
+                                dipublikasikan.
+                            </p>
+                        </div>
+                    )}
                 </section>
             </section>
         </>

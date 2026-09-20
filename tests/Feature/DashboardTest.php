@@ -40,7 +40,7 @@ class DashboardTest extends TestCase
                 ->where('stats.active', 0)
                 ->where('stats.completed', 0)
                 ->where('stats.progress', 0)
-                ->has('activity', 30)
+                ->has('recentActivities', 0)
                 ->has('enrollments', 0));
     }
 

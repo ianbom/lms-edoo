@@ -26,13 +26,8 @@ type Enrollment = {
 
 type DashboardProps = {
     stats: { enrolled: number; active: number; completed: number; progress: number };
-    activity: { date: string; studied: number; completed: number }[];
     recentActivities: { type: 'completed' | 'in_progress'; title: string; subtitle: string; time: string | null }[];
     enrollments: Enrollment[];
-    recommendations: {
-        id: number; title: string; slug: string; short_description: string | null;
-        thumbnail_url: string | null; category: string | null; teacher: string | null; materials_count: number;
-    }[];
     ebooks: {
         id: number; title: string; slug: string; author: string | null;
         short_description: string | null; cover_url: string | null; file_url: string;
@@ -68,17 +63,13 @@ function EmptyState({ children }: { children: string }) {
 
 export default function StudentDashboard({
     stats,
-    activity,
     recentActivities,
     enrollments,
-    recommendations,
     ebooks,
 }: DashboardProps) {
     const { auth } = usePage<{ auth: { user?: { name?: string } } }>().props;
     const studentName = auth.user?.name ?? 'Student';
     const continueCourses = enrollments.filter((course) => course.status !== 'completed').slice(0, 2);
-    const weeklyDone = activity.slice(-7).reduce((total, item) => total + item.completed, 0);
-    const weeklyPercent = Math.min(100, Math.round((weeklyDone / Math.max(5, weeklyDone)) * 100));
     const statCards = [
         { label: 'Kelas Saya', value: stats.enrolled, detail: 'Total kelas yang diikuti', icon: MonitorPlay },
         { label: 'Sedang Dipelajari', value: stats.active, detail: 'Kelas dalam proses', icon: Clock3 },
@@ -127,23 +118,11 @@ export default function StudentDashboard({
                             </div>
                         ) : <EmptyState>Belum ada kelas yang sedang dipelajari.</EmptyState>}
                     </div>
-                    <div className="rounded-xl bg-[#0b55bd] p-5 text-white">
-                        <div className="flex items-start justify-between"><div><p className="text-xs text-white/70">Progress Keseluruhan</p><p className="mt-1 text-3xl font-extrabold">{stats.progress}%</p></div><CheckCircle2 size={24} /></div>
-                        <div className="mt-6 h-2 overflow-hidden rounded-full bg-white/20"><div className="h-full rounded-full bg-white" style={{ width: `${stats.progress}%` }} /></div>
-                        <div className="mt-8 flex items-end justify-between"><div><p className="text-xs text-white/70">Target minggu ini</p><p className="mt-1 text-lg font-bold">{weeklyDone} materi selesai</p></div><span className="text-sm font-bold">{weeklyPercent}%</span></div>
-                    </div>
-                </section>
-
-                <section className="mt-5 grid gap-4 lg:grid-cols-2">
                     <div>
                         <Title href="/student/classes">Aktivitas Terbaru</Title>
                         {recentActivities.length ? <div className="divide-y divide-[#e8eff8] rounded-xl border border-[#dce8f6] bg-white px-4">{recentActivities.map((item, index) => (
                             <div key={`${item.title}-${index}`} className="flex items-center gap-3 py-3"><span className="grid size-8 shrink-0 place-items-center rounded-full bg-[#e8f3ff] text-[#1262d7]">{item.type === 'completed' ? <CheckCircle2 size={15} /> : <Clock3 size={15} />}</span><div className="min-w-0 flex-1"><p className="truncate text-xs font-semibold text-[#17235f]">{item.title}</p><p className="truncate text-[10px] text-[#7183a2]">{item.subtitle}</p></div><span className="shrink-0 text-[10px] text-[#7183a2]">{item.time}</span></div>
                         ))}</div> : <EmptyState>Belum ada aktivitas belajar.</EmptyState>}
-                    </div>
-                    <div>
-                        <Title href="/courses">Rekomendasi Kelas</Title>
-                        {recommendations.length ? <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">{recommendations.map((course) => <Link key={course.id} href={`/courses/${course.slug}`} className="flex gap-3 rounded-xl border border-[#dce8f6] bg-white p-3 transition hover:border-[#9fc7f8]"><img src={course.thumbnail_url ?? '/course-placeholder.svg'} className="size-16 rounded-lg object-cover" alt="" /><div className="min-w-0"><p className="text-[10px] text-[#1262d7]">{course.category ?? 'Kelas Online'}</p><h3 className="mt-1 truncate text-sm font-bold text-[#17235f]">{course.title}</h3><p className="mt-1 line-clamp-2 text-[10px] text-[#7183a2]">{course.short_description ?? 'Mulai belajar dari materi terbaik.'}</p></div></Link>)}</div> : <EmptyState>Belum ada rekomendasi kelas.</EmptyState>}
                     </div>
                 </section>
 

@@ -34,11 +34,10 @@ test('student receives the student dashboard with only their enrollments', funct
         ->where('stats.enrolled', 1)
         ->has('enrollments', 1)
         ->where('enrollments.0.title', 'Course')
-        ->where('recommendations', [])
     );
 });
 
-test('student dashboard returns real activity recommendations and ebooks', function () {
+test('student dashboard returns real activity and ebooks', function () {
     $student = User::factory()->create(['role' => UserRole::Student]);
     $category = CourseCategory::create(['name' => 'Web', 'slug' => 'web']);
     $teacher = Teacher::create(['name' => 'Jane Doe']);
@@ -49,15 +48,7 @@ test('student dashboard returns real activity recommendations and ebooks', funct
         'short_description' => 'Existing course',
         'status' => CourseStatus::Published,
     ]);
-    $recommended = Course::create([
-        'course_category_id' => $category->id,
-        'title' => 'Recommended Course',
-        'slug' => 'recommended-course',
-        'status' => CourseStatus::Published,
-        'published_at' => now(),
-    ]);
     $enrolled->teachers()->attach($teacher);
-    $recommended->teachers()->attach($teacher);
     CourseEnrollment::create([
         'user_id' => $student->id,
         'course_id' => $enrolled->id,
@@ -89,7 +80,6 @@ test('student dashboard returns real activity recommendations and ebooks', funct
         ->where('enrollments.0.teacher', 'Jane Doe')
         ->where('enrollments.0.materials_count', 1)
         ->where('recentActivities.0.title', 'Menyelesaikan materi Real Lesson')
-        ->where('recommendations.0.title', 'Recommended Course')
         ->where('ebooks.0.title', 'Real Ebook')
     );
 });
