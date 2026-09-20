@@ -207,9 +207,22 @@ export default function EbooksIndex({
                                                     </span>
                                                 )}
                                                 <div className="min-w-0">
-                                                    <p className="font-medium">
-                                                        {ebook.title}
-                                                    </p>
+                                                    {ebook.file_url ? (
+                                                        <a
+                                                            href={
+                                                                ebook.file_url
+                                                            }
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            className="font-medium underline-offset-4 hover:underline"
+                                                        >
+                                                            {ebook.title}
+                                                        </a>
+                                                    ) : (
+                                                        <p className="font-medium">
+                                                            {ebook.title}
+                                                        </p>
+                                                    )}
                                                     <p className="text-muted-foreground mt-1 text-xs">
                                                         {ebook.author ??
                                                             'No author'}

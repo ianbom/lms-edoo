@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-#[Fillable(['name', 'slug', 'description', 'icon', 'thumbnail_url', 'is_active', 'position'])]
+#[Fillable(['name', 'slug', 'description', 'is_active', 'position'])]
 class EbookCategory extends Model
 {
     use SoftDeletes;

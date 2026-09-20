@@ -3,14 +3,16 @@ import { GraduationCap, Instagram, Linkedin, Youtube } from 'lucide-react';
 
 export default function HomeFooter() {
     return (
-        <footer className="mx-auto grid max-w-[1370px] grid-cols-[1.45fr_1fr_1.2fr_1.8fr] gap-[42px] border-t border-[#E3E8F2] px-11 pt-9 pb-[45px] max-[1100px]:px-[25px] max-[760px]:grid-cols-2 max-[760px]:gap-[30px_20px] max-[760px]:px-[22px] max-[760px]:pt-[38px]">
+        <footer
+            className="mx-auto grid max-w-[1370px] grid-cols-[1.45fr_1fr_1.2fr_1.8fr] gap-[42px] border-t border-[#E3E8F2] px-11 pt-9 pb-[45px] max-[1100px]:px-[25px] max-[760px]:grid-cols-2 max-[760px]:gap-[30px_20px] max-[760px]:px-[22px] max-[760px]:pt-[38px]"
+        >
             <div className="max-[760px]:col-span-2">
                 <Link
                     href="/"
                     className="flex items-center gap-[9px] text-[25px] font-extrabold tracking-[-1.3px]"
                 >
                     <GraduationCap size={28} className="text-[#105BDD]" />
-                    EduLearn
+                    BRI Peduli
                 </Link>
                 <p className="text-[11px] text-[#59648A]">
                     Belajar Hari Ini, Lebih Baik Esok.
@@ -22,21 +24,23 @@ export default function HomeFooter() {
                     <Youtube size={16} />
                 </div>
                 <small className="mt-[22px] block text-[10px] text-[#7D89A8]">
-                    © 2026 EduLearn. All rights reserved.
+                    © 2026 BRI Peduli. All rights reserved.
                 </small>
             </div>
 
             <div>
                 <h3 className="mt-[7px] mb-3 text-xs font-bold">Quick Links</h3>
-                {['Home', 'About Us', 'Courses', 'Blog', 'Contact'].map((item) => (
-                    <a
-                        href={`#${item.toLowerCase().replace(' ', '-')}`}
-                        className="block text-[11px] leading-[1.7] text-[#59648A] hover:text-[#1054D0]"
-                        key={item}
-                    >
-                        {item}
-                    </a>
-                ))}
+                {['Home', 'About Us', 'Courses', 'Blog', 'Contact'].map(
+                    (item) => (
+                        <a
+                            href={`#${item.toLowerCase().replace(' ', '-')}`}
+                            className="block text-[11px] leading-[1.7] text-[#59648A] hover:text-[#1054D0]"
+                            key={item}
+                        >
+                            {item}
+                        </a>
+                    ),
+                )}
             </div>
 
             <div>

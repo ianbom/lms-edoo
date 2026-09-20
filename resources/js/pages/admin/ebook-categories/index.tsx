@@ -85,32 +85,15 @@ export default function EbookCategoriesIndex({
                                         className="hover:bg-muted/30"
                                     >
                                         <td className="max-w-md px-5 py-4">
-                                            <div className="flex items-center gap-3">
-                                                {category.thumbnail_url ? (
-                                                    <img
-                                                        src={
-                                                            category.thumbnail_url
-                                                        }
-                                                        alt=""
-                                                        className="size-10 rounded-lg border object-cover"
-                                                    />
-                                                ) : (
-                                                    <span className="bg-secondary text-secondary-foreground flex size-10 items-center justify-center rounded-lg">
-                                                        <BookOpen className="size-5" />
-                                                    </span>
-                                                )}
-                                                <div className="min-w-0">
-                                                    <p className="font-medium">
-                                                        {category.name}
+                                            <div className="min-w-0">
+                                                <p className="font-medium">
+                                                    {category.name}
+                                                </p>
+                                                {category.description && (
+                                                    <p className="text-muted-foreground mt-1 line-clamp-1">
+                                                        {category.description}
                                                     </p>
-                                                    {category.description && (
-                                                        <p className="text-muted-foreground mt-1 line-clamp-1">
-                                                            {
-                                                                category.description
-                                                            }
-                                                        </p>
-                                                    )}
-                                                </div>
+                                                )}
                                             </div>
                                         </td>
                                         <td className="text-muted-foreground px-5 py-4 font-mono text-xs">

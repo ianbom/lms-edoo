@@ -1,10 +1,10 @@
-import { Head } from "@inertiajs/react";
-import { Pencil, Plus, UserRound } from "lucide-react";
-import { useState } from "react";
-import { TeacherDialog } from "@/components/admin/teacher-dialog";
-import { Button } from "@/components/ui/button";
-import { index as teachersIndex } from "@/routes/admin/teachers";
-import type { BreadcrumbItem } from "@/types";
+import { Head } from '@inertiajs/react';
+import { Pencil, Plus, UserRound } from 'lucide-react';
+import { useState } from 'react';
+import { TeacherDialog } from '@/components/admin/teacher-dialog';
+import { Button } from '@/components/ui/button';
+import { index as teachersIndex } from '@/routes/admin/teachers';
+import type { BreadcrumbItem } from '@/types';
 
 type Teacher = {
     id: number;
@@ -20,7 +20,7 @@ type Teachers = {
 };
 
 const formatDate = (value: string): string =>
-    new Intl.DateTimeFormat("id-ID", { dateStyle: "medium" }).format(
+    new Intl.DateTimeFormat('id-ID', { dateStyle: 'medium' }).format(
         new Date(value),
     );
 
@@ -102,7 +102,7 @@ export default function TeachersIndex({ teachers }: { teachers: Teachers }) {
                                                     </p>
                                                     <p className="text-muted-foreground mt-1 text-sm">
                                                         {teacher.expertise ||
-                                                            "Expertise not set"}
+                                                            'Expertise not set'}
                                                     </p>
                                                 </div>
                                             </div>
@@ -162,7 +162,7 @@ export default function TeachersIndex({ teachers }: { teachers: Teachers }) {
 TeachersIndex.layout = {
     breadcrumbs: [
         {
-            title: "Teachers",
+            title: 'Teachers',
             href: teachersIndex(),
         },
     ] satisfies BreadcrumbItem[],

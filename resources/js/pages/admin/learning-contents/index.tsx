@@ -8,18 +8,242 @@ import { Input } from '@/components/ui/input';
 import { index } from '@/routes/admin/learning-contents';
 
 type MaterialOption = { id: number; title: string; course: { title: string } };
-type Content = { id: number; course_material_id: number; type: 'video' | 'textbook'; title: string; description: string | null; position: number; youtube_url: string | null; textbook_content: string | null; attachment_url: string | null; is_published: boolean; material: { title: string; course: { title: string } } };
-type Pagination = { data: Content[]; current_page: number; last_page: number; per_page: number; prev_page_url: string | null; next_page_url: string | null };
+type Content = {
+    id: number;
+    course_material_id: number;
+    type: 'video' | 'textbook';
+    title: string;
+    description: string | null;
+    position: number;
+    youtube_url: string | null;
+    textbook_content: string | null;
+    attachment_url: string | null;
+    is_published: boolean;
+    material: { title: string; course: { title: string } };
+};
+type Pagination = {
+    data: Content[];
+    current_page: number;
+    last_page: number;
+    per_page: number;
+    prev_page_url: string | null;
+    next_page_url: string | null;
+};
 type Filters = { search?: string };
 
-export default function LearningContentsIndex({ contents, materials, filters }: { contents: Pagination; materials: MaterialOption[]; filters: Filters }) {
+export default function LearningContentsIndex({
+    contents,
+    materials,
+    filters,
+}: {
+    contents: Pagination;
+    materials: MaterialOption[];
+    filters: Filters;
+}) {
     const [query, setQuery] = useState({ search: filters.search ?? '' });
     const [selected, setSelected] = useState<Content | null>(null);
     const [open, setOpen] = useState(false);
-    const openForm = (content: Content | null) => { setSelected(content); setOpen(true); };
-    const setFormOpen = (nextOpen: boolean) => { setOpen(nextOpen); if (!nextOpen) setSelected(null); };
-    const applyFilters = (event: React.FormEvent<HTMLFormElement>) => { event.preventDefault(); router.get(index.url(), query, { preserveState: true, replace: true }); };
-    const clearFilters = () => { const empty = { search: '' }; setQuery(empty); router.get(index.url(), empty, { preserveState: true, replace: true }); };
+    const openForm = (content: Content | null) => {
+        setSelected(content);
+        setOpen(true);
+    };
+    const setFormOpen = (nextOpen: boolean) => {
+        setOpen(nextOpen);
+        if (!nextOpen) setSelected(null);
+    };
+    const applyFilters = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        router.get(index.url(), query, { preserveState: true, replace: true });
+    };
+    const clearFilters = () => {
+        const empty = { search: '' };
+        setQuery(empty);
+        router.get(index.url(), empty, { preserveState: true, replace: true });
+    };
 
-    return <><Head title="Learning Contents" /><div className="space-y-6 p-4 md:p-6"><div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between"><div><p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Curriculum</p><h1 className="mt-1 text-2xl font-semibold tracking-tight">Learning Contents</h1><p className="text-sm text-muted-foreground">Manage video lessons and textbook chapters.</p></div><Button onClick={() => openForm(null)}><Plus /> Add content</Button></div><form className="flex flex-col gap-3 sm:flex-row" onSubmit={applyFilters}><div className="relative flex-1"><Search className="text-muted-foreground absolute top-1/2 left-3 size-4 -translate-y-1/2" /><Input value={query.search} onChange={(event) => setQuery({ search: event.target.value })} className="pl-9" placeholder="Search contents, materials, or courses" /></div><Button type="submit">Filter</Button>{query.search && <Button type="button" variant="outline" onClick={clearFilters}><X />Clear</Button>}</form><div className="overflow-hidden rounded-2xl border bg-card shadow-sm"><div className="overflow-x-auto"><table className="w-full min-w-220 text-left text-sm"><thead className="border-b bg-muted/40"><tr><th className="px-5 py-3">No.</th><th>Content</th><th>Course / Material</th><th>Type</th><th>Status</th><th>Position</th><th className="text-right">Action</th></tr></thead><tbody className="divide-y">{contents.data.map((content, contentIndex) => <tr key={content.id}><td className="px-5 py-4 text-muted-foreground">{(contents.current_page - 1) * contents.per_page + contentIndex + 1}</td><td className="py-4"><div className="flex items-center gap-3"><div className="rounded-lg bg-primary/10 p-2 text-primary">{content.type === 'video' ? <Video className="size-4" /> : <FileText className="size-4" />}</div><div><p className="font-medium">{content.title}</p><p className="text-xs text-muted-foreground">{content.description || 'No description'}</p></div></div></td><td><p>{content.material.course.title}</p><p className="text-xs text-muted-foreground">{content.material.title}</p></td><td className="capitalize">{content.type}</td><td><Badge variant={content.is_published ? 'secondary' : 'outline'}>{content.is_published ? 'Published' : 'Draft'}</Badge></td><td>{content.position}</td><td className="px-5 text-right"><Button variant="outline" size="sm" onClick={() => openForm(content)}><Pencil /> Edit</Button></td></tr>)}</tbody></table></div>{contents.data.length === 0 && <div className="px-6 py-16 text-center"><FileText className="mx-auto size-10 text-muted-foreground" /><h2 className="mt-4 font-semibold">No learning contents found</h2><p className="mt-1 text-sm text-muted-foreground">Create content or change the current search.</p></div>}{contents.last_page > 1 && <div className="flex items-center justify-between border-t px-5 py-4 text-sm"><span className="text-muted-foreground">Page {contents.current_page} of {contents.last_page}</span><div className="flex gap-2"><Button asChild variant="outline" size="sm" disabled={!contents.prev_page_url}><Link href={contents.prev_page_url ?? '#'}>Previous</Link></Button><Button asChild variant="outline" size="sm" disabled={!contents.next_page_url}><Link href={contents.next_page_url ?? '#'}>Next</Link></Button></div></div>}</div></div>{open && <LearningContentDialog content={selected} materials={materials} open={open} onOpenChange={setFormOpen} />}</>;
+    return (
+        <>
+            <Head title="Learning Contents" />
+            <div className="space-y-6 p-4 md:p-6">
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                    <div>
+                        <p className="text-primary text-xs font-semibold tracking-[0.18em] uppercase">
+                            Curriculum
+                        </p>
+                        <h1 className="mt-1 text-2xl font-semibold tracking-tight">
+                            Learning Contents
+                        </h1>
+                        <p className="text-muted-foreground text-sm">
+                            Manage video lessons and textbook chapters.
+                        </p>
+                    </div>
+                    <Button onClick={() => openForm(null)}>
+                        <Plus /> Add content
+                    </Button>
+                </div>
+                <form
+                    className="flex flex-col gap-3 sm:flex-row"
+                    onSubmit={applyFilters}
+                >
+                    <div className="relative flex-1">
+                        <Search className="text-muted-foreground absolute top-1/2 left-3 size-4 -translate-y-1/2" />
+                        <Input
+                            value={query.search}
+                            onChange={(event) =>
+                                setQuery({ search: event.target.value })
+                            }
+                            className="pl-9"
+                            placeholder="Search contents, materials, or courses"
+                        />
+                    </div>
+                    <Button type="submit">Filter</Button>
+                    {query.search && (
+                        <Button
+                            type="button"
+                            variant="outline"
+                            onClick={clearFilters}
+                        >
+                            <X />
+                            Clear
+                        </Button>
+                    )}
+                </form>
+                <div className="bg-card overflow-hidden rounded-2xl border shadow-sm">
+                    <div className="overflow-x-auto">
+                        <table className="w-full min-w-220 text-left text-sm">
+                            <thead className="bg-muted/40 border-b">
+                                <tr>
+                                    <th className="px-5 py-3">No.</th>
+                                    <th>Content</th>
+                                    <th>Course / Material</th>
+                                    <th>Type</th>
+                                    <th>Status</th>
+                                    <th>Position</th>
+                                    <th className="text-right">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y">
+                                {contents.data.map((content, contentIndex) => (
+                                    <tr key={content.id}>
+                                        <td className="text-muted-foreground px-5 py-4">
+                                            {(contents.current_page - 1) *
+                                                contents.per_page +
+                                                contentIndex +
+                                                1}
+                                        </td>
+                                        <td className="py-4">
+                                            <div className="flex items-center gap-3">
+                                                <div className="bg-primary/10 text-primary rounded-lg p-2">
+                                                    {content.type ===
+                                                    'video' ? (
+                                                        <Video className="size-4" />
+                                                    ) : (
+                                                        <FileText className="size-4" />
+                                                    )}
+                                                </div>
+                                                <div>
+                                                    <p className="font-medium">
+                                                        {content.title}
+                                                    </p>
+                                                    <p className="text-muted-foreground text-xs">
+                                                        {content.description ||
+                                                            'No description'}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <p>
+                                                {content.material.course.title}
+                                            </p>
+                                            <p className="text-muted-foreground text-xs">
+                                                {content.material.title}
+                                            </p>
+                                        </td>
+                                        <td className="capitalize">
+                                            {content.type}
+                                        </td>
+                                        <td>
+                                            <Badge
+                                                variant={
+                                                    content.is_published
+                                                        ? 'secondary'
+                                                        : 'outline'
+                                                }
+                                            >
+                                                {content.is_published
+                                                    ? 'Published'
+                                                    : 'Draft'}
+                                            </Badge>
+                                        </td>
+                                        <td>{content.position}</td>
+                                        <td className="px-5 text-right">
+                                            <Button
+                                                variant="outline"
+                                                size="sm"
+                                                onClick={() =>
+                                                    openForm(content)
+                                                }
+                                            >
+                                                <Pencil /> Edit
+                                            </Button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                    {contents.data.length === 0 && (
+                        <div className="px-6 py-16 text-center">
+                            <FileText className="text-muted-foreground mx-auto size-10" />
+                            <h2 className="mt-4 font-semibold">
+                                No learning contents found
+                            </h2>
+                            <p className="text-muted-foreground mt-1 text-sm">
+                                Create content or change the current search.
+                            </p>
+                        </div>
+                    )}
+                    {contents.last_page > 1 && (
+                        <div className="flex items-center justify-between border-t px-5 py-4 text-sm">
+                            <span className="text-muted-foreground">
+                                Page {contents.current_page} of{' '}
+                                {contents.last_page}
+                            </span>
+                            <div className="flex gap-2">
+                                <Button
+                                    asChild
+                                    variant="outline"
+                                    size="sm"
+                                    disabled={!contents.prev_page_url}
+                                >
+                                    <Link href={contents.prev_page_url ?? '#'}>
+                                        Previous
+                                    </Link>
+                                </Button>
+                                <Button
+                                    asChild
+                                    variant="outline"
+                                    size="sm"
+                                    disabled={!contents.next_page_url}
+                                >
+                                    <Link href={contents.next_page_url ?? '#'}>
+                                        Next
+                                    </Link>
+                                </Button>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            </div>
+            {open && (
+                <LearningContentDialog
+                    content={selected}
+                    materials={materials}
+                    open={open}
+                    onOpenChange={setFormOpen}
+                />
+            )}
+        </>
+    );
 }

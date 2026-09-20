@@ -23,7 +23,7 @@ class UserSeeder extends Seeder
             'name' => 'Budi Santoso',
             'phone' => '081233914117',
             'email' => 'budi@example.test',
-            'password' => ' ',
+            'password' => 'student123',
             'email_verified_at' => now(),
             'role' => UserRole::Student->value,
         ]);

@@ -1,6 +1,9 @@
 import { useForm } from '@inertiajs/react';
 import { LoaderCircle } from 'lucide-react';
-import { store, update } from '@/actions/App/Http/Controllers/Admin/EbookCategoryController';
+import {
+    store,
+    update,
+} from '@/actions/App/Http/Controllers/Admin/EbookCategoryController';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -20,8 +23,6 @@ export type EbookCategory = {
     name: string;
     slug: string;
     description: string | null;
-    icon: string | null;
-    thumbnail_url: string | null;
     is_active: boolean;
     position: number;
     ebooks_count: number;
@@ -43,8 +44,6 @@ export function EbookCategoryDialog({
         name: category?.name ?? '',
         slug: category?.slug ?? '',
         description: category?.description ?? '',
-        icon: category?.icon ?? '',
-        thumbnail: null as File | null,
         is_active: category?.is_active ?? true,
         position: String(category?.position ?? 0),
     });
@@ -118,15 +117,6 @@ export function EbookCategoryDialog({
                                 required
                             />
                         </Field>
-                        <Field label="Icon" error={form.errors.icon}>
-                            <Input
-                                value={form.data.icon}
-                                onChange={(event) =>
-                                    form.setData('icon', event.target.value)
-                                }
-                                placeholder="BookOpen"
-                            />
-                        </Field>
                         <Field label="Position" error={form.errors.position}>
                             <Input
                                 type="number"
@@ -148,22 +138,6 @@ export function EbookCategoryDialog({
                             }
                             className="border-input placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 min-h-24 w-full rounded-md border bg-transparent px-3 py-2 text-sm shadow-xs outline-none focus-visible:ring-[3px]"
                         />
-                    </Field>
-
-                    <Field label="Thumbnail" error={form.errors.thumbnail}>
-                        <Input
-                            type="file"
-                            accept="image/jpeg,image/png,image/webp"
-                            onChange={(event) =>
-                                form.setData(
-                                    'thumbnail',
-                                    event.target.files?.[0] ?? null,
-                                )
-                            }
-                        />
-                        <p className="text-muted-foreground text-xs">
-                            Optional JPG, PNG, or WebP image up to 5 MB.
-                        </p>
                     </Field>
 
                     <label className="flex items-center gap-3 text-sm font-medium">

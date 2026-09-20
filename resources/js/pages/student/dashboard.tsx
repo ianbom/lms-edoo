@@ -1,53 +1,157 @@
-import { Head, Link } from '@inertiajs/react';
-import { ArrowRight, BookOpen, CheckCircle2, Clock3, Code2, FileCheck2, MonitorPlay, Play, Sparkles, UserRound } from 'lucide-react';
+import { Head, Link, usePage } from '@inertiajs/react';
+import {
+    ArrowRight,
+    BookOpen,
+    CheckCircle2,
+    Clock3,
+    FileCheck2,
+    FileText,
+    MonitorPlay,
+    UserRound,
+} from 'lucide-react';
 
-type Enrollment = { id: number; title: string; slug: string; thumbnail_url: string | null; status: 'enrolled' | 'in_progress' | 'completed'; progress: number };
-type DashboardProps = { stats: { enrolled: number; active: number; completed: number; progress: number }; activity: { date: string; studied: number; completed: number }[]; enrollments: Enrollment[] };
+type Enrollment = {
+    id: number;
+    title: string;
+    slug: string;
+    thumbnail_url: string | null;
+    short_description: string | null;
+    category: string | null;
+    teacher: string | null;
+    materials_count: number;
+    status: 'enrolled' | 'in_progress' | 'completed';
+    progress: number;
+    last_learning_content: string | null;
+};
 
-const ebooks = [
-    { title: 'Clean Code untuk Pemula', category: 'Pemrograman', author: 'Robert C. Martin', color: 'from-[#082c4d] to-[#061522]' },
-    { title: 'Dasar-dasar UI/UX', category: 'Design', author: 'Siti Rahma', color: 'from-[#136ce1] to-[#082f84]' },
-    { title: 'Panduan REST API', category: 'Web Development', author: 'Ahmad Fauzi', color: 'from-[#0c426d] to-[#031c34]' },
-];
-const recommendations = [{ title: 'Git & GitHub Dasar', category: 'Developer Tools', description: 'Pelajari Git dan GitHub untuk mengelola kode sumber dengan profesional.', mark: 'Git', color: 'bg-[#20232a]' }, { title: 'TypeScript untuk Pemula', category: 'Web Development', description: 'Kuasai TypeScript untuk membuat aplikasi web yang lebih scalable.', mark: 'TS', color: 'bg-[#1675d1]' }, { title: 'Dasar Database MySQL', category: 'Database', description: 'Pelajari dasar database MySQL dari konsep hingga praktik.', mark: 'MySQL', color: 'bg-[#075087]' }];
-const fallback: Enrollment[] = [
-    { id: -1, title: 'Laravel Fundamental untuk Pemula', slug: 'laravel-fundamental', thumbnail_url: '/welcome/interactive-video-class.png', status: 'in_progress', progress: 68 },
-    { id: -2, title: 'React JS Dasar', slug: 'react-js-dasar', thumbnail_url: '/welcome/class-for-adults.png', status: 'in_progress', progress: 42 },
-    { id: -3, title: 'JavaScript Essentials', slug: 'javascript-essentials', thumbnail_url: '/welcome/class-for-summertime.png', status: 'enrolled', progress: 45 },
-];
-const statusText = (status: Enrollment['status']) => status === 'completed' ? 'Selesai' : 'Sedang Belajar';
+type DashboardProps = {
+    stats: { enrolled: number; active: number; completed: number; progress: number };
+    activity: { date: string; studied: number; completed: number }[];
+    recentActivities: { type: 'completed' | 'in_progress'; title: string; subtitle: string; time: string | null }[];
+    enrollments: Enrollment[];
+    recommendations: {
+        id: number; title: string; slug: string; short_description: string | null;
+        thumbnail_url: string | null; category: string | null; teacher: string | null; materials_count: number;
+    }[];
+    ebooks: {
+        id: number; title: string; slug: string; author: string | null;
+        short_description: string | null; cover_url: string | null; file_url: string;
+        total_pages: number | null; category: string | null;
+    }[];
+};
 
-function Title({ children }: { children: React.ReactNode }) {
-    return <div className="mb-3 flex items-center justify-between"><h2 className="text-[18px] font-extrabold tracking-[-.45px] text-[#111b5d]">{children}</h2><Link href={children === 'Kelas Saya' ? '/student/classes' : '/courses'} className="flex items-center gap-1 text-[11px] font-medium text-[#0961d8]">Lihat Semua <ArrowRight size={14} /></Link></div>;
+function Title({ children, href }: { children: React.ReactNode; href: string }) {
+    return (
+        <div className="mb-3 flex items-center justify-between">
+            <h2 className="text-[18px] font-extrabold tracking-[-.45px] text-[#111b5d]">{children}</h2>
+            <Link href={href} className="flex items-center gap-1 text-[11px] font-medium text-[#0961d8]">
+                Lihat Semua <ArrowRight size={14} />
+            </Link>
+        </div>
+    );
 }
+
 function Progress({ value }: { value: number }) {
-    return <div className="flex items-center gap-2"><div className="h-1.5 flex-1 overflow-hidden rounded-full bg-[#dcecff]"><div className="h-full rounded-full bg-[#1167e8]" style={{ width: `${Math.min(100, value)}%` }} /></div><span className="text-[10px] font-semibold text-[#1262d7]">{Math.round(value)}%</span></div>;
+    return (
+        <div className="flex items-center gap-2">
+            <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-[#dcecff]">
+                <div className="h-full rounded-full bg-[#1167e8]" style={{ width: `${Math.min(100, value)}%` }} />
+            </div>
+            <span className="text-[10px] font-semibold text-[#1262d7]">{Math.round(value)}%</span>
+        </div>
+    );
 }
 
-export default function StudentDashboard({ stats, activity, enrollments }: DashboardProps) {
-    const courses = enrollments.length ? enrollments : fallback;
-    const continueCourses = courses.filter((course) => course.status !== 'completed').slice(0, 2);
+function EmptyState({ children }: { children: string }) {
+    return <div className="rounded-xl border border-dashed border-[#cddcf0] bg-white px-5 py-10 text-center text-sm text-[#6b7f9f]">{children}</div>;
+}
+
+export default function StudentDashboard({
+    stats,
+    activity,
+    recentActivities,
+    enrollments,
+    recommendations,
+    ebooks,
+}: DashboardProps) {
+    const { auth } = usePage<{ auth: { user?: { name?: string } } }>().props;
+    const studentName = auth.user?.name ?? 'Student';
+    const continueCourses = enrollments.filter((course) => course.status !== 'completed').slice(0, 2);
     const weeklyDone = activity.slice(-7).reduce((total, item) => total + item.completed, 0);
-    const weeklyTarget = Math.max(5, weeklyDone);
-    const weeklyPercent = Math.min(100, Math.round((weeklyDone / weeklyTarget) * 100));
+    const weeklyPercent = Math.min(100, Math.round((weeklyDone / Math.max(5, weeklyDone)) * 100));
     const statCards = [
-        { label: 'Kelas Saya', value: stats.enrolled || courses.length, detail: 'Total kelas yang diikuti', icon: MonitorPlay },
-        { label: 'Sedang Dipelajari', value: stats.active || continueCourses.length, detail: 'Kelas dalam proses', icon: Clock3 },
+        { label: 'Kelas Saya', value: stats.enrolled, detail: 'Total kelas yang diikuti', icon: MonitorPlay },
+        { label: 'Sedang Dipelajari', value: stats.active, detail: 'Kelas dalam proses', icon: Clock3 },
         { label: 'Kelas Selesai', value: stats.completed, detail: 'Kelas yang telah diselesaikan', icon: FileCheck2 },
-        { label: 'E-Book Dibaca', value: 0, detail: 'Total e-book yang dibaca', icon: BookOpen },
-    ];
-    const activities = [
-        { icon: CheckCircle2, title: 'Menyelesaikan materi “Basic Routing”', subtitle: 'Kelas yang sedang dipelajari', time: '2 jam lalu', green: true },
-        { icon: BookOpen, title: 'Membuka e-book “Clean Code Dasar”', subtitle: 'E-Book', time: 'Kemarin' },
-        { icon: FileCheck2, title: 'Menyelesaikan textbook “Konsep MVC”', subtitle: 'Materi pembelajaran', time: '2 hari lalu' },
-        { icon: Sparkles, title: 'Mendaftar kelas baru', subtitle: courses[0]?.title ?? 'Kelas Online', time: '3 hari lalu' },
     ];
 
-    return <><Head title="Dashboard Student" /><div className="px-5 pb-6 sm:px-7 lg:px-7">
-        <section className="grid gap-3 xl:grid-cols-[minmax(0,3.1fr)_300px]"><div className="relative min-h-[200px] overflow-hidden rounded-xl bg-linear-to-r from-[#d8edff] via-[#dcedff] to-[#bcdcff]"><div className="relative z-10 max-w-[480px] px-9 py-6"><h2 className="text-[29px] leading-[1.02] font-extrabold tracking-[-1px] text-[#0e185c]">Lanjutkan Belajar dan<br />Tingkatkan Skill-mu</h2><p className="mt-3 max-w-[390px] text-[13px] leading-5 text-[#3f6098]">Akses kelas yang telah kamu daftarkan, pantau progress, dan lanjutkan materi terakhir dengan mudah.</p><a href="#lanjutkan-belajar" className="mt-4 inline-flex h-10 items-center gap-4 rounded-lg bg-[#1167e8] px-5 text-[12px] font-semibold text-white shadow-[0_8px_15px_rgba(17,103,232,.22)]">Lanjutkan Belajar <ArrowRight size={17} /></a></div><div className="absolute inset-y-0 right-0 w-[48%] bg-[url('/welcome/hero-online-training.png')] bg-cover bg-center opacity-95" /><div className="absolute inset-y-0 right-[36%] w-[24%] bg-linear-to-r from-[#d8edff] to-transparent" /></div><div className="rounded-xl border border-[#dce8f6] bg-white p-5 shadow-[0_5px_18px_rgba(35,80,135,.04)]"><h3 className="text-[15px] font-extrabold text-[#151e60]">Target Belajar Minggu Ini</h3><div className="mt-3 flex items-center gap-4"><div className="grid size-22 shrink-0 place-items-center rounded-full" style={{ background: `conic-gradient(#1167e8 ${weeklyPercent * 3.6}deg,#dcecff 0deg)` }}><div className="grid size-16 place-items-center rounded-full bg-white text-xl font-extrabold text-[#151e60]">{weeklyPercent}%</div></div><div><p className="text-[13px] font-bold text-[#075cd5]">{weeklyDone} dari {weeklyTarget} target selesai</p><p className="mt-2 text-[11px] leading-4 text-[#6075a1]">Sedikit lagi! Tetap konsisten untuk mencapai target mingguanmu.</p></div></div><button className="mt-3 flex h-8 w-full items-center justify-center gap-2 rounded-lg bg-[#eaf5ff] text-[11px] font-semibold text-[#0a59c8]">Lihat Detail Target <ArrowRight size={14} /></button></div></section>
-        <section className="mt-3 grid gap-2.5 sm:grid-cols-2 xl:grid-cols-4">{statCards.map(({ icon: Icon, ...card }) => <div key={card.label} className="flex min-h-[86px] items-center gap-4 rounded-xl border border-[#dce8f6] bg-white px-4 shadow-[0_4px_14px_rgba(35,80,135,.03)]"><span className="grid size-13 shrink-0 place-items-center rounded-full bg-[#e5f3ff] text-[#1167e8]"><Icon size={25} strokeWidth={2.1} /></span><div><p className="text-[11px] text-[#35558f]">{card.label}</p><strong className="block text-[24px] leading-7 text-[#10195b]">{card.value}</strong><p className="text-[10px] text-[#7890b8]">{card.detail}</p></div></div>)}</section>
-        <section className="mt-4 grid gap-4 xl:grid-cols-[minmax(0,1.9fr)_minmax(330px,1fr)]"><div id="lanjutkan-belajar"><Title>Lanjutkan Belajar</Title><div className="grid gap-3 md:grid-cols-2">{continueCourses.map((course) => <article key={course.id} className="grid min-h-[194px] grid-cols-[46%_1fr] overflow-hidden rounded-xl border border-[#dce8f6] bg-white p-3 shadow-[0_4px_16px_rgba(35,80,135,.04)]"><img src={course.thumbnail_url || '/course-placeholder.svg'} className="h-full min-h-[168px] w-full rounded-lg object-cover" alt="" /><div className="flex flex-col pl-3"><span className="w-fit rounded-md bg-[#e5f2ff] px-2 py-1 text-[8px] text-[#1262d7]">Web Development</span><h3 className="mt-1 text-[14px] leading-[1.15] font-extrabold text-[#10195b]">{course.title}</h3><p className="mt-2 flex items-center gap-2 text-[10px] text-[#526b9d]"><span className="grid size-5 place-items-center rounded-full bg-[#dcecff]"><UserRound size={11} /></span>Instruktur Edoo</p><div className="mt-3"><Progress value={course.progress} /></div><p className="mt-3 line-clamp-1 text-[9px] text-[#6279a5]">Materi terakhir: Dasar dan pengenalan</p><Link href={`/courses/${course.slug}`} className="mt-auto flex h-8 items-center justify-center gap-2 rounded-md bg-[#1167e8] text-[11px] font-semibold text-white">Lanjutkan <ArrowRight size={14} /></Link></div></article>)}</div></div><div id="aktivitas"><Title>Aktivitas Belajar Terbaru</Title><div className="rounded-xl border border-[#dce8f6] bg-white px-4 py-1">{activities.map(({ icon: Icon, ...activity }) => <div key={activity.title} className="flex items-center gap-3 border-b border-[#e8eef7] py-3 last:border-0"><span className={`grid size-9 shrink-0 place-items-center rounded-full ${activity.green ? 'bg-[#e2f9e9] text-[#22ad63]' : 'bg-[#e6f2ff] text-[#1267e8]'}`}><Icon size={16} /></span><div className="min-w-0 flex-1"><p className="truncate text-[11px] font-semibold text-[#152260]">{activity.title}</p><p className="mt-1 truncate text-[9px] text-[#7185ad]">{activity.subtitle}</p></div><time className="text-[9px] text-[#6d82aa]">{activity.time}</time></div>)}</div></div></section>
-        <section className="mt-4 grid gap-4 xl:grid-cols-[minmax(0,1.9fr)_minmax(330px,1fr)]"><div id="kelas-saya"><Title>Kelas Saya</Title><div className="grid gap-2.5 md:grid-cols-3">{courses.slice(0, 3).map((course) => <article key={course.id} className="flex min-h-[250px] flex-col rounded-xl border border-[#dce8f6] bg-white p-3"><div className="flex gap-2"><img src={course.thumbnail_url || '/course-placeholder.svg'} className="h-16 w-[43%] rounded-lg object-cover" alt="" /><span className={`h-fit rounded-md px-2 py-1 text-[8px] ${course.status === 'completed' ? 'bg-[#dcf7e5] text-[#159651]' : 'bg-[#e1f0ff] text-[#1261d6]'}`}>{statusText(course.status)}</span></div><h3 className="mt-2 text-[14px] leading-[1.08] font-extrabold text-[#111c5b]">{course.title}</h3><p className="mt-1 line-clamp-2 text-[10px] leading-4 text-[#6279a5]">Pelajari materi berkualitas untuk meningkatkan keterampilan dan masa depanmu.</p><p className="mt-2 flex items-center gap-2 text-[10px] text-[#526b9d]"><UserRound size={13} />Instruktur Edoo</p><p className="mt-2 flex items-center gap-2 text-[10px] text-[#526b9d]"><BookOpen size={13} />20 materi</p><div className="mt-2"><Progress value={course.progress} /></div><Link href={`/courses/${course.slug}`} className={`mt-auto flex h-8 items-center justify-center gap-2 rounded-md text-[10px] font-semibold ${course.status === 'completed' ? 'border border-[#b8d8fb] text-[#075bd5]' : 'bg-[#1167e8] text-white'}`}>{course.status === 'completed' ? 'Buka Kelas' : 'Lanjutkan'} <ArrowRight size={13} /></Link></article>)}</div></div><div id="ebooks"><Title>E-Book untuk Anda</Title><div className="grid grid-cols-3 gap-2">{ebooks.map((ebook) => <article key={ebook.title} className="flex min-h-[250px] flex-col rounded-xl border border-[#dce8f6] bg-white p-3"><div className={`mx-auto grid h-24 w-16 place-items-center rounded bg-linear-to-br ${ebook.color} px-2 text-center text-[10px] font-bold text-white shadow-lg`}>{ebook.title.split(' ').slice(0, 2).join(' ')}</div><h3 className="mt-3 text-[11px] leading-[1.15] font-bold text-[#10195b]">{ebook.title}</h3><span className="mt-1 w-fit rounded bg-[#eaf3ff] px-1.5 py-1 text-[8px] text-[#496ca8]">{ebook.category}</span><p className="mt-2 flex items-center gap-1 text-[9px] text-[#526b9d]"><UserRound size={11} />{ebook.author}</p><Link href="/courses" className="mt-auto flex h-8 items-center justify-center rounded-md border border-[#bad8fb] text-[9px] font-semibold text-[#075bd5]">Baca EBook</Link></article>)}</div></div></section>
-        <section className="mt-4"><Title>Rekomendasi Kelas</Title><div className="grid gap-2.5 md:grid-cols-2 xl:grid-cols-[repeat(3,minmax(0,1fr))_274px]">{recommendations.map((item) => <article key={item.title} className="flex min-h-[105px] gap-3 rounded-xl border border-[#dce8f6] bg-white p-3"><div className={`grid size-20 shrink-0 place-items-center rounded-lg ${item.color} text-center text-sm font-bold text-white`}>{item.mark}</div><div><h3 className="text-[12px] font-bold text-[#111c5b]">{item.title}</h3><span className="text-[8px] text-[#5571a3]">{item.category}</span><p className="mt-1 line-clamp-2 text-[9px] leading-3.5 text-[#6e82aa]">{item.description}</p><Link href="/courses" className="mt-1 inline-flex items-center gap-1 rounded-md border border-[#bedafb] px-3 py-1 text-[9px] font-semibold text-[#075bd5]">Lihat Detail <ArrowRight size={11} /></Link></div></article>)}<div className="relative min-h-[105px] overflow-hidden rounded-xl bg-linear-to-r from-[#dfefff] to-[#cce6ff] p-5"><h3 className="text-[14px] leading-4 font-extrabold text-[#111c5b]">Ilmu hari ini,<br />peluang esok hari</h3><p className="mt-2 max-w-[150px] text-[9px] leading-3.5 text-[#6078a3]">Terus belajar dan kembangkan dirimu bersama EduLearn.</p><Code2 className="absolute right-6 bottom-5 size-12 text-[#1267e8]/35" /></div></div></section>
-    </div></>;
+    return (
+        <>
+            <Head title="Dashboard Student" />
+            <div className="px-5 pb-6 sm:px-7 lg:px-7">
+                <section className="pt-5">
+                    <p className="text-[11px] font-semibold tracking-[0.12em] text-[#1262d7] uppercase">Dashboard Belajar</p>
+                    <h1 className="mt-1 text-2xl font-extrabold tracking-[-0.7px] text-[#10195b] sm:text-[28px]">Selamat datang, {studentName}!</h1>
+                    <p className="mt-1 text-sm text-[#526b9d]">Siap melanjutkan perjalanan belajarmu hari ini?</p>
+                </section>
+
+                <section className="mt-5 grid gap-3 sm:grid-cols-3">
+                    {statCards.map(({ label, value, detail, icon: Icon }) => (
+                        <article key={label} className="rounded-xl border border-[#dce8f6] bg-white p-4 shadow-[0_4px_16px_rgba(35,80,135,.04)]">
+                            <div className="flex items-center justify-between"><span className="text-xs text-[#6279a5]">{label}</span><Icon size={18} className="text-[#1262d7]" /></div>
+                            <p className="mt-2 text-2xl font-extrabold text-[#111c5b]">{value}</p>
+                            <p className="mt-1 text-[10px] text-[#7183a2]">{detail}</p>
+                        </article>
+                    ))}
+                </section>
+
+                <section className="mt-5 grid gap-4 xl:grid-cols-[minmax(0,1.9fr)_minmax(330px,1fr)]">
+                    <div>
+                        <Title href="/student/classes">Lanjutkan Belajar</Title>
+                        {continueCourses.length ? (
+                            <div className="grid gap-3 md:grid-cols-2">
+                                {continueCourses.map((course) => (
+                                    <article key={course.id} className="grid min-h-[194px] grid-cols-[46%_1fr] overflow-hidden rounded-xl border border-[#dce8f6] bg-white p-3 shadow-[0_4px_16px_rgba(35,80,135,.04)]">
+                                        <img src={course.thumbnail_url ?? '/course-placeholder.svg'} className="h-full min-h-[168px] w-full rounded-lg object-cover" alt="" />
+                                        <div className="flex flex-col pl-3">
+                                            <span className="w-fit rounded-md bg-[#e5f2ff] px-2 py-1 text-[8px] text-[#1262d7]">{course.category ?? 'Kelas Online'}</span>
+                                            <h3 className="mt-1 text-[14px] leading-[1.15] font-extrabold text-[#10195b]">{course.title}</h3>
+                                            <p className="mt-2 flex items-center gap-2 text-[10px] text-[#526b9d]"><UserRound size={13} />{course.teacher ?? 'Instruktur belum tersedia'}</p>
+                                            <p className="mt-2 flex items-center gap-2 text-[10px] text-[#526b9d]"><BookOpen size={13} />{course.materials_count} materi</p>
+                                            <div className="mt-3"><Progress value={course.progress} /></div>
+                                            <p className="mt-3 line-clamp-1 text-[9px] text-[#6279a5]">Materi terakhir: {course.last_learning_content ?? 'Belum dimulai'}</p>
+                                            <Link href={`/student/classes/${course.slug}/study`} className="mt-auto flex h-8 items-center justify-center gap-2 rounded-md bg-[#1167e8] text-[11px] font-semibold text-white">Lanjutkan <ArrowRight size={14} /></Link>
+                                        </div>
+                                    </article>
+                                ))}
+                            </div>
+                        ) : <EmptyState>Belum ada kelas yang sedang dipelajari.</EmptyState>}
+                    </div>
+                    <div className="rounded-xl bg-[#0b55bd] p-5 text-white">
+                        <div className="flex items-start justify-between"><div><p className="text-xs text-white/70">Progress Keseluruhan</p><p className="mt-1 text-3xl font-extrabold">{stats.progress}%</p></div><CheckCircle2 size={24} /></div>
+                        <div className="mt-6 h-2 overflow-hidden rounded-full bg-white/20"><div className="h-full rounded-full bg-white" style={{ width: `${stats.progress}%` }} /></div>
+                        <div className="mt-8 flex items-end justify-between"><div><p className="text-xs text-white/70">Target minggu ini</p><p className="mt-1 text-lg font-bold">{weeklyDone} materi selesai</p></div><span className="text-sm font-bold">{weeklyPercent}%</span></div>
+                    </div>
+                </section>
+
+                <section className="mt-5 grid gap-4 lg:grid-cols-2">
+                    <div>
+                        <Title href="/student/classes">Aktivitas Terbaru</Title>
+                        {recentActivities.length ? <div className="divide-y divide-[#e8eff8] rounded-xl border border-[#dce8f6] bg-white px-4">{recentActivities.map((item, index) => (
+                            <div key={`${item.title}-${index}`} className="flex items-center gap-3 py-3"><span className="grid size-8 shrink-0 place-items-center rounded-full bg-[#e8f3ff] text-[#1262d7]">{item.type === 'completed' ? <CheckCircle2 size={15} /> : <Clock3 size={15} />}</span><div className="min-w-0 flex-1"><p className="truncate text-xs font-semibold text-[#17235f]">{item.title}</p><p className="truncate text-[10px] text-[#7183a2]">{item.subtitle}</p></div><span className="shrink-0 text-[10px] text-[#7183a2]">{item.time}</span></div>
+                        ))}</div> : <EmptyState>Belum ada aktivitas belajar.</EmptyState>}
+                    </div>
+                    <div>
+                        <Title href="/courses">Rekomendasi Kelas</Title>
+                        {recommendations.length ? <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">{recommendations.map((course) => <Link key={course.id} href={`/courses/${course.slug}`} className="flex gap-3 rounded-xl border border-[#dce8f6] bg-white p-3 transition hover:border-[#9fc7f8]"><img src={course.thumbnail_url ?? '/course-placeholder.svg'} className="size-16 rounded-lg object-cover" alt="" /><div className="min-w-0"><p className="text-[10px] text-[#1262d7]">{course.category ?? 'Kelas Online'}</p><h3 className="mt-1 truncate text-sm font-bold text-[#17235f]">{course.title}</h3><p className="mt-1 line-clamp-2 text-[10px] text-[#7183a2]">{course.short_description ?? 'Mulai belajar dari materi terbaik.'}</p></div></Link>)}</div> : <EmptyState>Belum ada rekomendasi kelas.</EmptyState>}
+                    </div>
+                </section>
+
+                <section className="mt-5">
+                    <Title href="/student/ebooks">E-Book untuk Anda</Title>
+                    {ebooks.length ? <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">{ebooks.map((ebook) => <a key={ebook.id} href={ebook.file_url} target="_blank" rel="noreferrer" className="flex gap-3 rounded-xl border border-[#dce8f6] bg-white p-3"><div className="grid size-20 shrink-0 place-items-center overflow-hidden rounded-lg bg-[#e8f3ff] text-[#1262d7]">{ebook.cover_url ? <img src={ebook.cover_url} className="size-full object-cover" alt="" /> : <BookOpen size={25} />}</div><div className="min-w-0"><h3 className="line-clamp-2 text-sm font-bold text-[#10195b]">{ebook.title}</h3><p className="mt-1 text-[10px] text-[#526b9d]">{ebook.author ?? 'Penulis belum tersedia'}</p><p className="mt-2 flex items-center gap-1 text-[10px] text-[#7183a2]"><FileText size={12} />{ebook.total_pages ? `${ebook.total_pages} halaman` : 'E-book PDF'}</p></div></a>)}</div> : <EmptyState>Belum ada e-book tersedia.</EmptyState>}
+                </section>
+            </div>
+        </>
+    );
 }

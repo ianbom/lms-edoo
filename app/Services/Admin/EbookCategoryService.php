@@ -4,7 +4,6 @@ namespace App\Services\Admin;
 
 use App\Http\Requests\Admin\EbookCategoryRequest;
 use App\Models\EbookCategory;
-use Illuminate\Support\Facades\Storage;
 
 class EbookCategoryService
 {
@@ -34,11 +33,6 @@ class EbookCategoryService
 
     private function data(EbookCategoryRequest $request): array
     {
-        $data = $request->safe()->except('thumbnail');
-        if ($file = $request->file('thumbnail')) {
-            $data['thumbnail_url'] = Storage::disk('public')->url($file->store('ebook-categories/thumbnails', 'public'));
-        }
-
-return $data;
+        return $request->safe()->all();
     }
 }

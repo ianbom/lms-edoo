@@ -7,8 +7,6 @@ use App\Models\Ebook;
 use App\Models\EbookCategory;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
 use Inertia\Testing\AssertableInertia as Assert;
 use Tests\TestCase;
 
@@ -56,9 +54,8 @@ class EbookCategoryTest extends TestCase
                 ->where('categories.0.ebooks_count', 1));
     }
 
-    public function test_admin_can_create_ebook_category_with_thumbnail(): void
+    public function test_admin_can_create_ebook_category(): void
     {
-        Storage::fake('public');
         $admin = User::factory()->create(['role' => UserRole::Admin]);
 
         $this->actingAs($admin)
@@ -66,8 +63,6 @@ class EbookCategoryTest extends TestCase
                 'name' => 'Programming',
                 'slug' => 'programming',
                 'description' => 'Programming books.',
-                'icon' => 'Code2',
-                'thumbnail' => UploadedFile::fake()->image('programming.jpg'),
                 'is_active' => true,
                 'position' => 2,
             ])
@@ -76,14 +71,8 @@ class EbookCategoryTest extends TestCase
         $category = EbookCategory::query()->sole();
 
         $this->assertSame('Programming', $category->name);
+        $this->assertSame('Programming books.', $category->description);
         $this->assertTrue($category->is_active);
-        $this->assertStringContainsString(
-            '/storage/ebook-categories/thumbnails/',
-            (string) $category->thumbnail_url,
-        );
-        Storage::disk('public')->assertExists(
-            'ebook-categories/thumbnails/'.basename((string) $category->thumbnail_url),
-        );
     }
 
     public function test_category_slug_must_be_unique(): void
@@ -107,7 +96,6 @@ class EbookCategoryTest extends TestCase
         $category = EbookCategory::create([
             'name' => 'Programming',
             'slug' => 'programming',
-            'thumbnail_url' => 'https://example.test/programming.jpg',
         ]);
 
         $this->actingAs($admin)
@@ -115,7 +103,6 @@ class EbookCategoryTest extends TestCase
                 'name' => 'Software Engineering',
                 'slug' => 'software-engineering',
                 'description' => 'Engineering books.',
-                'icon' => 'BookCode',
                 'is_active' => false,
                 'position' => 3,
             ])
@@ -125,7 +112,7 @@ class EbookCategoryTest extends TestCase
             'id' => $category->id,
             'name' => 'Software Engineering',
             'slug' => 'software-engineering',
-            'thumbnail_url' => 'https://example.test/programming.jpg',
+            'description' => 'Engineering books.',
             'is_active' => false,
             'position' => 3,
         ]);

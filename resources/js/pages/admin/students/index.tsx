@@ -40,7 +40,8 @@ export default function StudentsIndex({ students }: { students: Students }) {
                             Students
                         </h1>
                         <p className="text-muted-foreground text-sm">
-                            Manage student accounts and monitor learning activity.
+                            Manage student accounts and monitor learning
+                            activity.
                         </p>
                     </div>
                     <Button onClick={() => setFormOpen(true)}>
@@ -54,19 +55,36 @@ export default function StudentsIndex({ students }: { students: Students }) {
                         <table className="w-full min-w-225 text-left text-sm">
                             <thead className="bg-muted/50 text-muted-foreground border-b text-xs tracking-wide uppercase">
                                 <tr>
-                                    <th className="px-5 py-3 font-medium">Student</th>
-                                    <th className="px-5 py-3 font-medium">Phone</th>
-                                    <th className="px-5 py-3 font-medium">Registered</th>
-                                    <th className="px-5 py-3 font-medium">Courses</th>
-                                    <th className="px-5 py-3 font-medium">Completed</th>
-                                    <th className="px-5 py-3 font-medium">Last login</th>
+                                    <th className="px-5 py-3 font-medium">
+                                        Student
+                                    </th>
+                                    <th className="px-5 py-3 font-medium">
+                                        Phone
+                                    </th>
+                                    <th className="px-5 py-3 font-medium">
+                                        Registered
+                                    </th>
+                                    <th className="px-5 py-3 font-medium">
+                                        Courses
+                                    </th>
+                                    <th className="px-5 py-3 font-medium">
+                                        Completed
+                                    </th>
+                                    <th className="px-5 py-3 font-medium">
+                                        Last login
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y">
                                 {students.data.map((student) => (
-                                    <tr key={student.id} className="hover:bg-muted/30">
+                                    <tr
+                                        key={student.id}
+                                        className="hover:bg-muted/30"
+                                    >
                                         <td className="px-5 py-4">
-                                            <p className="font-medium">{student.name}</p>
+                                            <p className="font-medium">
+                                                {student.name}
+                                            </p>
                                             <p className="text-muted-foreground mt-1 text-sm">
                                                 {student.email ?? 'No email'}
                                             </p>
@@ -77,11 +95,17 @@ export default function StudentsIndex({ students }: { students: Students }) {
                                         <td className="text-muted-foreground px-5 py-4">
                                             {formatDate(student.created_at)}
                                         </td>
-                                        <td className="px-5 py-4">{student.enrollments_count}</td>
-                                        <td className="px-5 py-4">{student.completed_courses_count}</td>
+                                        <td className="px-5 py-4">
+                                            {student.enrollments_count}
+                                        </td>
+                                        <td className="px-5 py-4">
+                                            {student.completed_courses_count}
+                                        </td>
                                         <td className="text-muted-foreground px-5 py-4">
                                             {student.last_login_at
-                                                ? formatDate(student.last_login_at)
+                                                ? formatDate(
+                                                      student.last_login_at,
+                                                  )
                                                 : 'Never'}
                                         </td>
                                     </tr>
@@ -97,7 +121,10 @@ export default function StudentsIndex({ students }: { students: Students }) {
                             <p className="text-muted-foreground mt-1 max-w-sm text-sm">
                                 Create the first student account to get started.
                             </p>
-                            <Button className="mt-5" onClick={() => setFormOpen(true)}>
+                            <Button
+                                className="mt-5"
+                                onClick={() => setFormOpen(true)}
+                            >
                                 <Plus />
                                 Add student
                             </Button>
@@ -107,10 +134,7 @@ export default function StudentsIndex({ students }: { students: Students }) {
             </div>
 
             {formOpen && (
-                <StudentDialog
-                    open={formOpen}
-                    onOpenChange={setFormOpen}
-                />
+                <StudentDialog open={formOpen} onOpenChange={setFormOpen} />
             )}
         </>
     );

@@ -1,27 +1,189 @@
-import { Link, usePage } from '@inertiajs/react';
-import { BookOpen, CircleUserRound, GraduationCap, History, Home, LogOut, Menu, Play, Settings } from 'lucide-react';
+import { Link, router, usePage } from '@inertiajs/react';
+import {
+    BookOpen,
+    CircleUserRound,
+    GraduationCap,
+    History,
+    Home,
+    LoaderCircle,
+    LogOut,
+    Menu,
+    Play,
+} from 'lucide-react';
 import { useState } from 'react';
+import AppLogo from '@/components/app-logo';
+import { Button } from '@/components/ui/button';
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from '@/components/ui/dialog';
+import { logout } from '@/routes';
 import type { Auth } from '@/types/auth';
 
-type StudentStats = { enrolled: number; active: number; completed: number; progress: number };
+type StudentStats = {
+    enrolled: number;
+    active: number;
+    completed: number;
+    progress: number;
+};
 
 const navItems = [
-    { label: 'Dashboard', href: '/dashboard', icon: Home }, { label: 'Kelas Saya', href: '/student/classes', icon: BookOpen }, { label: 'Lanjutkan Belajar', href: '/dashboard#lanjutkan-belajar', icon: Play }, { label: 'E-Books', href: '/dashboard#ebooks', icon: GraduationCap }, { label: 'Riwayat Belajar', href: '/dashboard#aktivitas', icon: History }, { label: 'Profil', href: '/settings/profile', icon: CircleUserRound },
+    { label: 'Dashboard', href: '/dashboard', icon: Home },
+    { label: 'Kelas Saya', href: '/student/classes', icon: BookOpen },
+    { label: 'E-Books', href: '/student/ebooks', icon: GraduationCap },
+    { label: 'Profil', href: '/student/profile', icon: CircleUserRound },
 ];
 
-export default function StudentLayout({ children }: { children: React.ReactNode }) {
+export default function StudentLayout({
+    children,
+}: {
+    children: React.ReactNode;
+}) {
     const page = usePage<{ auth: Auth; stats?: StudentStats }>();
     const { auth, stats } = page.props;
     const [mobileOpen, setMobileOpen] = useState(false);
-    const initials = auth.user.name.split(' ').map((part) => part[0]).join('').slice(0, 2).toUpperCase();
-    const weeklyPercent = stats?.enrolled ? Math.min(100, Math.round((stats.completed / stats.enrolled) * 100)) : 0;
-    const sidebar = <div className="flex h-full min-h-0 flex-col overflow-x-hidden overflow-y-auto px-5 py-5">
-        <Link href="/dashboard" className="flex items-center gap-2.5 px-2"><span className="grid size-10 place-items-center rounded-xl bg-[#1167e8] text-white shadow-[0_8px_18px_rgba(17,103,232,.22)]"><GraduationCap size={25} strokeWidth={2.4} /></span><span><strong className="block text-[20px] leading-none tracking-[-.5px] text-[#0754c9]">EduLearn</strong><small className="mt-1 block text-[8px] font-medium text-[#7890bd]">Belajar Hari Ini, Lebih Baik Esok</small></span></Link>
-        <div className="mt-8 rounded-xl border border-[#dfe9f7] bg-white p-3 shadow-[0_4px_14px_rgba(28,80,145,.04)]"><div className="flex items-center gap-3"><div className="grid size-14 shrink-0 place-items-center rounded-full bg-linear-to-br from-[#d7e9ff] to-[#1264de] text-lg font-bold text-white">{initials}</div><div className="min-w-0"><p className="truncate text-[15px] font-bold text-[#101c60]">{auth.user.name}</p><p className="text-xs text-[#46619b]">Student</p><span className="mt-1.5 inline-flex items-center gap-1 rounded-full bg-[#dff4ff] px-2 py-1 text-[9px] font-semibold text-[#0873d8]"><span className="size-1.5 rounded-full bg-[#26c66b]" /> Active Learner</span></div></div></div>
-        <div className="mt-3 rounded-xl border border-[#dfe9f7] bg-white p-4"><p className="text-xs font-bold text-[#182567]">Progress Belajar Minggu Ini</p><p className="mt-2 text-[11px] text-[#45619a]"><span className="font-bold text-[#d7ac00]">{stats?.completed ?? 0}</span> dari {Math.max(stats?.enrolled ?? 0, 5)} target selesai</p><div className="mt-3 flex items-center gap-2"><div className="h-2 flex-1 overflow-hidden rounded-full bg-[#e1effe]"><div className="h-full rounded-full bg-[#1267e8]" style={{ width: `${weeklyPercent}%` }} /></div><span className="text-[10px] font-semibold text-[#0860d8]">{weeklyPercent}%</span></div></div>
-        <nav className="mt-4 space-y-1.5">{navItems.map((item) => { const active = item.href === '/student/classes' ? page.url.startsWith('/student/classes') : page.url === item.href; return <Link key={item.label} href={item.href} onClick={() => setMobileOpen(false)} className={`flex h-12 items-center gap-4 rounded-xl px-3.5 text-[13px] font-medium transition ${active ? 'bg-[#e8f4ff] font-bold text-[#075bd5]' : 'text-[#38528d] hover:bg-[#f0f7ff] hover:text-[#075bd5]'}`}><item.icon size={20} strokeWidth={active ? 2.7 : 2} />{item.label}</Link>; })}</nav>
-        <div className="relative mt-auto hidden min-h-50 overflow-hidden rounded-[36px] rounded-bl-[60px] bg-linear-to-b from-[#f0f8ff] to-[#e5f2ff] px-6 py-8 text-center xl:block"><span className="mx-auto grid size-11 place-items-center rounded-full bg-white text-[#1167e8] shadow-sm"><GraduationCap size={25} /></span><p className="mt-4 text-sm leading-5 text-[#49649d]">Terus belajar,<br />wujudkan masa depan<br />lebih baik!</p><span className="absolute -right-6 bottom-3 size-24 rotate-[-25deg] rounded-full border-[18px] border-white/35" /></div>
-        <div className="mt-5 space-y-1 border-t border-[#e7eef8] pt-4"><Link href="/settings/profile" className="flex h-11 items-center gap-4 px-3 text-[13px] text-[#38528d]"><Settings size={19} />Pengaturan</Link><button type="button" className="flex h-11 w-full items-center gap-4 px-3 text-[13px] text-[#38528d]"><LogOut size={19} />Keluar</button></div>
-    </div>;
-    return <div className="min-h-screen bg-[#f8fbff] font-sans text-[#111d60]"><aside className="fixed inset-y-0 left-0 z-40 hidden w-[246px] rounded-r-[18px] border-r border-[#e4edf8] bg-white shadow-[8px_0_30px_rgba(32,78,133,.035)] lg:block">{sidebar}</aside>{mobileOpen && <div className="fixed inset-0 z-50 lg:hidden"><button aria-label="Close navigation" className="absolute inset-0 bg-[#0b164b]/35" onClick={() => setMobileOpen(false)} /><aside className="absolute inset-y-0 left-0 w-[286px] bg-white shadow-2xl">{sidebar}</aside></div>}<button type="button" aria-label="Open navigation" className="fixed top-4 left-4 z-40 grid size-11 place-items-center rounded-xl border border-[#dce8f7] bg-white text-[#175fcf] shadow-[0_6px_20px_rgba(32,78,133,.14)] lg:hidden" onClick={() => setMobileOpen(true)}><Menu size={20} /></button><main className="min-w-0 pt-6 sm:pt-8 lg:ml-[246px]">{children}</main></div>;
+    const [logoutOpen, setLogoutOpen] = useState(false);
+    const [logoutProcessing, setLogoutProcessing] = useState(false);
+    const initials = auth.user.name
+        .split(' ')
+        .map((part) => part[0])
+        .join('')
+        .slice(0, 2)
+        .toUpperCase();
+    const weeklyPercent = stats?.enrolled
+        ? Math.min(100, Math.round((stats.completed / stats.enrolled) * 100))
+        : 0;
+    const confirmLogout = (): void => {
+        router.flushAll();
+        router.post(
+            logout.url(),
+            {},
+            {
+                onStart: () => setLogoutProcessing(true),
+                onFinish: () => setLogoutProcessing(false),
+                onSuccess: () => setLogoutOpen(false),
+            },
+        );
+    };
+    const sidebar = (
+        <div className="flex h-full min-h-0 flex-col overflow-x-hidden overflow-y-auto px-5 py-5">
+            <Link
+                href="/dashboard"
+                className="mb-1 flex min-h-14 items-center rounded-xl bg-white px-3 shadow-[0_6px_18px_rgba(4,39,105,.2)]"
+                aria-label="Kembali ke dashboard"
+            >
+                <AppLogo />
+            </Link>
+
+            <nav className="mt-4 space-y-1.5">
+                {navItems.map((item) => {
+                    const active =
+                        item.href === '/student/classes'
+                            ? page.url.startsWith('/student/classes')
+                            : page.url === item.href;
+                    return (
+                        <Link
+                            key={item.label}
+                            href={item.href}
+                            onClick={() => setMobileOpen(false)}
+                            className={`flex h-12 items-center gap-4 rounded-xl px-3.5 text-[13px] font-medium transition ${active ? 'bg-white font-bold text-[#075bd5] shadow-[0_4px_12px_rgba(4,39,105,.16)]' : 'text-white/80 hover:bg-white/15 hover:text-white'}`}
+                        >
+                            <item.icon
+                                size={20}
+                                strokeWidth={active ? 2.7 : 2}
+                            />
+                            {item.label}
+                        </Link>
+                    );
+                })}
+            </nav>
+
+            <div className="mt-auto border-t border-white/20 pt-4">
+                <button
+                    type="button"
+                    className="flex h-11 w-full items-center gap-4 rounded-xl px-3 text-[13px] font-medium text-white/80 transition hover:bg-white/15 hover:text-white"
+                    onClick={() => {
+                        setMobileOpen(false);
+                        setLogoutOpen(true);
+                    }}
+                >
+                    <LogOut size={19} />
+                    Keluar
+                </button>
+            </div>
+        </div>
+    );
+    return (
+        <div className="min-h-screen bg-[#f8fbff] font-sans text-[#111d60]">
+            <aside className="fixed inset-y-0 left-0 z-40 hidden w-[246px] rounded-r-[18px] border-r border-[#0b61d4] bg-[#0754c9] shadow-[8px_0_30px_rgba(4,39,105,.16)] lg:block">
+                {sidebar}
+            </aside>
+            {mobileOpen && (
+                <div className="fixed inset-0 z-50 lg:hidden">
+                    <button
+                        aria-label="Close navigation"
+                        className="absolute inset-0 bg-[#0b164b]/35"
+                        onClick={() => setMobileOpen(false)}
+                    />
+                    <aside className="absolute inset-y-0 left-0 w-[286px] bg-[#0754c9] shadow-2xl">
+                        {sidebar}
+                    </aside>
+                </div>
+            )}
+            <button
+                type="button"
+                aria-label="Open navigation"
+                className="fixed top-4 left-4 z-40 grid size-11 place-items-center rounded-xl border border-[#dce8f7] bg-white text-[#175fcf] shadow-[0_6px_20px_rgba(32,78,133,.14)] lg:hidden"
+                onClick={() => setMobileOpen(true)}
+            >
+                <Menu size={20} />
+            </button>
+            <Dialog
+                open={logoutOpen}
+                onOpenChange={(open) => {
+                    if (!logoutProcessing) {
+                        setLogoutOpen(open);
+                    }
+                }}
+            >
+                <DialogContent className="sm:max-w-md">
+                    <DialogHeader>
+                        <DialogTitle>Keluar dari akun?</DialogTitle>
+                        <DialogDescription>
+                            Kamu perlu masuk kembali untuk melanjutkan proses
+                            belajar.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter>
+                        <Button
+                            type="button"
+                            variant="outline"
+                            disabled={logoutProcessing}
+                            onClick={() => setLogoutOpen(false)}
+                        >
+                            Batal
+                        </Button>
+                        <Button
+                            type="button"
+                            variant="destructive"
+                            disabled={logoutProcessing}
+                            onClick={confirmLogout}
+                        >
+                            {logoutProcessing && (
+                                <LoaderCircle className="animate-spin" />
+                            )}
+                            Ya, Keluar
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+            <main className="min-w-0 pt-6 sm:pt-8 lg:ml-[246px]">
+                {children}
+            </main>
+        </div>
+    );
 }

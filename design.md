@@ -60,7 +60,7 @@ Prinsip utama:
 
 # 3. Color System
 
-Palet warna berasal dari referensi visual EduLearn.
+Palet warna berasal dari referensi visual BRI Peduli.
 
 ## 3.1 Primary Blue
 
@@ -713,7 +713,7 @@ Primary Register Button
 Contoh:
 
 ```text
-[EduLearn]
+[BRI Peduli]
 
 Home
 Kelas⌄

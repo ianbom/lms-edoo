@@ -61,7 +61,9 @@ export function DeleteEbookCategoryDialog({
                         onClick={remove}
                         disabled={processing}
                     >
-                        {processing && <LoaderCircle className="animate-spin" />}
+                        {processing && (
+                            <LoaderCircle className="animate-spin" />
+                        )}
                         Delete category
                     </Button>
                 </DialogFooter>

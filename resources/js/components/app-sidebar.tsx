@@ -1,5 +1,13 @@
 import { Link, usePage } from '@inertiajs/react';
-import { FileText, Layers3, LayoutGrid, Library, Tags, UserRound, Users } from 'lucide-react';
+import {
+    FileText,
+    Layers3,
+    LayoutGrid,
+    Library,
+    Tags,
+    UserRound,
+    Users,
+} from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
@@ -26,30 +34,32 @@ export function AppSidebar() {
     const groups = [
         {
             title: 'Overview',
-            items: [{ title: 'Dashboard', href: dashboard(), icon: LayoutGrid }],
+            items: [
+                { title: 'Dashboard', href: dashboard(), icon: LayoutGrid },
+            ],
         },
         ...(auth.user.role === 'admin'
             ? [
                   {
                       title: 'Learning Management',
-                       items: [
-                           {
-                               title: 'Courses',
-                               href: courses(),
-                               icon: Library,
-                           },
-                           {
-                               title: 'Course Materials',
-                               href: '/admin/course-materials',
-                               icon: Layers3,
-                           },
-                           {
-                               title: 'Learning Contents',
-                               href: '/admin/learning-contents',
-                               icon: FileText,
-                           },
-                           {
-                               title: 'Course Categories',
+                      items: [
+                          {
+                              title: 'Courses',
+                              href: courses(),
+                              icon: Library,
+                          },
+                          {
+                              title: 'Course Materials',
+                              href: '/admin/course-materials',
+                              icon: Layers3,
+                          },
+                          {
+                              title: 'Learning Contents',
+                              href: '/admin/learning-contents',
+                              icon: FileText,
+                          },
+                          {
+                              title: 'Course Categories',
                               href: courseCategories(),
                               icon: Tags,
                           },

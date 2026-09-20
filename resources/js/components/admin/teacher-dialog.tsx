@@ -1,11 +1,11 @@
-import { useForm } from "@inertiajs/react";
-import { LoaderCircle } from "lucide-react";
+import { useForm } from '@inertiajs/react';
+import { LoaderCircle } from 'lucide-react';
 import {
     store,
     update,
-} from "@/actions/App/Http/Controllers/Admin/TeacherController";
-import InputError from "@/components/input-error";
-import { Button } from "@/components/ui/button";
+} from '@/actions/App/Http/Controllers/Admin/TeacherController';
+import InputError from '@/components/input-error';
+import { Button } from '@/components/ui/button';
 import {
     Dialog,
     DialogContent,
@@ -13,9 +13,9 @@ import {
     DialogFooter,
     DialogHeader,
     DialogTitle,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 type Teacher = {
     id: number;
@@ -33,8 +33,8 @@ export function TeacherDialog({
     onOpenChange: (open: boolean) => void;
 }) {
     const form = useForm({
-        name: teacher?.name ?? "",
-        expertise: teacher?.expertise ?? "",
+        name: teacher?.name ?? '',
+        expertise: teacher?.expertise ?? '',
         photo: null as File | null,
     });
     const isEditing = teacher !== null;
@@ -76,7 +76,7 @@ export function TeacherDialog({
             <DialogContent className="sm:max-w-lg">
                 <DialogHeader>
                     <DialogTitle>
-                        {isEditing ? "Edit teacher" : "Add teacher"}
+                        {isEditing ? 'Edit teacher' : 'Add teacher'}
                     </DialogTitle>
                     <DialogDescription>
                         Add the instructor details shown on course pages.
@@ -90,7 +90,7 @@ export function TeacherDialog({
                             id="teacher-name"
                             value={form.data.name}
                             onChange={(event) =>
-                                form.setData("name", event.target.value)
+                                form.setData('name', event.target.value)
                             }
                             autoFocus
                             required
@@ -104,7 +104,7 @@ export function TeacherDialog({
                             id="teacher-expertise"
                             value={form.data.expertise}
                             onChange={(event) =>
-                                form.setData("expertise", event.target.value)
+                                form.setData('expertise', event.target.value)
                             }
                             placeholder="Backend Development"
                             aria-invalid={Boolean(form.errors.expertise)}
@@ -119,7 +119,7 @@ export function TeacherDialog({
                             accept="image/jpeg,image/png,image/webp"
                             onChange={(event) =>
                                 form.setData(
-                                    "photo",
+                                    'photo',
                                     event.target.files?.[0] ?? null,
                                 )
                             }
@@ -140,7 +140,7 @@ export function TeacherDialog({
                             {form.processing && (
                                 <LoaderCircle className="animate-spin" />
                             )}
-                            {isEditing ? "Save changes" : "Create teacher"}
+                            {isEditing ? 'Save changes' : 'Create teacher'}
                         </Button>
                     </DialogFooter>
                 </form>

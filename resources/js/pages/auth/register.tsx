@@ -61,7 +61,9 @@ export default function Register({ passwordRules }: Props) {
                             </div>
 
                             <div className="grid gap-2">
-                                <Label htmlFor="email">Alamat email (opsional)</Label>
+                                <Label htmlFor="email">
+                                    Alamat email (opsional)
+                                </Label>
                                 <Input
                                     id="email"
                                     type="email"
@@ -115,14 +117,14 @@ export default function Register({ passwordRules }: Props) {
                                 data-test="register-user-button"
                             >
                                 {processing && <Spinner />}
-Buat akun
+                                Buat akun
                             </Button>
                         </div>
 
                         <div className="text-muted-foreground text-center text-sm">
                             Sudah punya akun?{' '}
                             <TextLink href={login()} tabIndex={7}>
-Masuk
+                                Masuk
                             </TextLink>
                         </div>
                     </>
@@ -134,5 +136,6 @@ Masuk
 
 Register.layout = {
     title: 'Buat akun baru',
-    description: 'Daftar untuk mulai mengikuti kelas dan menyimpan progress belajar.',
+    description:
+        'Daftar untuk mulai mengikuti kelas dan menyimpan progress belajar.',
 };

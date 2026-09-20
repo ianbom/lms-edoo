@@ -14,6 +14,8 @@ use App\Http\Controllers\CourseCatalogController;
 use App\Http\Controllers\CourseDetailController;
 use App\Http\Controllers\CourseEnrollmentController;
 use App\Http\Controllers\StudentClassController;
+use App\Http\Controllers\StudentEbookController;
+use App\Http\Controllers\StudentProfileController;
 use App\Http\Controllers\StudentStudyController;
 use Illuminate\Support\Facades\Route;
 
@@ -25,6 +27,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', DashboardController::class)->name('dashboard');
     Route::post('courses/{course:slug}/enroll', CourseEnrollmentController::class)->name('courses.enroll');
     Route::get('student/classes', [StudentClassController::class, 'index'])->name('student.classes.index');
+    Route::get('student/ebooks', StudentEbookController::class)->name('student.ebooks.index');
+    Route::get('student/profile', [StudentProfileController::class, 'edit'])->name('student.profile.edit');
+    Route::patch('student/profile', [StudentProfileController::class, 'update'])->name('student.profile.update');
+    Route::put('student/profile/password', [StudentProfileController::class, 'updatePassword'])
+        ->middleware('throttle:6,1')
+        ->name('student.profile.password');
     Route::get('student/classes/{course:slug}/study/{content?}', [StudentStudyController::class, 'show'])->name('student.classes.study');
     Route::post('student/classes/{course:slug}/study/{content}/complete', [StudentStudyController::class, 'complete'])->name('student.classes.study.complete');
 });

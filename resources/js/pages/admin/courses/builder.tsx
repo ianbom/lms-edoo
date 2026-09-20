@@ -1,37 +1,543 @@
 import { Head, useForm } from '@inertiajs/react';
-import { BookOpen, CheckCircle2, ChevronDown, FileText, Layers3, Plus, Trash2, Video } from 'lucide-react';
+import {
+    BookOpen,
+    CheckCircle2,
+    ChevronDown,
+    FileText,
+    Layers3,
+    Plus,
+    Trash2,
+    Video,
+} from 'lucide-react';
 import { TextbookEditor } from '@/components/admin/textbook-editor';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
 
-type Content = { id?: number; type: 'video' | 'textbook'; title: string; description: string; position: number; is_published: boolean; youtube_url?: string | null; textbook_content?: string | null; youtube_video_id?: string | null };
-type Material = { id?: number; title: string; description: string; position: number; is_published: boolean; contents: Content[] };
+type Content = {
+    id?: number;
+    type: 'video' | 'textbook';
+    title: string;
+    description: string;
+    position: number;
+    is_published: boolean;
+    youtube_url?: string | null;
+    textbook_content?: string | null;
+    youtube_video_id?: string | null;
+};
+type Material = {
+    id?: number;
+    title: string;
+    description: string;
+    position: number;
+    is_published: boolean;
+    contents: Content[];
+};
 type Course = { id: number; title: string; materials: Material[] };
-const blankContent = (position: number): Content => ({ type: 'video', title: '', description: '', position, is_published: true, youtube_url: '' });
-const blankMaterial = (position: number): Material => ({ title: '', description: '', position, is_published: true, contents: [blankContent(0)] });
+const blankContent = (position: number): Content => ({
+    type: 'video',
+    title: '',
+    description: '',
+    position,
+    is_published: true,
+    youtube_url: '',
+});
+const blankMaterial = (position: number): Material => ({
+    title: '',
+    description: '',
+    position,
+    is_published: true,
+    contents: [blankContent(0)],
+});
 
 export default function CourseBuilder({ course }: { course: Course }) {
     const form = useForm({ materials: course.materials });
-    const addMaterial = () => form.setData('materials', [...form.data.materials, blankMaterial(form.data.materials.length)]);
-    const save = (event: React.FormEvent) => { event.preventDefault(); form.put(`/admin/courses/${course.id}/builder`); };
-    const updateMaterial = (materialIndex: number, update: Partial<Material>) => { const materials = [...form.data.materials]; materials[materialIndex] = { ...materials[materialIndex], ...update }; form.setData('materials', materials); };
-    const updateContent = (materialIndex: number, contentIndex: number, update: Partial<Content>) => { const materials = [...form.data.materials]; const contents = [...materials[materialIndex].contents]; contents[contentIndex] = { ...contents[contentIndex], ...update }; materials[materialIndex] = { ...materials[materialIndex], contents }; form.setData('materials', materials); };
-    const contentCount = form.data.materials.reduce((total, material) => total + material.contents.length, 0);
+    const addMaterial = () =>
+        form.setData('materials', [
+            ...form.data.materials,
+            blankMaterial(form.data.materials.length),
+        ]);
+    const save = (event: React.FormEvent) => {
+        event.preventDefault();
+        form.put(`/admin/courses/${course.id}/builder`);
+    };
+    const updateMaterial = (
+        materialIndex: number,
+        update: Partial<Material>,
+    ) => {
+        const materials = [...form.data.materials];
+        materials[materialIndex] = { ...materials[materialIndex], ...update };
+        form.setData('materials', materials);
+    };
+    const updateContent = (
+        materialIndex: number,
+        contentIndex: number,
+        update: Partial<Content>,
+    ) => {
+        const materials = [...form.data.materials];
+        const contents = [...materials[materialIndex].contents];
+        contents[contentIndex] = { ...contents[contentIndex], ...update };
+        materials[materialIndex] = { ...materials[materialIndex], contents };
+        form.setData('materials', materials);
+    };
+    const contentCount = form.data.materials.reduce(
+        (total, material) => total + material.contents.length,
+        0,
+    );
 
-    return <><Head title={`Builder: ${course.title}`} /><div className="min-h-full space-y-6 p-4 md:p-6">
-        <header className="rounded-2xl border bg-card p-5 shadow-sm md:p-6"><div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between"><div className="flex items-start gap-4"><div className="rounded-xl bg-primary/10 p-3 text-primary"><Layers3 className="size-6" /></div><div><p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Curriculum workspace</p><h1 className="mt-1 text-2xl font-semibold tracking-tight">{course.title}</h1><p className="mt-1 text-sm text-muted-foreground">Build a clear learning path from modules and lessons.</p></div></div><div className="flex items-center gap-3"><div className="hidden items-center gap-4 rounded-lg bg-muted/50 px-4 py-2 text-sm sm:flex"><span><strong>{form.data.materials.length}</strong> materials</span><span className="text-muted-foreground">·</span><span><strong>{contentCount}</strong> contents</span></div><Button onClick={save} disabled={form.processing} className="h-10">{form.processing ? 'Saving...' : 'Save builder'}</Button></div></div></header>
+    return (
+        <>
+            <Head title={`Builder: ${course.title}`} />
+            <div className="min-h-full space-y-6 p-4 md:p-6">
+                <header className="bg-card rounded-2xl border p-5 shadow-sm md:p-6">
+                    <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
+                        <div className="flex items-start gap-4">
+                            <div className="bg-primary/10 text-primary rounded-xl p-3">
+                                <Layers3 className="size-6" />
+                            </div>
+                            <div>
+                                <p className="text-primary text-xs font-semibold tracking-[0.18em] uppercase">
+                                    Curriculum workspace
+                                </p>
+                                <h1 className="mt-1 text-2xl font-semibold tracking-tight">
+                                    {course.title}
+                                </h1>
+                                <p className="text-muted-foreground mt-1 text-sm">
+                                    Build a clear learning path from modules and
+                                    lessons.
+                                </p>
+                            </div>
+                        </div>
+                        <div className="flex items-center gap-3">
+                            <div className="bg-muted/50 hidden items-center gap-4 rounded-lg px-4 py-2 text-sm sm:flex">
+                                <span>
+                                    <strong>
+                                        {form.data.materials.length}
+                                    </strong>{' '}
+                                    materials
+                                </span>
+                                <span className="text-muted-foreground">·</span>
+                                <span>
+                                    <strong>{contentCount}</strong> contents
+                                </span>
+                            </div>
+                            <Button
+                                onClick={save}
+                                disabled={form.processing}
+                                className="h-10"
+                            >
+                                {form.processing ? 'Saving...' : 'Save builder'}
+                            </Button>
+                        </div>
+                    </div>
+                </header>
 
-        <form onSubmit={save} className="space-y-5">
-            {form.data.materials.map((material, materialIndex) => <details key={material.id ?? `new-${materialIndex}`} open className="group rounded-2xl border bg-card shadow-sm"><summary className="flex cursor-pointer list-none items-center gap-3 p-4 md:p-5 [&::-webkit-details-marker]:hidden"><div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground">{materialIndex + 1}</div><div className="min-w-0 flex-1"><div className="flex flex-wrap items-center gap-2"><span className="font-semibold">{material.title || `Untitled material ${materialIndex + 1}`}</span>{material.is_published && <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-1 text-[11px] font-medium text-emerald-700"><CheckCircle2 className="size-3" /> Published</span>}</div><p className="mt-1 text-xs text-muted-foreground">{material.contents.length} {material.contents.length === 1 ? 'content' : 'contents'}</p></div><ChevronDown className="size-5 text-muted-foreground transition-transform group-open:rotate-180" /></summary><div className="space-y-5 border-t p-4 md:p-5">
-                <div className="grid gap-4 md:grid-cols-[minmax(0,1fr)_auto] md:items-end"><div className="grid gap-2"><Label htmlFor={`material-title-${materialIndex}`}>Material title</Label><Input id={`material-title-${materialIndex}`} value={material.title} onChange={(event) => updateMaterial(materialIndex, { title: event.target.value })} placeholder="e.g. Getting started" required /></div><div className="flex items-center justify-between gap-4 md:pb-2"><label className="flex items-center gap-2 text-sm"><Checkbox checked={material.is_published} onCheckedChange={(checked) => updateMaterial(materialIndex, { is_published: checked === true })} /> Published</label><Button type="button" variant="ghost" size="icon" aria-label="Delete material" onClick={() => form.setData('materials', form.data.materials.filter((_, index) => index !== materialIndex))}><Trash2 className="size-4 text-destructive" /></Button></div></div>
-                <div className="grid gap-2"><Label htmlFor={`material-description-${materialIndex}`}>Description <span className="font-normal text-muted-foreground">(optional)</span></Label><textarea id={`material-description-${materialIndex}`} value={material.description} onChange={(event) => updateMaterial(materialIndex, { description: event.target.value })} placeholder="What will learners cover in this material?" className="min-h-20 resize-y rounded-lg border bg-background p-3 text-sm outline-none transition focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50" /></div>
-                <div className="space-y-3 rounded-xl bg-muted/30 p-3 md:p-4"><div className="flex items-center justify-between"><div><p className="text-sm font-semibold">Learning contents</p><p className="text-xs text-muted-foreground">Add video lessons or textbook chapters.</p></div><span className="rounded-full border bg-background px-2.5 py-1 text-xs font-medium">{material.contents.length}</span></div>{material.contents.map((content, contentIndex) => <div key={content.id ?? `${materialIndex}-${contentIndex}`} className="space-y-4 rounded-xl border bg-background p-4 shadow-xs"><div className="flex items-start gap-3"><div className="mt-2 rounded-lg bg-muted p-2 text-muted-foreground">{content.type === 'video' ? <Video className="size-4" /> : <FileText className="size-4" />}</div><div className="grid flex-1 gap-4 md:grid-cols-[minmax(0,1fr)_180px]"><div className="grid gap-2"><Label htmlFor={`content-title-${materialIndex}-${contentIndex}`}>Content title</Label><Input id={`content-title-${materialIndex}-${contentIndex}`} value={content.title} onChange={(event) => updateContent(materialIndex, contentIndex, { title: event.target.value })} placeholder="e.g. Welcome to the course" required /></div><div className="grid gap-2"><Label>Type</Label><Select value={content.type} onValueChange={(value) => updateContent(materialIndex, contentIndex, { type: value as Content['type'] })}><SelectTrigger><SelectValue /></SelectTrigger><SelectContent><SelectItem value="video"><span className="flex items-center gap-2"><Video className="size-4" /> Video</span></SelectItem><SelectItem value="textbook"><span className="flex items-center gap-2"><BookOpen className="size-4" /> Textbook</span></SelectItem></SelectContent></Select></div></div><Button type="button" variant="ghost" size="icon" aria-label="Delete content" onClick={() => { const materials = [...form.data.materials]; materials[materialIndex] = { ...materials[materialIndex], contents: materials[materialIndex].contents.filter((_, index) => index !== contentIndex) }; form.setData('materials', materials); }}><Trash2 className="size-4 text-muted-foreground" /></Button></div>{content.type === 'video' ? <div className="grid gap-2"><Label htmlFor={`youtube-url-${materialIndex}-${contentIndex}`}>YouTube URL</Label><Input id={`youtube-url-${materialIndex}-${contentIndex}`} value={content.youtube_url ?? ''} onChange={(event) => updateContent(materialIndex, contentIndex, { youtube_url: event.target.value })} placeholder="https://www.youtube.com/watch?v=..." /></div> : <div className="grid gap-2"><Label>Textbook content</Label><TextbookEditor value={content.textbook_content ?? ''} onChange={(value) => updateContent(materialIndex, contentIndex, { textbook_content: value })} /></div>}<div className="grid gap-2"><Label htmlFor={`content-description-${materialIndex}-${contentIndex}`}>Description <span className="font-normal text-muted-foreground">(optional)</span></Label><textarea id={`content-description-${materialIndex}-${contentIndex}`} value={content.description} onChange={(event) => updateContent(materialIndex, contentIndex, { description: event.target.value })} placeholder="Add a short lesson summary" className="min-h-16 resize-y rounded-lg border bg-background p-3 text-sm outline-none transition focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50" /></div><label className="flex items-center gap-2 text-sm"><Checkbox checked={content.is_published} onCheckedChange={(checked) => updateContent(materialIndex, contentIndex, { is_published: checked === true })} /> Publish this content</label></div>)}</div>
-                <Button type="button" variant="outline" onClick={() => { const materials = [...form.data.materials]; materials[materialIndex] = { ...materials[materialIndex], contents: [...materials[materialIndex].contents, blankContent(materials[materialIndex].contents.length)] }; form.setData('materials', materials); }}><Plus /> Add content</Button>
-            </div></details>)}
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"><Button type="button" variant="outline" onClick={addMaterial}><Plus /> Add material</Button><p className="text-xs text-muted-foreground">Materials are saved in their current order.</p></div>
-        </form>
-    </div></>;
+                <form onSubmit={save} className="space-y-5">
+                    {form.data.materials.map((material, materialIndex) => (
+                        <details
+                            key={material.id ?? `new-${materialIndex}`}
+                            open
+                            className="group bg-card rounded-2xl border shadow-sm"
+                        >
+                            <summary className="flex cursor-pointer list-none items-center gap-3 p-4 md:p-5 [&::-webkit-details-marker]:hidden">
+                                <div
+                                    className="bg-primary text-primary-foreground flex size-9 shrink-0 items-center justify-center rounded-full text-sm font-semibold"
+                                >
+                                    {materialIndex + 1}
+                                </div>
+                                <div className="min-w-0 flex-1">
+                                    <div className="flex flex-wrap items-center gap-2">
+                                        <span className="font-semibold">
+                                            {material.title ||
+                                                `Untitled material ${materialIndex + 1}`}
+                                        </span>
+                                        {material.is_published && (
+                                            <span
+                                                className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-1 text-[11px] font-medium text-emerald-700"
+                                            >
+                                                <CheckCircle2 className="size-3" />{' '}
+                                                Published
+                                            </span>
+                                        )}
+                                    </div>
+                                    <p className="text-muted-foreground mt-1 text-xs">
+                                        {material.contents.length}{' '}
+                                        {material.contents.length === 1
+                                            ? 'content'
+                                            : 'contents'}
+                                    </p>
+                                </div>
+                                <ChevronDown className="text-muted-foreground size-5 transition-transform group-open:rotate-180" />
+                            </summary>
+                            <div className="space-y-5 border-t p-4 md:p-5">
+                                <div className="grid gap-4 md:grid-cols-[minmax(0,1fr)_auto] md:items-end">
+                                    <div className="grid gap-2">
+                                        <Label
+                                            htmlFor={`material-title-${materialIndex}`}
+                                        >
+                                            Material title
+                                        </Label>
+                                        <Input
+                                            id={`material-title-${materialIndex}`}
+                                            value={material.title}
+                                            onChange={(event) =>
+                                                updateMaterial(materialIndex, {
+                                                    title: event.target.value,
+                                                })
+                                            }
+                                            placeholder="e.g. Getting started"
+                                            required
+                                        />
+                                    </div>
+                                    <div className="flex items-center justify-between gap-4 md:pb-2">
+                                        <label className="flex items-center gap-2 text-sm">
+                                            <Checkbox
+                                                checked={material.is_published}
+                                                onCheckedChange={(checked) =>
+                                                    updateMaterial(
+                                                        materialIndex,
+                                                        {
+                                                            is_published:
+                                                                checked ===
+                                                                true,
+                                                        },
+                                                    )
+                                                }
+                                            />{' '}
+                                            Published
+                                        </label>
+                                        <Button
+                                            type="button"
+                                            variant="ghost"
+                                            size="icon"
+                                            aria-label="Delete material"
+                                            onClick={() =>
+                                                form.setData(
+                                                    'materials',
+                                                    form.data.materials.filter(
+                                                        (_, index) =>
+                                                            index !==
+                                                            materialIndex,
+                                                    ),
+                                                )
+                                            }
+                                        >
+                                            <Trash2 className="text-destructive size-4" />
+                                        </Button>
+                                    </div>
+                                </div>
+                                <div className="grid gap-2">
+                                    <Label
+                                        htmlFor={`material-description-${materialIndex}`}
+                                    >
+                                        Description{' '}
+                                        <span className="text-muted-foreground font-normal">
+                                            (optional)
+                                        </span>
+                                    </Label>
+                                    <textarea
+                                        id={`material-description-${materialIndex}`}
+                                        value={material.description}
+                                        onChange={(event) =>
+                                            updateMaterial(materialIndex, {
+                                                description: event.target.value,
+                                            })
+                                        }
+                                        placeholder="What will learners cover in this material?"
+                                        className="bg-background focus-visible:border-ring focus-visible:ring-ring/50 min-h-20 resize-y rounded-lg border p-3 text-sm transition outline-none focus-visible:ring-[3px]"
+                                    />
+                                </div>
+                                <div className="bg-muted/30 space-y-3 rounded-xl p-3 md:p-4">
+                                    <div className="flex items-center justify-between">
+                                        <div>
+                                            <p className="text-sm font-semibold">
+                                                Learning contents
+                                            </p>
+                                            <p className="text-muted-foreground text-xs">
+                                                Add video lessons or textbook
+                                                chapters.
+                                            </p>
+                                        </div>
+                                        <span className="bg-background rounded-full border px-2.5 py-1 text-xs font-medium">
+                                            {material.contents.length}
+                                        </span>
+                                    </div>
+                                    {material.contents.map(
+                                        (content, contentIndex) => (
+                                            <div
+                                                key={
+                                                    content.id ??
+                                                    `${materialIndex}-${contentIndex}`
+                                                }
+                                                className="bg-background space-y-4 rounded-xl border p-4 shadow-xs"
+                                            >
+                                                <div className="flex items-start gap-3">
+                                                    <div className="bg-muted text-muted-foreground mt-2 rounded-lg p-2">
+                                                        {content.type ===
+                                                        'video' ? (
+                                                            <Video className="size-4" />
+                                                        ) : (
+                                                            <FileText className="size-4" />
+                                                        )}
+                                                    </div>
+                                                    <div className="grid flex-1 gap-4 md:grid-cols-[minmax(0,1fr)_180px]">
+                                                        <div className="grid gap-2">
+                                                            <Label
+                                                                htmlFor={`content-title-${materialIndex}-${contentIndex}`}
+                                                            >
+                                                                Content title
+                                                            </Label>
+                                                            <Input
+                                                                id={`content-title-${materialIndex}-${contentIndex}`}
+                                                                value={
+                                                                    content.title
+                                                                }
+                                                                onChange={(
+                                                                    event,
+                                                                ) =>
+                                                                    updateContent(
+                                                                        materialIndex,
+                                                                        contentIndex,
+                                                                        {
+                                                                            title: event
+                                                                                .target
+                                                                                .value,
+                                                                        },
+                                                                    )
+                                                                }
+                                                                placeholder="e.g. Welcome to the course"
+                                                                required
+                                                            />
+                                                        </div>
+                                                        <div className="grid gap-2">
+                                                            <Label>Type</Label>
+                                                            <Select
+                                                                value={
+                                                                    content.type
+                                                                }
+                                                                onValueChange={(
+                                                                    value,
+                                                                ) =>
+                                                                    updateContent(
+                                                                        materialIndex,
+                                                                        contentIndex,
+                                                                        {
+                                                                            type: value as Content['type'],
+                                                                        },
+                                                                    )
+                                                                }
+                                                            >
+                                                                <SelectTrigger>
+                                                                    <SelectValue />
+                                                                </SelectTrigger>
+                                                                <SelectContent>
+                                                                    <SelectItem value="video">
+                                                                        <span className="flex items-center gap-2">
+                                                                            <Video className="size-4" />{' '}
+                                                                            Video
+                                                                        </span>
+                                                                    </SelectItem>
+                                                                    <SelectItem value="textbook">
+                                                                        <span className="flex items-center gap-2">
+                                                                            <BookOpen className="size-4" />{' '}
+                                                                            Textbook
+                                                                        </span>
+                                                                    </SelectItem>
+                                                                </SelectContent>
+                                                            </Select>
+                                                        </div>
+                                                    </div>
+                                                    <Button
+                                                        type="button"
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        aria-label="Delete content"
+                                                        onClick={() => {
+                                                            const materials = [
+                                                                ...form.data
+                                                                    .materials,
+                                                            ];
+                                                            materials[
+                                                                materialIndex
+                                                            ] = {
+                                                                ...materials[
+                                                                    materialIndex
+                                                                ],
+                                                                contents:
+                                                                    materials[
+                                                                        materialIndex
+                                                                    ].contents.filter(
+                                                                        (
+                                                                            _,
+                                                                            index,
+                                                                        ) =>
+                                                                            index !==
+                                                                            contentIndex,
+                                                                    ),
+                                                            };
+                                                            form.setData(
+                                                                'materials',
+                                                                materials,
+                                                            );
+                                                        }}
+                                                    >
+                                                        <Trash2 className="text-muted-foreground size-4" />
+                                                    </Button>
+                                                </div>
+                                                {content.type === 'video' ? (
+                                                    <div className="grid gap-2">
+                                                        <Label
+                                                            htmlFor={`youtube-url-${materialIndex}-${contentIndex}`}
+                                                        >
+                                                            YouTube URL
+                                                        </Label>
+                                                        <Input
+                                                            id={`youtube-url-${materialIndex}-${contentIndex}`}
+                                                            value={
+                                                                content.youtube_url ??
+                                                                ''
+                                                            }
+                                                            onChange={(event) =>
+                                                                updateContent(
+                                                                    materialIndex,
+                                                                    contentIndex,
+                                                                    {
+                                                                        youtube_url:
+                                                                            event
+                                                                                .target
+                                                                                .value,
+                                                                    },
+                                                                )
+                                                            }
+                                                            placeholder="https://www.youtube.com/watch?v=..."
+                                                        />
+                                                    </div>
+                                                ) : (
+                                                    <div className="grid gap-2">
+                                                        <Label>
+                                                            Textbook content
+                                                        </Label>
+                                                        <TextbookEditor
+                                                            value={
+                                                                content.textbook_content ??
+                                                                ''
+                                                            }
+                                                            onChange={(value) =>
+                                                                updateContent(
+                                                                    materialIndex,
+                                                                    contentIndex,
+                                                                    {
+                                                                        textbook_content:
+                                                                            value,
+                                                                    },
+                                                                )
+                                                            }
+                                                        />
+                                                    </div>
+                                                )}
+                                                <div className="grid gap-2">
+                                                    <Label
+                                                        htmlFor={`content-description-${materialIndex}-${contentIndex}`}
+                                                    >
+                                                        Description{' '}
+                                                        <span className="text-muted-foreground font-normal">
+                                                            (optional)
+                                                        </span>
+                                                    </Label>
+                                                    <textarea
+                                                        id={`content-description-${materialIndex}-${contentIndex}`}
+                                                        value={
+                                                            content.description
+                                                        }
+                                                        onChange={(event) =>
+                                                            updateContent(
+                                                                materialIndex,
+                                                                contentIndex,
+                                                                {
+                                                                    description:
+                                                                        event
+                                                                            .target
+                                                                            .value,
+                                                                },
+                                                            )
+                                                        }
+                                                        placeholder="Add a short lesson summary"
+                                                        className="bg-background focus-visible:border-ring focus-visible:ring-ring/50 min-h-16 resize-y rounded-lg border p-3 text-sm transition outline-none focus-visible:ring-[3px]"
+                                                    />
+                                                </div>
+                                                <label className="flex items-center gap-2 text-sm">
+                                                    <Checkbox
+                                                        checked={
+                                                            content.is_published
+                                                        }
+                                                        onCheckedChange={(
+                                                            checked,
+                                                        ) =>
+                                                            updateContent(
+                                                                materialIndex,
+                                                                contentIndex,
+                                                                {
+                                                                    is_published:
+                                                                        checked ===
+                                                                        true,
+                                                                },
+                                                            )
+                                                        }
+                                                    />{' '}
+                                                    Publish this content
+                                                </label>
+                                            </div>
+                                        ),
+                                    )}
+                                </div>
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    onClick={() => {
+                                        const materials = [
+                                            ...form.data.materials,
+                                        ];
+                                        materials[materialIndex] = {
+                                            ...materials[materialIndex],
+                                            contents: [
+                                                ...materials[materialIndex]
+                                                    .contents,
+                                                blankContent(
+                                                    materials[materialIndex]
+                                                        .contents.length,
+                                                ),
+                                            ],
+                                        };
+                                        form.setData('materials', materials);
+                                    }}
+                                >
+                                    <Plus /> Add content
+                                </Button>
+                            </div>
+                        </details>
+                    ))}
+                    <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                        <Button
+                            type="button"
+                            variant="outline"
+                            onClick={addMaterial}
+                        >
+                            <Plus /> Add material
+                        </Button>
+                        <p className="text-muted-foreground text-xs">
+                            Materials are saved in their current order.
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </>
+    );
 }

@@ -16,9 +16,9 @@ class EbookSeeder extends Seeder
         $admin = User::query()->where('phone', '081233914116')->firstOrFail();
 
         $categories = collect([
-            ['name' => 'Programming', 'slug' => 'programming', 'description' => 'Buku pengembangan perangkat lunak.', 'icon' => 'code-2', 'thumbnail_url' => null, 'is_active' => true, 'position' => 1],
-            ['name' => 'Design', 'slug' => 'design', 'description' => 'Buku desain produk dan pengalaman pengguna.', 'icon' => 'palette', 'thumbnail_url' => null, 'is_active' => true, 'position' => 2],
-            ['name' => 'Data & Business', 'slug' => 'data-business', 'description' => 'Buku data, analitik, dan bisnis.', 'icon' => 'chart-no-axes-combined', 'thumbnail_url' => null, 'is_active' => true, 'position' => 3],
+            ['name' => 'Programming', 'slug' => 'programming', 'description' => 'Buku pengembangan perangkat lunak.', 'is_active' => true, 'position' => 1],
+            ['name' => 'Design', 'slug' => 'design', 'description' => 'Buku desain produk dan pengalaman pengguna.', 'is_active' => true, 'position' => 2],
+            ['name' => 'Data & Business', 'slug' => 'data-business', 'description' => 'Buku data, analitik, dan bisnis.', 'is_active' => true, 'position' => 3],
         ])->mapWithKeys(fn (array $category) => [
             $category['slug'] => EbookCategory::query()->updateOrCreate(['slug' => $category['slug']], $category),
         ]);
