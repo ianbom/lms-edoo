@@ -34,7 +34,7 @@ class StudentTest extends TestCase
         $this->actingAs($student)
             ->post('/admin/students', [
                 'name' => 'New Student',
-                'email' => 'student@example.com',
+                'phone' => '081234567890',
                 'password' => 'password',
                 'password_confirmation' => 'password',
             ])
@@ -64,6 +64,7 @@ class StudentTest extends TestCase
         $this->actingAs($admin)
             ->post('/admin/students', [
                 'name' => 'New Student',
+                'phone' => '081234567890',
                 'email' => 'student@example.com',
                 'password' => 'password',
                 'password_confirmation' => 'password',
@@ -72,24 +73,25 @@ class StudentTest extends TestCase
 
         $this->assertDatabaseHas('users', [
             'name' => 'New Student',
+            'phone' => '081234567890',
             'email' => 'student@example.com',
             'role' => UserRole::Student->value,
         ]);
     }
 
-    public function test_student_email_must_be_unique(): void
+    public function test_student_phone_must_be_unique(): void
     {
         $admin = User::factory()->create(['role' => UserRole::Admin]);
-        User::factory()->create(['email' => 'student@example.com']);
+        User::factory()->create(['phone' => '081234567890']);
 
         $this->actingAs($admin)
             ->post('/admin/students', [
                 'name' => 'New Student',
-                'email' => 'student@example.com',
+                'phone' => '081234567890',
                 'password' => 'password',
                 'password_confirmation' => 'password',
             ])
-            ->assertSessionHasErrors('email');
+            ->assertSessionHasErrors('phone');
     }
 
     public function test_student_password_must_be_confirmed(): void
@@ -99,7 +101,7 @@ class StudentTest extends TestCase
         $this->actingAs($admin)
             ->post('/admin/students', [
                 'name' => 'New Student',
-                'email' => 'student@example.com',
+                'phone' => '081234567890',
                 'password' => 'password',
                 'password_confirmation' => 'different-password',
             ])

@@ -1,4 +1,5 @@
-import { Head } from '@inertiajs/react';
+import { Head, router } from '@inertiajs/react';
+import { useState } from 'react';
 import {
     BookOpen,
     CalendarDays,
@@ -34,6 +35,7 @@ type Material = {
     contents: Content[];
 };
 type Course = {
+    slug: string;
     title: string;
     short_description: string | null;
     description: string | null;
@@ -96,6 +98,14 @@ function Preview({ course }: { course: Course }) {
 }
 
 export default function CourseDetail({ course }: { course: Course }) {
+    const [enrolling, setEnrolling] = useState(false);
+    const enroll = (): void => {
+        setEnrolling(true);
+        router.post(`/courses/${course.slug}/enroll`, {}, {
+            onFinish: () => setEnrolling(false),
+        });
+    };
+
     return (
         <>
             <Head title={course.title} />
@@ -161,7 +171,7 @@ export default function CourseDetail({ course }: { course: Course }) {
                                 <span className="col-span-2 flex items-center gap-2"><CalendarDays size={15} className="text-primary" />{formatDate(course.published_at)}</span>
                             </CardContent>
                             <CardFooter className="px-5 pt-2 pb-5">
-                                <button type="button" className="flex h-10 w-full items-center justify-center gap-2 rounded-[7px] bg-primary text-[12px] font-bold text-primary-foreground shadow-[0_3px_6px_rgba(16,84,208,0.2)]">Daftar Kelas <PlayCircle size={15} /></button>
+                                <button type="button" onClick={enroll} disabled={enrolling} className="flex h-10 w-full items-center justify-center gap-2 rounded-[7px] bg-primary text-[12px] font-bold text-primary-foreground shadow-[0_3px_6px_rgba(16,84,208,0.2)] disabled:cursor-not-allowed disabled:opacity-60">{enrolling ? 'Mendaftarkan...' : 'Daftar Kelas'} <PlayCircle size={15} /></button>
                             </CardFooter>
                         </Card>
 

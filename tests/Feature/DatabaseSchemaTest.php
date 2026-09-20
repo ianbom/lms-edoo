@@ -49,6 +49,7 @@ class DatabaseSchemaTest extends TestCase
 
         $this->assertTrue(Schema::hasColumns('users', [
             'role',
+            'phone',
             'last_login_at',
             'deleted_at',
         ]));

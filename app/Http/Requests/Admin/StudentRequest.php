@@ -24,7 +24,8 @@ class StudentRequest extends FormRequest
     {
         return [
             'name.required' => 'Nama student wajib diisi.',
-            'email.required' => 'Email student wajib diisi.',
+            'phone.required' => 'Phone student wajib diisi.',
+            'phone.unique' => 'Phone student sudah digunakan.',
             'email.email' => 'Format email student tidak valid.',
             'email.unique' => 'Email student sudah digunakan.',
             'password.required' => 'Password wajib diisi.',

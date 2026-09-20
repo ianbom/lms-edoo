@@ -23,6 +23,7 @@ export function StudentDialog({
 }) {
     const form = useForm({
         name: '',
+        phone: '',
         email: '',
         password: '',
         password_confirmation: '',
@@ -77,7 +78,21 @@ export function StudentDialog({
                         <InputError message={form.errors.name} />
                     </div>
                     <div className="grid gap-2">
-                        <Label htmlFor="student-email">Email</Label>
+                        <Label htmlFor="student-phone">Phone</Label>
+                        <Input
+                            id="student-phone"
+                            type="tel"
+                            value={form.data.phone}
+                            onChange={(event) =>
+                                form.setData('phone', event.target.value)
+                            }
+                            required
+                            aria-invalid={Boolean(form.errors.phone)}
+                        />
+                        <InputError message={form.errors.phone} />
+                    </div>
+                    <div className="grid gap-2">
+                        <Label htmlFor="student-email">Email (optional)</Label>
                         <Input
                             id="student-email"
                             type="email"
@@ -85,7 +100,6 @@ export function StudentDialog({
                             onChange={(event) =>
                                 form.setData('email', event.target.value)
                             }
-                            required
                             aria-invalid={Boolean(form.errors.email)}
                         />
                         <InputError message={form.errors.email} />

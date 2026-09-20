@@ -9,7 +9,8 @@ import type { BreadcrumbItem } from '@/types';
 type Student = {
     id: number;
     name: string;
-    email: string;
+    phone: string;
+    email: string | null;
     enrollments_count: number;
     completed_courses_count: number;
     created_at: string;
@@ -54,6 +55,7 @@ export default function StudentsIndex({ students }: { students: Students }) {
                             <thead className="bg-muted/50 text-muted-foreground border-b text-xs tracking-wide uppercase">
                                 <tr>
                                     <th className="px-5 py-3 font-medium">Student</th>
+                                    <th className="px-5 py-3 font-medium">Phone</th>
                                     <th className="px-5 py-3 font-medium">Registered</th>
                                     <th className="px-5 py-3 font-medium">Courses</th>
                                     <th className="px-5 py-3 font-medium">Completed</th>
@@ -66,8 +68,11 @@ export default function StudentsIndex({ students }: { students: Students }) {
                                         <td className="px-5 py-4">
                                             <p className="font-medium">{student.name}</p>
                                             <p className="text-muted-foreground mt-1 text-sm">
-                                                {student.email}
+                                                {student.email ?? 'No email'}
                                             </p>
+                                        </td>
+                                        <td className="text-muted-foreground px-5 py-4">
+                                            {student.phone}
                                         </td>
                                         <td className="text-muted-foreground px-5 py-4">
                                             {formatDate(student.created_at)}

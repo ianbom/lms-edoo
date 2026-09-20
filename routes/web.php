@@ -12,6 +12,9 @@ use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\Admin\TeacherController;
 use App\Http\Controllers\CourseCatalogController;
 use App\Http\Controllers\CourseDetailController;
+use App\Http\Controllers\CourseEnrollmentController;
+use App\Http\Controllers\StudentClassController;
+use App\Http\Controllers\StudentStudyController;
 use Illuminate\Support\Facades\Route;
 
 Route::inertia('/', 'welcome')->name('home');
@@ -20,6 +23,10 @@ Route::get('courses/{course:slug}', CourseDetailController::class)->name('course
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', DashboardController::class)->name('dashboard');
+    Route::post('courses/{course:slug}/enroll', CourseEnrollmentController::class)->name('courses.enroll');
+    Route::get('student/classes', [StudentClassController::class, 'index'])->name('student.classes.index');
+    Route::get('student/classes/{course:slug}/study/{content?}', [StudentStudyController::class, 'show'])->name('student.classes.study');
+    Route::post('student/classes/{course:slug}/study/{content}/complete', [StudentStudyController::class, 'complete'])->name('student.classes.study.complete');
 });
 
 Route::prefix('admin')
