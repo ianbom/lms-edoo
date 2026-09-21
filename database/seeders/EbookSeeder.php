@@ -13,7 +13,7 @@ class EbookSeeder extends Seeder
 {
     public function run(): void
     {
-        $admin = User::query()->where('phone', '081233914116')->firstOrFail();
+        $admin = User::query()->where('phone', '088888888')->firstOrFail();
 
         $categories = collect([
             ['name' => 'Programming', 'slug' => 'programming', 'description' => 'Buku pengembangan perangkat lunak.', 'is_active' => true, 'position' => 1],

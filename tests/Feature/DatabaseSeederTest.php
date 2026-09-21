@@ -22,7 +22,7 @@ class DatabaseSeederTest extends TestCase
     {
         $this->seed(DatabaseSeeder::class);
 
-        $admin = User::query()->where('phone', '081233914116')->firstOrFail();
+        $admin = User::query()->where('phone', '088888888')->firstOrFail();
 
         $this->assertSame(UserRole::Admin, $admin->role);
         $this->assertSame(2, User::query()->where('role', UserRole::Student)->count());

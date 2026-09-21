@@ -16,7 +16,7 @@ class CourseSeeder extends Seeder
 {
     public function run(): void
     {
-        $admin = User::query()->where('phone', '0000000000')->firstOrFail();
+        $admin = User::query()->where('phone', '088888888')->firstOrFail();
 
         $categories = collect([
             ['name' => 'Web Development', 'slug' => 'web-development', 'description' => 'Kelas untuk membangun aplikasi web modern.'],

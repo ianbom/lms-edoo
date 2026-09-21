@@ -12,7 +12,7 @@ class UserSeeder extends Seeder
     {
         $this->saveUser([
             'name' => 'Admin Edoo',
-            'phone' => '0000000000',
+            'phone' => '088888888',
             'email' => 'admin@gmail.com',
             'password' => 'admin123',
             'email_verified_at' => now(),
