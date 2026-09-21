@@ -2,14 +2,13 @@ import { Head, Link } from '@inertiajs/react';
 import {
     ArrowRight,
     BookOpen,
-    CalendarDays,
     Clock3,
-    MonitorPlay,
     UserRound,
     UsersRound,
     Video,
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { CourseRegistrationCta } from '@/components/course-registration-cta';
 
 type Course = {
     id: number;
@@ -102,11 +101,11 @@ export default function Welcome({ courses }: { courses: Course[] }) {
 
     return (
         <>
-            <Head title="Eduo - Pelatihan Online Langsung" />
+            <Head title="Pelatihan Online Langsung" />
             <section
                 className="relative mx-auto my-4 block w-[calc(100%-88px)] max-w-[1282px] overflow-hidden rounded-[32px] bg-[#070B49] max-[1100px]:w-[calc(100%-50px)] max-[1100px]:rounded-[26px] max-[760px]:my-2.5 max-[760px]:w-[calc(100%-44px)] max-[760px]:rounded-[18px]"
                 id="home"
-                aria-label="Promosi kelas Eduo"
+                aria-label="Promosi kelas BRI Peduli"
                 aria-roledescription="carousel"
                 onMouseEnter={() => setIsPaused(true)}
                 onMouseLeave={() => setIsPaused(false)}
@@ -288,6 +287,10 @@ export default function Welcome({ courses }: { courses: Course[] }) {
                             </p>
                         </div>
                     )}
+                </section>
+
+                <section className={`${sectionClass} pt-8`}>
+                    <CourseRegistrationCta />
                 </section>
             </section>
         </>

@@ -2,6 +2,8 @@
 
 namespace App\Http\Middleware;
 
+use App\Enums\CourseStatus;
+use App\Models\CourseCategory;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -42,6 +44,18 @@ class HandleInertiaRequests extends Middleware
                 'user' => $request->user(),
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
+            'footerCourseCategories' => fn () => CourseCategory::query()
+                ->select(['id', 'name', 'slug'])
+                ->whereHas(
+                    'courses',
+                    fn ($courses) => $courses->where(
+                        'status',
+                        CourseStatus::Published,
+                    ),
+                )
+                ->orderBy('name')
+                ->limit(5)
+                ->get(),
         ];
     }
 }

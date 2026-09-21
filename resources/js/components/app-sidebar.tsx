@@ -1,4 +1,5 @@
 import { Link, usePage } from '@inertiajs/react';
+import type { CSSProperties } from 'react';
 import {
     FileText,
     Layers3,
@@ -31,6 +32,16 @@ import type { Auth } from '@/types/auth';
 
 export function AppSidebar() {
     const { auth } = usePage<{ auth: Auth }>().props;
+    const sidebarStyle = {
+        '--sidebar': '#1054D0',
+        '--sidebar-foreground': '#FFFFFF',
+        '--sidebar-primary': '#FFFFFF',
+        '--sidebar-primary-foreground': '#1054D0',
+        '--sidebar-accent': '#FFFFFF',
+        '--sidebar-accent-foreground': '#1054D0',
+        '--sidebar-border': '#FFFFFF33',
+        '--sidebar-ring': '#FFFFFF',
+    } as CSSProperties;
     const groups = [
         {
             title: 'Ringkasan',
@@ -100,12 +111,21 @@ export function AppSidebar() {
     ];
 
     return (
-        <Sidebar collapsible="icon" variant="inset">
+        <Sidebar
+            collapsible="icon"
+            variant="inset"
+            className="bg-[#1054D0] [&_[data-sidebar=sidebar]]:!bg-[#1054D0]"
+            style={sidebarStyle}
+        >
             <SidebarHeader>
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild>
-                            <Link href={dashboard()} prefetch>
+                            <Link
+                                href={dashboard()}
+                                prefetch
+                                className="inline-flex rounded-md bg-white px-2 py-1"
+                            >
                                 <AppLogo />
                             </Link>
                         </SidebarMenuButton>
@@ -113,11 +133,13 @@ export function AppSidebar() {
                 </SidebarMenu>
             </SidebarHeader>
 
-            <SidebarContent>
+            <SidebarContent
+                className="[&_[data-sidebar=group-label]]:!text-white/75 [&_[data-sidebar=menu-button]]:!text-white [&_[data-sidebar=menu-button]:hover]:!bg-white [&_[data-sidebar=menu-button]:hover]:!text-[#1054D0] [&_[data-sidebar=menu-button][data-active=true]]:!bg-white [&_[data-sidebar=menu-button][data-active=true]]:!text-[#1054D0]"
+            >
                 <NavMain groups={groups} />
             </SidebarContent>
 
-            <SidebarFooter>
+            <SidebarFooter className="m-2 overflow-hidden rounded-lg bg-white p-0 text-[#1054D0]">
                 <NavUser />
             </SidebarFooter>
         </Sidebar>

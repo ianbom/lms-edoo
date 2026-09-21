@@ -1,8 +1,30 @@
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import { Instagram, Linkedin, Youtube } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 
+type CourseCategory = {
+    id: number;
+    name: string;
+    slug: string;
+};
+
 export default function HomeFooter() {
+    const { auth, footerCourseCategories = [] } = usePage<{
+        auth: { user: { id: number } | null };
+        footerCourseCategories?: CourseCategory[];
+    }>().props;
+    const quickLinks = [
+        { label: 'Beranda', href: '/' },
+        { label: 'Kelas', href: '/courses' },
+        { label: 'E-Books', href: '/ebooks' },
+        ...(auth.user
+            ? [{ label: 'Dasbor', href: '/dashboard' }]
+            : [
+                  { label: 'Masuk', href: '/login' },
+                  { label: 'Daftar', href: '/register' },
+              ]),
+    ];
+
     return (
         <footer className="bg-[#1054D0] text-white">
             <div className="mx-auto grid max-w-[1370px] grid-cols-[1.45fr_1fr_1.2fr_1.8fr] gap-[42px] border-t border-white/20 px-11 pt-9 pb-[45px] max-[1100px]:px-[25px] max-[760px]:grid-cols-2 max-[760px]:gap-[30px_20px] max-[760px]:px-[22px] max-[760px]:pt-[38px]">
@@ -31,38 +53,35 @@ export default function HomeFooter() {
                     <h3 className="mt-[7px] mb-3 text-sm font-bold">
                         Tautan Cepat
                     </h3>
-                    {['Beranda', 'Tentang Kami', 'Kelas', 'Blog', 'Kontak'].map(
-                        (item) => (
-                            <a
-                                href={`#${item.toLowerCase().replace(' ', '-')}`}
+                    {quickLinks.map((item) => (
+                            <Link
+                                href={item.href}
                                 className="block text-[13px] leading-[1.7] text-[#DCEBFF] transition-colors hover:text-white"
-                                key={item}
+                                key={item.href}
                             >
-                                {item}
-                            </a>
-                        ),
-                    )}
+                                {item.label}
+                            </Link>
+                    ))}
                 </div>
 
                 <div>
                     <h3 className="mt-[7px] mb-3 text-sm font-bold">
                         Kelas Populer
                     </h3>
-                    {[
-                        'Web Development',
-                        'Digital Marketing',
-                        'UI/UX Design',
-                        'Business',
-                        'Personal Development',
-                    ].map((item) => (
-                        <a
-                            href="#courses"
+                    {footerCourseCategories.map((category) => (
+                        <Link
+                            href={`/courses?category=${encodeURIComponent(category.slug)}`}
                             className="block text-[13px] leading-[1.7] text-[#DCEBFF] transition-colors hover:text-white"
-                            key={item}
+                            key={category.id}
                         >
-                            {item}
-                        </a>
+                            {category.name}
+                        </Link>
                     ))}
+                    {footerCourseCategories.length === 0 && (
+                        <p className="text-[13px] leading-[1.7] text-[#DCEBFF]">
+                            Kategori kelas belum tersedia.
+                        </p>
+                    )}
                 </div>
 
                 <div className="max-[760px]:col-span-2">

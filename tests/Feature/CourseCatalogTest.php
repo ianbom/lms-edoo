@@ -47,6 +47,8 @@ class CourseCatalogTest extends TestCase
                 ->component('home/courses/index')
                 ->where('filters.search', 'Peternakan')
                 ->where('filters.category', 'agribisnis')
+                ->has('footerCourseCategories', 1)
+                ->where('footerCourseCategories.0.slug', 'agribisnis')
                 ->has('categories', 1)
                 ->has('courses', 1)
                 ->where('courses.0.id', $course->id)
