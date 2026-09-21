@@ -104,7 +104,7 @@ export default function Welcome({ courses }: { courses: Course[] }) {
         <>
             <Head title="Eduo - Pelatihan Online Langsung" />
             <section
-                className="relative mx-auto my-4 w-[calc(100%-32px)] max-w-[1640px] overflow-hidden rounded-[32px] bg-[#070B49] max-[1100px]:w-[calc(100%-36px)] max-[1100px]:rounded-[26px] max-[760px]:my-2.5 max-[760px]:w-[calc(100%-20px)] max-[760px]:rounded-[18px]"
+                className="relative mx-auto my-4 block w-[calc(100%-88px)] max-w-[1282px] overflow-hidden rounded-[32px] bg-[#070B49] max-[1100px]:w-[calc(100%-50px)] max-[1100px]:rounded-[26px] max-[760px]:my-2.5 max-[760px]:w-[calc(100%-44px)] max-[760px]:rounded-[18px]"
                 id="home"
                 aria-label="Promosi kelas Eduo"
                 aria-roledescription="carousel"
