@@ -1,8 +1,16 @@
 import { Head, Link, router } from '@inertiajs/react';
 import { Plus, Search, X } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
 import {
     create,
     edit,
@@ -30,23 +38,36 @@ type Pagination = {
     next_page_url: string | null;
 };
 type Filters = { search?: string };
+type Category = { id: number; name: string };
 
 export default function CoursesIndex({
     courses,
+    categories,
     filters,
 }: {
     courses: Pagination;
-    filters: Filters;
+    categories: Category[];
+    filters: Filters & { category?: number };
 }) {
-    const [query, setQuery] = useState({ search: filters.search ?? '' });
-    const applyFilters = (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        router.get(index.url(), query, { preserveState: true, replace: true });
-    };
+    const [query, setQuery] = useState({
+        search: filters.search ?? '',
+        category: String(filters.category ?? ''),
+    });
+    const debouncedQuery = useDebouncedValue(query);
+    const didMount = useRef(false);
+    useEffect(() => {
+        if (!didMount.current) {
+            didMount.current = true;
+            return;
+        }
+        router.get(index.url(), { ...debouncedQuery, page: 1 }, {
+            preserveState: true,
+            replace: true,
+        });
+    }, [debouncedQuery]);
     const clearFilters = () => {
-        const empty = { search: '' };
+        const empty = { search: '', category: '' };
         setQuery(empty);
-        router.get(index.url(), empty, { preserveState: true, replace: true });
     };
 
     return (
@@ -67,23 +88,46 @@ export default function CoursesIndex({
                         </Link>
                     </Button>
                 </div>
-                <form
-                    className="flex flex-col gap-3 sm:flex-row"
-                    onSubmit={applyFilters}
-                >
+                <div className="flex flex-col gap-3 sm:flex-row">
                     <div className="relative flex-1">
                         <Search className="text-muted-foreground absolute top-1/2 left-3 size-4 -translate-y-1/2" />
                         <Input
                             value={query.search}
                             onChange={(event) =>
-                                setQuery({ search: event.target.value })
+                                setQuery({
+                                    ...query,
+                                    search: event.target.value,
+                                })
                             }
                             className="pl-9"
                             placeholder='Cari kelas'
                         />
                     </div>
-                    <Button type="submit">Terapkan filter</Button>
-                    {query.search && (
+                    <Select
+                        value={query.category || 'all'}
+                        onValueChange={(value) =>
+                            setQuery({
+                                ...query,
+                                category: value === 'all' ? '' : value,
+                            })
+                        }
+                    >
+                        <SelectTrigger className="w-full sm:w-56">
+                            <SelectValue placeholder="Semua kategori" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="all">Semua kategori</SelectItem>
+                            {categories.map((category) => (
+                                <SelectItem
+                                    key={category.id}
+                                    value={String(category.id)}
+                                >
+                                    {category.name}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+                    {(query.search || query.category) && (
                         <Button
                             type="button"
                             variant="outline"
@@ -93,7 +137,7 @@ export default function CoursesIndex({
                             Bersihkan
                         </Button>
                     )}
-                </form>
+                </div>
                 <div className="bg-card overflow-hidden border">
                     <div className="overflow-x-auto">
                         <table className="w-full min-w-225 text-left text-sm">

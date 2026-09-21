@@ -15,18 +15,18 @@ class EnrollmentSeeder extends Seeder
     {
         $students = User::query()->whereIn('phone', ['081233914117', '081233914118'])->get()->keyBy('phone');
         $courses = Course::query()->with(['materials.contents'])->whereIn('slug', [
-            'fundamental-web-development',
-            'ui-ux-design-fundamentals',
-            'data-analytics-for-beginners',
+            'teknologi-peternakan-dasar',
+            'bahasa-jepang-sehari-hari',
+            'budidaya-ikan-air-tawar',
         ])->get()->keyBy('slug');
 
         foreach ([
-            ['phone' => '081233914117', 'course' => 'fundamental-web-development', 'status' => 'completed', 'completed_contents' => 6],
-            ['phone' => '081233914117', 'course' => 'ui-ux-design-fundamentals', 'status' => 'in_progress', 'completed_contents' => 3],
-            ['phone' => '081233914117', 'course' => 'data-analytics-for-beginners', 'status' => 'enrolled', 'completed_contents' => 0],
-            ['phone' => '081233914118', 'course' => 'fundamental-web-development', 'status' => 'in_progress', 'completed_contents' => 2],
-            ['phone' => '081233914118', 'course' => 'ui-ux-design-fundamentals', 'status' => 'enrolled', 'completed_contents' => 0],
-            ['phone' => '081233914118', 'course' => 'data-analytics-for-beginners', 'status' => 'completed', 'completed_contents' => 6],
+            ['phone' => '081233914117', 'course' => 'teknologi-peternakan-dasar', 'status' => 'completed', 'completed_contents' => 6],
+            ['phone' => '081233914117', 'course' => 'bahasa-jepang-sehari-hari', 'status' => 'in_progress', 'completed_contents' => 3],
+            ['phone' => '081233914117', 'course' => 'budidaya-ikan-air-tawar', 'status' => 'enrolled', 'completed_contents' => 0],
+            ['phone' => '081233914118', 'course' => 'teknologi-peternakan-dasar', 'status' => 'in_progress', 'completed_contents' => 2],
+            ['phone' => '081233914118', 'course' => 'bahasa-jepang-sehari-hari', 'status' => 'enrolled', 'completed_contents' => 0],
+            ['phone' => '081233914118', 'course' => 'budidaya-ikan-air-tawar', 'status' => 'completed', 'completed_contents' => 6],
         ] as $definition) {
             $this->seedEnrollment($students[$definition['phone']], $courses[$definition['course']], $definition);
         }

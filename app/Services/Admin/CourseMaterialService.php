@@ -18,7 +18,8 @@ class CourseMaterialService
                 ->where('title', 'like', "%{$search}%")
                 ->orWhereHas('course', fn ($query) => $query->where('title', 'like', "%{$search}%"))))
             ->orderByDesc('updated_at')
-            ->paginate(15)
+            ->when($filters['course_id'] ?? null, fn ($query, int $courseId) => $query->where('course_id', $courseId))
+            ->paginate($filters['per_page'] ?? 15)
             ->withQueryString();
     }
 

@@ -18,8 +18,16 @@ class LearningContentController extends Controller
     {
         $filters = $request->validate([
             'search' => ['nullable', 'string', 'max:255'],
+            'course_id' => ['nullable', 'integer', 'exists:courses,id'],
+            'course_material_id' => ['nullable', 'integer', 'exists:course_materials,id'],
             'per_page' => ['nullable', 'integer', 'in:10,15,25'],
         ]);
+        $filters['course_id'] = isset($filters['course_id'])
+            ? (int) $filters['course_id']
+            : null;
+        $filters['course_material_id'] = isset($filters['course_material_id'])
+            ? (int) $filters['course_material_id']
+            : null;
         $filters['per_page'] = (int) ($filters['per_page'] ?? 15);
 
         return Inertia::render('admin/learning-contents/index', ['contents' => $this->service->paginate($filters), ...$this->service->options(), 'filters' => $filters]);

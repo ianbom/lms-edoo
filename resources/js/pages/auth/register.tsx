@@ -21,12 +21,12 @@ export default function Register({ passwordRules }: Props) {
                 {...store.form()}
                 resetOnSuccess={['password', 'password_confirmation']}
                 disableWhileProcessing
-                className="flex flex-col gap-5"
+                className="flex flex-col gap-4"
             >
                 {({ processing, errors }) => (
                     <>
-                        <div className="grid gap-6">
-                            <div className="grid gap-2">
+                        <div className="grid gap-4">
+                            <div className="grid gap-1.5">
                                 <Label htmlFor="name">Nama lengkap</Label>
                                 <Input
                                     id="name"
@@ -37,7 +37,7 @@ export default function Register({ passwordRules }: Props) {
                                     autoComplete="name"
                                     name="name"
                                     placeholder="Nama lengkap"
-                                    className="h-11 rounded-lg bg-white"
+                                    className="h-10 rounded-lg bg-white"
                                 />
                                 <InputError
                                     message={errors.name}
@@ -45,7 +45,7 @@ export default function Register({ passwordRules }: Props) {
                                 />
                             </div>
 
-                            <div className="grid gap-2">
+                            <div className="grid gap-1.5">
                                 <Label htmlFor="phone">Nomor telepon</Label>
                                 <Input
                                     id="phone"
@@ -55,12 +55,12 @@ export default function Register({ passwordRules }: Props) {
                                     autoComplete="tel"
                                     name="phone"
                                     placeholder="Masukkan nomor telepon"
-                                    className="h-11 rounded-lg bg-white"
+                                    className="h-10 rounded-lg bg-white"
                                 />
                                 <InputError message={errors.phone} />
                             </div>
 
-                            <div className="grid gap-2">
+                            <div className="grid gap-1.5">
                                 <Label htmlFor="email">
                                     Alamat email (opsional)
                                 </Label>
@@ -71,12 +71,12 @@ export default function Register({ passwordRules }: Props) {
                                     autoComplete="email"
                                     name="email"
                                     placeholder="nama@email.com"
-                                    className="h-11 rounded-lg bg-white"
+                                    className="h-10 rounded-lg bg-white"
                                 />
                                 <InputError message={errors.email} />
                             </div>
 
-                            <div className="grid gap-2">
+                            <div className="grid gap-1.5">
                                 <Label htmlFor="password">Password</Label>
                                 <PasswordInput
                                     id="password"
@@ -85,13 +85,13 @@ export default function Register({ passwordRules }: Props) {
                                     autoComplete="new-password"
                                     name="password"
                                     placeholder="Buat password"
-                                    className="h-11 rounded-lg bg-white"
+                                    className="h-10 rounded-lg bg-white"
                                     passwordrules={passwordRules}
                                 />
                                 <InputError message={errors.password} />
                             </div>
 
-                            <div className="grid gap-2">
+                            <div className="grid gap-1.5">
                                 <Label htmlFor="password_confirmation">
                                     Konfirmasi password
                                 </Label>
@@ -102,7 +102,7 @@ export default function Register({ passwordRules }: Props) {
                                     autoComplete="new-password"
                                     name="password_confirmation"
                                     placeholder="Ulangi password"
-                                    className="h-11 rounded-lg bg-white"
+                                    className="h-10 rounded-lg bg-white"
                                     passwordrules={passwordRules}
                                 />
                                 <InputError
@@ -112,7 +112,7 @@ export default function Register({ passwordRules }: Props) {
 
                             <Button
                                 type="submit"
-                                className="mt-2 h-11 w-full rounded-lg active:scale-[0.98]"
+                                className="mt-1 h-10 w-full rounded-lg active:scale-[0.98]"
                                 tabIndex={6}
                                 data-test="register-user-button"
                             >

@@ -8,7 +8,10 @@ use App\Http\Requests\Admin\CourseRequest;
 use App\Models\Course;
 use App\Models\CourseCategory;
 use App\Services\Admin\CourseService;
+use Illuminate\Database\DatabaseManager;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 
 class CourseController extends Controller
@@ -95,6 +98,59 @@ class CourseController extends Controller
                 ],
             ],
         ]);
+    }
+
+    public function reorderCurriculum(Request $request, Course $course): RedirectResponse
+    {
+        $data = $request->validate([
+            'materials' => ['required', 'array'],
+            'materials.*.id' => ['required', 'integer', 'distinct'],
+            'materials.*.contents' => ['present', 'array'],
+            'materials.*.contents.*' => ['integer', 'distinct'],
+        ]);
+
+        $materials = $course->materials()
+            ->with('contents:id,course_material_id')
+            ->get()
+            ->keyBy('id');
+        $submittedMaterials = collect($data['materials']);
+
+        if ($submittedMaterials->count() !== $materials->count()
+            || $submittedMaterials->pluck('id')->map(fn ($id) => (int) $id)->sort()->values()->all()
+                !== $materials->keys()->map(fn ($id) => (int) $id)->sort()->values()->all()) {
+            throw ValidationException::withMessages([
+                'materials' => 'Urutan modul tidak valid.',
+            ]);
+        }
+
+        foreach ($submittedMaterials as $submittedMaterial) {
+            $material = $materials->get((int) $submittedMaterial['id']);
+            $submittedContents = collect($submittedMaterial['contents'])
+                ->map(fn ($id) => (int) $id);
+            $contentIds = $material->contents->pluck('id')->map(fn ($id) => (int) $id);
+
+            if ($submittedContents->count() !== $contentIds->count()
+                || $submittedContents->sort()->values()->all() !== $contentIds->sort()->values()->all()) {
+                throw ValidationException::withMessages([
+                    'materials' => 'Urutan materi tidak valid.',
+                ]);
+            }
+        }
+
+        app(DatabaseManager::class)->transaction(function () use ($submittedMaterials, $materials): void {
+            foreach ($submittedMaterials->values() as $materialPosition => $submittedMaterial) {
+                $material = $materials->get((int) $submittedMaterial['id']);
+                $material->update(['position' => $materialPosition]);
+
+                foreach (collect($submittedMaterial['contents'])->values() as $contentPosition => $contentId) {
+                    $material->contents()->whereKey((int) $contentId)->update([
+                        'position' => $contentPosition,
+                    ]);
+                }
+            }
+        });
+
+        return back();
     }
 
     public function store(CourseRequest $request)

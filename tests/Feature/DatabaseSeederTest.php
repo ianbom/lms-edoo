@@ -28,15 +28,15 @@ class DatabaseSeederTest extends TestCase
         $this->assertSame(2, User::query()->where('role', UserRole::Student)->count());
         $this->assertTrue(User::query()->whereNull('email')->exists());
 
-        $this->assertDatabaseCount('course_categories', 3);
-        $this->assertDatabaseCount('teachers', 4);
-        $this->assertDatabaseCount('courses', 4);
-        $this->assertDatabaseCount('course_materials', 8);
-        $this->assertDatabaseCount('learning_contents', 24);
-        $this->assertSame(3, Course::query()->where('status', CourseStatus::Published)->count());
+        $this->assertDatabaseCount('course_categories', 6);
+        $this->assertDatabaseCount('teachers', 6);
+        $this->assertDatabaseCount('courses', 9);
+        $this->assertDatabaseCount('course_materials', 18);
+        $this->assertDatabaseCount('learning_contents', 54);
+        $this->assertSame(9, Course::query()->where('status', CourseStatus::Published)->count());
 
-        $this->assertDatabaseCount('ebook_categories', 3);
-        $this->assertSame(6, Ebook::query()->count());
+        $this->assertDatabaseCount('ebook_categories', 6);
+        $this->assertSame(9, Ebook::query()->count());
 
         $this->assertSame(6, CourseEnrollment::query()->count());
         $this->assertSame(36, LearningContentProgress::query()->count());

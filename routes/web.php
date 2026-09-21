@@ -48,6 +48,7 @@ Route::prefix('admin')
             ->only(['index', 'create', 'store', 'show', 'edit', 'update', 'destroy']);
         Route::get('courses/{course}/builder', [CourseBuilderController::class, 'show'])->name('courses.builder');
         Route::put('courses/{course}/builder', [CourseBuilderController::class, 'update'])->name('courses.builder.update');
+        Route::put('courses/{course}/curriculum/order', [CourseController::class, 'reorderCurriculum'])->name('courses.curriculum.reorder');
         Route::resource('course-materials', CourseMaterialController::class)
             ->only(['index', 'store', 'update']);
         Route::resource('learning-contents', LearningContentController::class)
@@ -62,6 +63,8 @@ Route::prefix('admin')
             ->only(['index', 'store']);
         Route::get('students/{student}/progress', [StudentController::class, 'progress'])
             ->name('students.progress');
+        Route::put('students/{student}/password', [StudentController::class, 'resetPassword'])
+            ->name('students.password.update');
         Route::resource('teachers', TeacherController::class)
             ->only(['index', 'store', 'update']);
     });

@@ -43,7 +43,7 @@ class WelcomeController extends Controller
             ])
             ->where('status', CourseStatus::Published)
             ->latest('published_at')
-            ->limit(3)
+            ->limit(6)
             ->get()
             ->map(fn (Course $course) => [
                 'id' => $course->id,

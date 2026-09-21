@@ -4,6 +4,7 @@ namespace App\Services\Admin;
 
 use App\Enums\ContentType;
 use App\Http\Requests\Admin\LearningContentRequest;
+use App\Models\Course;
 use App\Models\CourseMaterial;
 use App\Models\LearningContent;
 use App\Support\TextbookHtmlSanitizer;
@@ -21,6 +22,8 @@ class LearningContentService
                 ->orWhereHas('material', fn ($query) => $query
                     ->where('title', 'like', "%{$search}%")
                     ->orWhereHas('course', fn ($query) => $query->where('title', 'like', "%{$search}%")))))
+            ->when($filters['course_id'] ?? null, fn ($query, int $courseId) => $query->whereHas('material', fn ($query) => $query->where('course_id', $courseId)))
+            ->when($filters['course_material_id'] ?? null, fn ($query, int $materialId) => $query->where('course_material_id', $materialId))
             ->orderByDesc('updated_at')
             ->paginate($filters['per_page'] ?? 15)
             ->withQueryString();
@@ -29,6 +32,7 @@ class LearningContentService
     public function options(): array
     {
         return [
+            'courses' => Course::query()->orderBy('title')->get(['id', 'title']),
             'materials' => CourseMaterial::query()->with('course:id,title')->orderBy('title')->get(['id', 'course_id', 'title']),
             'types' => array_column(ContentType::cases(), 'value'),
         ];

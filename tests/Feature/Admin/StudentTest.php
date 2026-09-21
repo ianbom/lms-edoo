@@ -12,6 +12,7 @@ use App\Models\CourseMaterial;
 use App\Models\CourseMaterialProgress;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Hash;
 use Inertia\Testing\AssertableInertia as Assert;
 use Tests\TestCase;
 
@@ -168,6 +169,47 @@ class StudentTest extends TestCase
                 'password_confirmation' => 'different-password',
             ])
             ->assertSessionHasErrors('password');
+    }
+
+    public function test_admin_can_reset_student_password(): void
+    {
+        $admin = User::factory()->create(['role' => UserRole::Admin]);
+        $student = User::factory()->create(['role' => UserRole::Student]);
+
+        $this->actingAs($admin)
+            ->put("/admin/students/{$student->id}/password", [
+                'password' => 'new-password',
+                'password_confirmation' => 'new-password',
+            ])
+            ->assertRedirect('/admin/students');
+
+        $this->assertTrue(Hash::check('new-password', $student->fresh()->password));
+    }
+
+    public function test_student_password_reset_requires_confirmation(): void
+    {
+        $admin = User::factory()->create(['role' => UserRole::Admin]);
+        $student = User::factory()->create(['role' => UserRole::Student]);
+
+        $this->actingAs($admin)
+            ->put("/admin/students/{$student->id}/password", [
+                'password' => 'new-password',
+                'password_confirmation' => 'different-password',
+            ])
+            ->assertSessionHasErrors('password');
+    }
+
+    public function test_admin_cannot_reset_non_student_password(): void
+    {
+        $admin = User::factory()->create(['role' => UserRole::Admin]);
+        $otherAdmin = User::factory()->create(['role' => UserRole::Admin]);
+
+        $this->actingAs($admin)
+            ->put("/admin/students/{$otherAdmin->id}/password", [
+                'password' => 'new-password',
+                'password_confirmation' => 'new-password',
+            ])
+            ->assertNotFound();
     }
 
     public function test_admin_can_search_students_and_choose_per_page(): void

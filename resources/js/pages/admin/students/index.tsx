@@ -1,7 +1,9 @@
 import { Head, Link, router } from '@inertiajs/react';
-import { ChartNoAxesCombined, Plus, Search, Users, X } from 'lucide-react';
-import { useState } from 'react';
+import { ChartNoAxesCombined, KeyRound, Plus, Search, Users, X } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 import { StudentDialog } from '@/components/admin/student-dialog';
+import { StudentPasswordDialog } from '@/components/admin/student-password-dialog';
+import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -48,10 +50,23 @@ export default function StudentsIndex({
     filters: Filters;
 }) {
     const [formOpen, setFormOpen] = useState(false);
+    const [passwordStudent, setPasswordStudent] = useState<Student | null>(null);
     const [query, setQuery] = useState({
         search: filters.search ?? '',
         per_page: String(filters.per_page ?? 15),
     });
+    const debouncedQuery = useDebouncedValue(query);
+    const didMount = useRef(false);
+    useEffect(() => {
+        if (!didMount.current) {
+            didMount.current = true;
+            return;
+        }
+        router.get(studentsIndex.url(), { ...debouncedQuery, page: 1 }, {
+            preserveState: true,
+            replace: true,
+        });
+    }, [debouncedQuery]);
 
     const visitPage = (page: number): void => {
         router.get(
@@ -61,18 +76,9 @@ export default function StudentsIndex({
         );
     };
 
-    const applyFilters = (event: React.FormEvent<HTMLFormElement>): void => {
-        event.preventDefault();
-        visitPage(1);
-    };
-
     const clearFilters = (): void => {
         const empty = { search: '', per_page: '15' };
         setQuery(empty);
-        router.get(studentsIndex.url(), empty, {
-            preserveState: true,
-            replace: true,
-        });
     };
 
     const pages = Array.from(
@@ -100,10 +106,7 @@ export default function StudentsIndex({
                     </Button>
                 </div>
 
-                <form
-                    className="flex flex-col gap-3 sm:flex-row"
-                    onSubmit={applyFilters}
-                >
+                <div className="flex flex-col gap-3 sm:flex-row">
                     <div className="relative flex-1">
                         <Search className="text-muted-foreground absolute top-1/2 left-3 size-4 -translate-y-1/2" />
                         <Input
@@ -118,24 +121,6 @@ export default function StudentsIndex({
                             placeholder="Cari nama, nomor telepon, atau email"
                         />
                     </div>
-                    <Select
-                        value={query.per_page}
-                        onValueChange={(value) =>
-                            setQuery({ ...query, per_page: value })
-                        }
-                    >
-                        <SelectTrigger className="w-full sm:w-36">
-                            <SelectValue placeholder="Per halaman" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            {[10, 15, 25].map((value) => (
-                                <SelectItem key={value} value={String(value)}>
-                                    {value} per halaman
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
-                    <Button type="submit">Terapkan filter</Button>
                     {(query.search || query.per_page !== '15') && (
                         <Button
                             type="button"
@@ -146,7 +131,7 @@ export default function StudentsIndex({
                             Bersihkan
                         </Button>
                     )}
-                </form>
+                </div>
 
                 <div className="bg-card overflow-hidden border">
                     <div className="overflow-x-auto">
@@ -210,18 +195,30 @@ export default function StudentsIndex({
                                             {student.completed_courses_count}
                                         </td>
                                         <td className="px-5 py-4 text-right">
-                                            <Button
-                                                variant="outline"
-                                                size="sm"
-                                                asChild
-                                            >
-                                                <Link
-                                                    href={`/admin/students/${student.id}/progress`}
+                                            <div className="flex justify-end gap-2">
+                                                <Button
+                                                    variant="outline"
+                                                    size="sm"
+                                                    onClick={() =>
+                                                        setPasswordStudent(student)
+                                                    }
                                                 >
-                                                    <ChartNoAxesCombined />
-                                                    Progress
-                                                </Link>
-                                            </Button>
+                                                    <KeyRound />
+                                                    Reset password
+                                                </Button>
+                                                <Button
+                                                    variant="outline"
+                                                    size="sm"
+                                                    asChild
+                                                >
+                                                    <Link
+                                                        href={`/admin/students/${student.id}/progress`}
+                                                    >
+                                                        <ChartNoAxesCombined />
+                                                        Progress
+                                                    </Link>
+                                                </Button>
+                                            </div>
                                         </td>
                                     </tr>
                                 ))}
@@ -253,7 +250,24 @@ export default function StudentsIndex({
                             Halaman {students.current_page} dari{' '}
                             {students.last_page}
                         </span>
-                        <div className="flex flex-wrap gap-2">
+                        <div className="flex flex-wrap items-center gap-2">
+                            <Select
+                                value={query.per_page}
+                                onValueChange={(value) =>
+                                    setQuery({ ...query, per_page: value })
+                                }
+                            >
+                                <SelectTrigger className="w-36">
+                                    <SelectValue placeholder="Per halaman" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {[10, 15, 25].map((value) => (
+                                        <SelectItem key={value} value={String(value)}>
+                                            {value} per halaman
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
                             <Button
                                 type="button"
                                 variant="outline"
@@ -295,6 +309,15 @@ export default function StudentsIndex({
             {formOpen && (
                 <StudentDialog open={formOpen} onOpenChange={setFormOpen} />
             )}
+            <StudentPasswordDialog
+                student={passwordStudent}
+                open={passwordStudent !== null}
+                onOpenChange={(open) => {
+                    if (!open) {
+                        setPasswordStudent(null);
+                    }
+                }}
+            />
         </>
     );
 }

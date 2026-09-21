@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\ResetStudentPasswordRequest;
 use App\Http\Requests\Admin\StudentRequest;
 use App\Models\User;
 use App\Services\Admin\StudentService;
@@ -49,5 +50,18 @@ class StudentController extends Controller
             ],
             'enrollments' => $this->service->progress($student),
         ]);
+    }
+
+    public function resetPassword(ResetStudentPasswordRequest $request, User $student)
+    {
+        abort_unless($student->role === UserRole::Student, 404);
+
+        $student->update([
+            'password' => $request->validated('password'),
+        ]);
+
+        Inertia::flash('toast', ['type' => 'success', 'message' => __('Student password updated.')]);
+
+        return to_route('admin.students.index');
     }
 }

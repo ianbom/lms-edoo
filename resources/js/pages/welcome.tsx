@@ -9,6 +9,7 @@ import {
     UsersRound,
     Video,
 } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 type Course = {
     id: number;
@@ -35,6 +36,21 @@ const sectionClass =
 const kickerClass =
     'relative block pl-[27px] text-[10px] font-bold tracking-[1.2px] text-[#1054D0] before:absolute before:left-0 before:top-[5px] before:h-0.5 before:w-5 before:bg-[#1054D0]';
 
+const heroSlides = [
+    {
+        src: '/welcome/hero1.png',
+        alt: 'Pelajar sedang belajar di lingkungan kampus',
+    },
+    {
+        src: '/welcome/hero2.png',
+        alt: 'Pelajar sedang belajar bersama secara online',
+    },
+    {
+        src: '/welcome/hero3.png',
+        alt: 'Pelajar sedang belajar bersama secara online',
+    },
+] as const;
+
 const formatCount = (value: number): string =>
     new Intl.NumberFormat('id-ID').format(value);
 
@@ -51,59 +67,96 @@ const formatDuration = (minutes: number | null): string => {
 };
 
 export default function Welcome({ courses }: { courses: Course[] }) {
+    const [activeSlide, setActiveSlide] = useState(0);
+    const [isPaused, setIsPaused] = useState(false);
+    const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+
+    useEffect(() => {
+        const mediaQuery = window.matchMedia(
+            '(prefers-reduced-motion: reduce)',
+        );
+        const updateMotionPreference = (): void => {
+            setPrefersReducedMotion(mediaQuery.matches);
+        };
+
+        updateMotionPreference();
+        mediaQuery.addEventListener('change', updateMotionPreference);
+
+        return () =>
+            mediaQuery.removeEventListener('change', updateMotionPreference);
+    }, []);
+
+    useEffect(() => {
+        if (isPaused || prefersReducedMotion) {
+            return;
+        }
+
+        const interval = window.setInterval(() => {
+            setActiveSlide((currentSlide) =>
+                (currentSlide + 1) % heroSlides.length,
+            );
+        }, 5000);
+
+        return () => window.clearInterval(interval);
+    }, [isPaused, prefersReducedMotion]);
+
     return (
         <>
             <Head title="Eduo - Pelatihan Online Langsung" />
             <section
-                className="relative mx-auto flex aspect-[2048/1148] max-w-[1370px] overflow-hidden bg-[#070B49] max-[1100px]:mx-[18px] max-[760px]:mx-2.5 max-[760px]:aspect-auto max-[760px]:h-[480px]"
+                className="relative mx-auto my-4 w-[calc(100%-32px)] max-w-[1640px] overflow-hidden rounded-[32px] bg-[#070B49] max-[1100px]:w-[calc(100%-36px)] max-[1100px]:rounded-[26px] max-[760px]:my-2.5 max-[760px]:w-[calc(100%-20px)] max-[760px]:rounded-[18px]"
                 id="home"
+                aria-label="Promosi kelas Eduo"
+                aria-roledescription="carousel"
+                onMouseEnter={() => setIsPaused(true)}
+                onMouseLeave={() => setIsPaused(false)}
+                onFocus={() => setIsPaused(true)}
+                onBlur={(event) => {
+                    if (!event.currentTarget.contains(event.relatedTarget)) {
+                        setIsPaused(false);
+                    }
+                }}
             >
-                <img
-                    className="block size-full object-cover max-[760px]:object-[34%_center]"
-                    src="/welcome/hero-online-training.png"
-                    alt="Instruktur berpengalaman sedang mengajar kelas online langsung"
-                />
                 <h1 className="sr-only">
-                    Pelatihan online langsung kami dibawakan oleh instruktur
-                    berpengalaman
+                    Belajar hari ini untuk tumbuh menuju masa depan
                 </h1>
-                <Link
-                    className="absolute top-[58%] left-[10.3%] z-[4] h-[9%] w-[27%] rounded-full focus-visible:outline-4 focus-visible:outline-offset-4 focus-visible:outline-[#2478E4] max-[760px]:left-[8%] max-[760px]:h-[10%] max-[760px]:w-[52%]"
-                    href="#courses"
-                    aria-label="Lihat katalog kelas"
-                />
-            </section>
-
-            <section
-                className="mx-auto grid max-w-[1370px] grid-cols-3 gap-[35px] bg-[#EEF6FF] px-11 py-[58px] max-[1100px]:mx-[18px] max-[1100px]:px-[25px] max-[1100px]:py-11 max-[760px]:mx-0 max-[760px]:block max-[760px]:px-[22px] max-[760px]:py-[35px]"
-                aria-label="Keunggulan Eduo"
-            >
-                {(
-                    [
-                        [CalendarDays, 'Jadwal Kelas'],
-                        [MonitorPlay, 'Keunggulan Kelas online Interaktif'],
-                        [UsersRound, '100% Satisfaction Guaranteed'],
-                    ] as const
-                ).map(([Icon, title]) => (
-                    <div
-                        className="flex items-start gap-[18px] border-r border-[#E3E8F2] pr-[35px] last:border-r-0 max-[760px]:mb-5 max-[760px]:border-r-0 max-[760px]:border-b max-[760px]:pr-0 max-[760px]:pb-5 max-[760px]:last:mb-0 max-[760px]:last:border-b-0 max-[760px]:last:pb-0"
-                        key={title}
-                    >
-                        <span className="inline-flex size-12 shrink-0 items-center justify-center rounded-[10px] bg-[#DCECFC] text-[#1054D0]">
-                            <Icon size={25} />
-                        </span>
-                        <div>
-                            <h3 className="mt-1 mb-[9px] text-sm font-bold">
-                                {title}
-                            </h3>
-                            <p className="text-xs leading-[1.65] text-[#59648A]">
-                                Eduo menyediakan materi menarik bersama
-                                instruktur untuk siapa saja dan segala usia,
-                                tanpa perlu keluar rumah.
-                            </p>
-                        </div>
-                    </div>
-                ))}
+                <div
+                    className="flex transition-transform duration-700 ease-out motion-reduce:transition-none"
+                    style={{ transform: `translateX(-${activeSlide * 100}%)` }}
+                >
+                    {heroSlides.map((slide) => (
+                        <Link
+                            key={slide.src}
+                            className="group block w-full shrink-0 focus-visible:z-10 focus-visible:outline-4 focus-visible:outline-offset-[-4px] focus-visible:outline-[#2478E4]"
+                            href="/courses"
+                            aria-label="Lihat katalog kelas"
+                            tabIndex={0}
+                        >
+                            <img
+                                className="block h-auto w-full transition-[filter] duration-200 group-hover:brightness-[0.98]"
+                                src={slide.src}
+                                alt={slide.alt}
+                            />
+                        </Link>
+                    ))}
+                </div>
+                <div className="absolute bottom-5 left-1/2 flex -translate-x-1/2 items-center gap-2 rounded-full bg-black/20 px-3 py-2 backdrop-blur-sm max-[760px]:bottom-3">
+                    {heroSlides.map((slide, index) => (
+                        <button
+                            key={slide.src}
+                            type="button"
+                            className="size-2.5 rounded-full bg-white/60 transition-[width,background-color] duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                            style={
+                                activeSlide === index
+                                    ? { width: '1.5rem', backgroundColor: 'white' }
+                                    : undefined
+                            }
+                            onClick={() => setActiveSlide(index)}
+                            aria-label={`Tampilkan slide ${index + 1}`}
+                            aria-current={activeSlide === index}
+                        />
+                    ))}
+                </div>
             </section>
 
             <section className="bg-white">

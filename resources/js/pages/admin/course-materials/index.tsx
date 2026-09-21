@@ -1,10 +1,18 @@
-import { Head, Link, router } from '@inertiajs/react';
+import { Head, router } from '@inertiajs/react';
 import { Layers3, Pencil, Plus, Search, X } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { CourseMaterialDialog } from '@/components/admin/course-material-dialog';
+import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
 import { index } from '@/routes/admin/course-materials';
 
 type Material = {
@@ -26,7 +34,7 @@ type Pagination = {
     prev_page_url: string | null;
     next_page_url: string | null;
 };
-type Filters = { search?: string };
+type Filters = { search?: string; course_id?: number; per_page?: number };
 
 export default function CourseMaterialsIndex({
     materials,
@@ -37,7 +45,23 @@ export default function CourseMaterialsIndex({
     courses: Course[];
     filters: Filters;
 }) {
-    const [query, setQuery] = useState({ search: filters.search ?? '' });
+    const [query, setQuery] = useState({
+        search: filters.search ?? '',
+        course_id: String(filters.course_id ?? ''),
+        per_page: String(filters.per_page ?? 15),
+    });
+    const debouncedQuery = useDebouncedValue(query);
+    const didMount = useRef(false);
+    useEffect(() => {
+        if (!didMount.current) {
+            didMount.current = true;
+            return;
+        }
+        router.get(index.url(), { ...debouncedQuery, page: 1 }, {
+            preserveState: true,
+            replace: true,
+        });
+    }, [debouncedQuery]);
     const [selected, setSelected] = useState<Material | null>(null);
     const [open, setOpen] = useState(false);
     const openForm = (material: Material | null) => {
@@ -48,15 +72,22 @@ export default function CourseMaterialsIndex({
         setOpen(nextOpen);
         if (!nextOpen) setSelected(null);
     };
-    const applyFilters = (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        router.get(index.url(), query, { preserveState: true, replace: true });
+    const visitPage = (page: number): void => {
+        router.get(
+            index.url(),
+            { ...query, page },
+            { preserveState: true, replace: true },
+        );
     };
     const clearFilters = () => {
-        const empty = { search: '' };
+        const empty = { search: '', course_id: '', per_page: '15' };
         setQuery(empty);
-        router.get(index.url(), empty, { preserveState: true, replace: true });
     };
+    const pages = Array.from(
+        { length: materials.last_page },
+        (_, pageIndex) => pageIndex + 1,
+    );
+    const hasFilters = Boolean(query.search || query.course_id);
 
     return (
         <>
@@ -78,23 +109,46 @@ export default function CourseMaterialsIndex({
                         <Plus /> Tambah modul
                     </Button>
                 </div>
-                <form
-                    className="flex flex-col gap-3 sm:flex-row"
-                    onSubmit={applyFilters}
-                >
+                <div className="flex flex-col gap-3 sm:flex-row">
                     <div className="relative flex-1">
                         <Search className="text-muted-foreground absolute top-1/2 left-3 size-4 -translate-y-1/2" />
                         <Input
                             value={query.search}
                             onChange={(event) =>
-                                setQuery({ search: event.target.value })
+                                setQuery({
+                                    ...query,
+                                    search: event.target.value,
+                                })
                             }
                             className="pl-9"
                             placeholder="Cari modul atau kelas"
                         />
                     </div>
-                    <Button type="submit">Terapkan filter</Button>
-                    {query.search && (
+                    <Select
+                        value={query.course_id || 'all'}
+                        onValueChange={(value) =>
+                            setQuery({
+                                ...query,
+                                course_id: value === 'all' ? '' : value,
+                            })
+                        }
+                    >
+                        <SelectTrigger className="w-full sm:w-56">
+                            <SelectValue placeholder="Semua kelas" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="all">Semua kelas</SelectItem>
+                            {courses.map((course) => (
+                                <SelectItem
+                                    key={course.id}
+                                    value={String(course.id)}
+                                >
+                                    {course.title}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+                    {hasFilters && (
                         <Button
                             type="button"
                             variant="outline"
@@ -104,7 +158,7 @@ export default function CourseMaterialsIndex({
                             Bersihkan
                         </Button>
                     )}
-                </form>
+                </div>
                 <div className="bg-card overflow-hidden border">
                     <div className="overflow-x-auto">
                         <table className="w-full min-w-180 text-left text-sm">
@@ -116,7 +170,9 @@ export default function CourseMaterialsIndex({
                                     <th className="font-bold">Materi</th>
                                     <th className="font-bold">Status</th>
                                     <th className="font-bold">Urutan</th>
-                                    <th className="text-right font-bold">Tindakan</th>
+                                    <th className="text-right font-bold">
+                                        Tindakan
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y">
@@ -189,33 +245,93 @@ export default function CourseMaterialsIndex({
                             </p>
                         </div>
                     )}
-                    {materials.last_page > 1 && (
-                        <div className="flex items-center justify-between border-t px-5 py-4 text-sm">
+                    {(materials.last_page > 1 || materials.data.length > 0) && (
+                        <div className="flex flex-col gap-3 border-t px-5 py-4 text-sm sm:flex-row sm:items-end sm:justify-between">
                             <span className="text-muted-foreground">
                                 Halaman {materials.current_page} dari{' '}
                                 {materials.last_page}
                             </span>
-                            <div className="flex gap-2">
-                                <Button
-                                    asChild
-                                    variant="outline"
-                                    size="sm"
-                                    disabled={!materials.prev_page_url}
-                                >
-                                    <Link href={materials.prev_page_url ?? '#'}>
+                            <div className="flex flex-col items-start gap-2 sm:items-end">
+                                <div className="flex flex-wrap gap-2">
+                                    <Button
+                                        type="button"
+                                        variant="outline"
+                                        size="sm"
+                                        disabled={!materials.prev_page_url}
+                                        onClick={() =>
+                                            visitPage(
+                                                materials.current_page - 1,
+                                            )
+                                        }
+                                    >
                                         Sebelumnya
-                                    </Link>
-                                </Button>
-                                <Button
-                                    asChild
-                                    variant="outline"
-                                    size="sm"
-                                    disabled={!materials.next_page_url}
-                                >
-                                    <Link href={materials.next_page_url ?? '#'}>
+                                    </Button>
+                                    {pages.map((page) => (
+                                        <Button
+                                            key={page}
+                                            type="button"
+                                            variant={
+                                                page === materials.current_page
+                                                    ? 'default'
+                                                    : 'outline'
+                                            }
+                                            size="sm"
+                                            onClick={() => visitPage(page)}
+                                        >
+                                            {page}
+                                        </Button>
+                                    ))}
+                                    <Button
+                                        type="button"
+                                        variant="outline"
+                                        size="sm"
+                                        disabled={!materials.next_page_url}
+                                        onClick={() =>
+                                            visitPage(
+                                                materials.current_page + 1,
+                                            )
+                                        }
+                                    >
                                         Berikutnya
-                                    </Link>
-                                </Button>
+                                    </Button>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <span className="text-muted-foreground text-xs">
+                                        Per halaman
+                                    </span>
+                                    <Select
+                                        value={query.per_page}
+                                        onValueChange={(value) => {
+                                            const nextQuery = {
+                                                ...query,
+                                                per_page: value,
+                                            };
+                                            setQuery(nextQuery);
+                                            router.get(
+                                                index.url(),
+                                                { ...nextQuery, page: 1 },
+                                                {
+                                                    preserveState: true,
+                                                    replace: true,
+                                                },
+                                            );
+                                        }}
+                                    >
+                                        <SelectTrigger className="h-8 w-24">
+                                            <SelectValue />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {[10, 15, 25].map((value) => (
+                                                <SelectItem
+                                                    key={value}
+                                                    value={String(value)}
+                                                >
+                                                    {value}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                </div>
                             </div>
                         </div>
                     )}

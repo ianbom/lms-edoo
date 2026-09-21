@@ -22,12 +22,12 @@ export default function Login({ status }: Props) {
             <Form
                 {...store.form()}
                 resetOnSuccess={['password']}
-                className="flex flex-col gap-5"
+                className="flex flex-col gap-4"
             >
                 {({ processing, errors }) => (
                     <>
-                        <div className="grid gap-6">
-                            <div className="grid gap-2">
+                        <div className="grid gap-5">
+                            <div className="grid gap-1.5">
                                 <Label htmlFor="phone">Nomor telepon</Label>
                                 <Input
                                     id="phone"
@@ -38,12 +38,12 @@ export default function Login({ status }: Props) {
                                     tabIndex={1}
                                     autoComplete="tel"
                                     placeholder="Masukkan nomor telepon"
-                                    className="h-11 rounded-lg bg-white"
+                                    className="h-10 rounded-lg bg-white"
                                 />
                                 <InputError message={errors.phone} />
                             </div>
 
-                            <div className="grid gap-2">
+                            <div className="grid gap-1.5">
                                 <div className="flex items-center">
                                     <Label htmlFor="password">Password</Label>
                                 </div>
@@ -54,7 +54,7 @@ export default function Login({ status }: Props) {
                                     tabIndex={2}
                                     autoComplete="current-password"
                                     placeholder="Masukkan password"
-                                    className="h-11 rounded-lg bg-white"
+                                    className="h-10 rounded-lg bg-white"
                                 />
                                 <InputError message={errors.password} />
                             </div>
@@ -70,7 +70,7 @@ export default function Login({ status }: Props) {
 
                             <Button
                                 type="submit"
-                                className="mt-2 h-11 w-full rounded-lg active:scale-[0.98]"
+                                className="mt-1 h-10 w-full rounded-lg active:scale-[0.98]"
                                 tabIndex={4}
                                 disabled={processing}
                                 data-test="login-button"

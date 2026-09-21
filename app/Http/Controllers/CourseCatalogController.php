@@ -36,8 +36,7 @@ class CourseCatalogController extends Controller
             ->when($filters['category'] ?? null, fn (Builder $query, string $category) => $query
                 ->whereHas('category', fn (Builder $categoryQuery) => $categoryQuery->where('slug', $category)))
             ->latest('published_at')
-            ->paginate(6)
-            ->withQueryString();
+            ->get();
 
         $categories = CourseCategory::query()
             ->whereHas('courses', fn (Builder $query) => $query->where('status', $published))

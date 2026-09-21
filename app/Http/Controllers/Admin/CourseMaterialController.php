@@ -16,7 +16,15 @@ class CourseMaterialController extends Controller
 
     public function index(Request $request): Response
     {
-        $filters = $request->validate(['search' => ['nullable', 'string', 'max:255']]);
+        $filters = $request->validate([
+            'search' => ['nullable', 'string', 'max:255'],
+            'course_id' => ['nullable', 'integer', 'exists:courses,id'],
+            'per_page' => ['nullable', 'integer', 'in:10,15,25'],
+        ]);
+        $filters['course_id'] = isset($filters['course_id'])
+            ? (int) $filters['course_id']
+            : null;
+        $filters['per_page'] = (int) ($filters['per_page'] ?? 15);
 
         return Inertia::render('admin/course-materials/index', ['materials' => $this->service->paginate($filters), ...$this->service->options(), 'filters' => $filters]);
     }

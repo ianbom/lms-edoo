@@ -21,14 +21,6 @@ type Course = {
     videos_count: number;
     enrollments_count: number;
 };
-type Courses = {
-    data: Course[];
-    current_page: number;
-    last_page: number;
-    prev_page_url: string | null;
-    next_page_url: string | null;
-};
-
 const formatCount = (value: number): string =>
     new Intl.NumberFormat('id-ID').format(value);
 
@@ -115,7 +107,7 @@ export default function CourseCatalog({
     categories,
     filters,
 }: {
-    courses: Courses;
+    courses: Course[];
     categories: Category[];
     filters: { search: string; category: string };
 }) {
@@ -177,12 +169,12 @@ export default function CourseCatalog({
                     )}
 
                     <div className="mt-5 grid gap-[18px] md:grid-cols-2 xl:grid-cols-3">
-                        {courses.data.map((course) => (
+                        {courses.map((course) => (
                             <CourseCard key={course.id} course={course} />
                         ))}
                     </div>
 
-                    {courses.data.length === 0 && (
+                    {courses.length === 0 && (
                         <div className="mt-5 rounded-[14px] border border-dashed border-[#C9D9F0] bg-white px-6 py-20 text-center">
                             <Search className="mx-auto size-9 text-[#105BDD]" />
                             <h2 className="mt-4 text-xl font-bold text-[#071457]">
@@ -194,33 +186,6 @@ export default function CourseCatalog({
                         </div>
                     )}
 
-                    {courses.last_page > 1 && (
-                        <nav
-                            className="mt-7 flex items-center justify-center gap-3"
-                            aria-label="Pagination kelas"
-                        >
-                            {courses.prev_page_url && (
-                                <Link
-                                    href={courses.prev_page_url}
-                                    className="rounded-full border border-[#D9E4F5] bg-white px-5 py-2.5 text-sm font-semibold text-[#105BDD]"
-                                >
-                                    Sebelumnya
-                                </Link>
-                            )}
-                            <span className="text-sm text-[#60709A]">
-                                Halaman {courses.current_page} dari{' '}
-                                {courses.last_page}
-                            </span>
-                            {courses.next_page_url && (
-                                <Link
-                                    href={courses.next_page_url}
-                                    className="rounded-full bg-[#105BDD] px-5 py-2.5 text-sm font-semibold text-white"
-                                >
-                                    Berikutnya
-                                </Link>
-                            )}
-                        </nav>
-                    )}
                 </div>
             </section>
         </>

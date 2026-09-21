@@ -48,11 +48,11 @@ class CourseCatalogTest extends TestCase
                 ->where('filters.search', 'Peternakan')
                 ->where('filters.category', 'agribisnis')
                 ->has('categories', 1)
-                ->has('courses.data', 1)
-                ->where('courses.data.0.id', $course->id)
-                ->where('courses.data.0.videos_count', 1)
-                ->where('courses.data.0.enrollments_count', 1)
-                ->missing('courses.data.1')
+                ->has('courses', 1)
+                ->where('courses.0.id', $course->id)
+                ->where('courses.0.videos_count', 1)
+                ->where('courses.0.enrollments_count', 1)
+                ->missing('courses.1')
             );
 
         $this->assertModelExists($draft);

@@ -2,16 +2,14 @@ import { Head, Link } from '@inertiajs/react';
 import {
     ArrowLeft,
     BookOpen,
-    CheckCircle2,
-    Clock3,
     FileText,
     GraduationCap,
     Layers3,
     Pencil,
-    PlayCircle,
     Users,
     Video,
 } from 'lucide-react';
+import { SortableCurriculum } from '@/components/admin/sortable-curriculum';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -138,48 +136,6 @@ function StatCard({
         </Card>
     );
 }
-function ContentRow({ content }: { content: Content }) {
-    const isVideo = content.type === 'video';
-
-    return (
-        <div className="bg-background flex items-start gap-3 rounded-lg border px-4 py-3">
-            <span className="bg-muted text-muted-foreground mt-0.5 grid size-8 shrink-0 place-items-center rounded-md">
-                {isVideo ? (
-                    <PlayCircle className="size-4" />
-                ) : (
-                    <FileText className="size-4" />
-                )}
-            </span>
-            <div className="min-w-0 flex-1">
-                <div className="flex flex-wrap items-center gap-2">
-                    <p className="font-medium">{content.title}</p>
-                    <Badge variant="outline" className="text-[11px]">
-                        {isVideo ? 'Video' : 'Textbook'}
-                    </Badge>
-                    {content.is_published ? (
-                        <CheckCircle2 className="size-4 text-emerald-600" />
-                    ) : (
-                        <Badge variant="secondary" className="text-[11px]">
-                            Draft
-                        </Badge>
-                    )}
-                </div>
-                {content.description && (
-                    <p className="text-muted-foreground mt-1 line-clamp-2 text-sm">
-                        {content.description}
-                    </p>
-                )}
-            </div>
-            {isVideo && content.video_duration_seconds && (
-                <span className="text-muted-foreground flex shrink-0 items-center gap-1 text-xs">
-                    <Clock3 className="size-3.5" />
-                    {Math.floor(content.video_duration_seconds / 60)} menit
-                </span>
-            )}
-        </div>
-    );
-}
-
 export default function CourseShow({ course }: { course: Course }) {
     return (
         <>
@@ -292,7 +248,7 @@ export default function CourseShow({ course }: { course: Course }) {
                                         Kurikulum kelas
                                     </CardTitle>
                                     <CardDescription className="mt-1">
-                                        Struktur modul dan materi yang tersedia.
+                                        Tarik handle untuk mengatur urutan modul dan materi.
                                     </CardDescription>
                                 </div>
                                 <Badge variant="outline">
@@ -301,79 +257,10 @@ export default function CourseShow({ course }: { course: Course }) {
                             </div>
                         </CardHeader>
                         <CardContent className="space-y-4">
-                            {course.materials.length ? (
-                                course.materials.map(
-                                    (material, materialIndex) => (
-                                        <div
-                                            key={material.id}
-                                            className="rounded-xl border p-4"
-                                        >
-                                            <div className="flex flex-wrap items-start justify-between gap-3">
-                                                <div>
-                                                    <p className="text-primary text-xs font-semibold tracking-[0.16em] uppercase">
-                                                        Modul{' '}
-                                                        {materialIndex + 1}
-                                                    </p>
-                                                    <h2 className="mt-1 font-semibold">
-                                                        {material.title}
-                                                    </h2>
-                                                    {material.description && (
-                                                        <p className="text-muted-foreground mt-1 text-sm">
-                                                            {
-                                                                material.description
-                                                            }
-                                                        </p>
-                                                    )}
-                                                </div>
-                                                <div className="flex items-center gap-2">
-                                                    <Badge variant="secondary">
-                                                        {
-                                                            material.contents
-                                                                .length
-                                                        }{' '}
-                                                        materi
-                                                    </Badge>
-                                                    <Badge
-                                                        variant={
-                                                            material.is_published
-                                                                ? 'default'
-                                                                : 'outline'
-                                                        }
-                                                    >
-                                                        {material.is_published
-                                                            ? 'Terbit'
-                                                            : 'Draft'}
-                                                    </Badge>
-                                                </div>
-                                            </div>
-                                            <Separator className="my-4" />
-                                            <div className="space-y-2">
-                                                {material.contents.length ? (
-                                                    material.contents.map(
-                                                        (content) => (
-                                                            <ContentRow
-                                                                key={content.id}
-                                                                content={
-                                                                    content
-                                                                }
-                                                            />
-                                                        ),
-                                                    )
-                                                ) : (
-                                                    <p className="text-muted-foreground rounded-lg border border-dashed p-4 text-sm">
-                                                        Belum ada materi pada
-                                                        modul ini.
-                                                    </p>
-                                                )}
-                                            </div>
-                                        </div>
-                                    ),
-                                )
-                            ) : (
-                                <div className="text-muted-foreground rounded-lg border border-dashed p-8 text-center text-sm">
-                                    Belum ada modul pembelajaran.
-                                </div>
-                            )}
+                            <SortableCurriculum
+                                courseId={course.id}
+                                initialMaterials={course.materials}
+                            />
                         </CardContent>
                     </Card>
 
