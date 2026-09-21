@@ -16,16 +16,16 @@ type Ebook = {
 export default function Ebooks({ ebooks }: { ebooks: Ebook[] }) {
     return (
         <>
-            <Head title="E-Books" />
+            <Head title='E-Book' />
 
             <section className="px-5 pb-10 sm:px-8 lg:px-10">
                 <div className="mx-auto max-w-7xl">
                     <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
                         <div>
-                            <h1 className="mt-4 text-3xl font-extrabold tracking-[-0.9px] text-[#071842] sm:text-[36px]">
-                                E-Books
+                            <h1 className="mt-2 text-[28px] leading-none font-extrabold tracking-[-.8px] text-[#101b5d]">
+                                E-Book
                             </h1>
-                            <p className="mt-2 max-w-2xl text-sm leading-6 text-[#627395] sm:text-base">
+                            <p className="mt-2 text-sm text-[#5972a0]">
                                 Jelajahi koleksi bacaan untuk mendukung proses
                                 belajarmu.
                             </p>

@@ -107,17 +107,17 @@ export function EbookDialog({
             <DialogContent className="max-h-[calc(100vh-2rem)] overflow-y-auto sm:max-w-3xl">
                 <DialogHeader>
                     <DialogTitle>
-                        {ebook ? 'Edit ebook' : 'Create ebook'}
+                        {ebook ? 'Ubah e-book' : 'Buat e-book'}
                     </DialogTitle>
                     <DialogDescription>
-                        Add the ebook metadata, cover, and downloadable PDF.
+                        Tambahkan informasi e-book, sampul, dan PDF yang bisa diunduh.
                     </DialogDescription>
                 </DialogHeader>
 
                 <form className="space-y-5" onSubmit={submit}>
                     <div className="grid gap-5 sm:grid-cols-2">
                         <Field
-                            label="Category"
+                            label="Kategori"
                             error={form.errors.ebook_category_id}
                         >
                             <Select
@@ -127,7 +127,7 @@ export function EbookDialog({
                                 }
                             >
                                 <SelectTrigger className="w-full">
-                                    <SelectValue placeholder="Select category" />
+                                    <SelectValue placeholder='Pilih kategori' />
                                 </SelectTrigger>
                                 <SelectContent>
                                     {categories.map((category) => (
@@ -163,7 +163,7 @@ export function EbookDialog({
                                 </SelectContent>
                             </Select>
                         </Field>
-                        <Field label="Title" error={form.errors.title}>
+                        <Field label="Judul" error={form.errors.title}>
                             <Input
                                 value={form.data.title}
                                 onChange={(event) =>
@@ -183,7 +183,7 @@ export function EbookDialog({
                                 required
                             />
                         </Field>
-                        <Field label="Author" error={form.errors.author}>
+                        <Field label="Penulis" error={form.errors.author}>
                             <Input
                                 value={form.data.author}
                                 onChange={(event) =>
@@ -192,7 +192,7 @@ export function EbookDialog({
                             />
                         </Field>
                         <Field
-                            label="Total pages"
+                            label="Total halaman"
                             error={form.errors.total_pages}
                         >
                             <Input
@@ -207,7 +207,7 @@ export function EbookDialog({
                                 }
                             />
                         </Field>
-                        <Field label="Cover" error={form.errors.cover}>
+                        <Field label="Sampul" error={form.errors.cover}>
                             <Input
                                 type="file"
                                 accept="image/jpeg,image/png,image/webp"
@@ -220,11 +220,11 @@ export function EbookDialog({
                             />
                             {ebook?.cover_url && !form.data.cover && (
                                 <p className="text-muted-foreground text-xs">
-                                    Existing cover will be kept.
+                                    Sampul yang ada akan tetap digunakan.
                                 </p>
                             )}
                         </Field>
-                        <Field label="PDF file" error={form.errors.file}>
+                        <Field label="File PDF" error={form.errors.file}>
                             <Input
                                 type="file"
                                 accept="application/pdf"
@@ -237,12 +237,12 @@ export function EbookDialog({
                             />
                             {ebook?.file_name && !form.data.file && (
                                 <p className="text-muted-foreground text-xs">
-                                    Existing file: {ebook.file_name}
+                                    File saat ini: {ebook.file_name}
                                 </p>
                             )}
                         </Field>
                         <Field
-                            label="Published date"
+                            label="Tanggal terbit"
                             error={form.errors.published_at}
                         >
                             <Input
@@ -259,7 +259,7 @@ export function EbookDialog({
                     </div>
 
                     <Field
-                        label="Short description"
+                        label="Deskripsi singkat"
                         error={form.errors.short_description}
                     >
                         <textarea
@@ -273,7 +273,7 @@ export function EbookDialog({
                             className="border-input focus-visible:border-ring focus-visible:ring-ring/50 min-h-20 w-full rounded-md border bg-transparent px-3 py-2 text-sm shadow-xs outline-none focus-visible:ring-[3px]"
                         />
                     </Field>
-                    <Field label="Description" error={form.errors.description}>
+                    <Field label="Deskripsi" error={form.errors.description}>
                         <textarea
                             value={form.data.description}
                             onChange={(event) =>
@@ -290,13 +290,13 @@ export function EbookDialog({
                             onClick={close}
                             disabled={form.processing}
                         >
-                            Cancel
+                            Batal
                         </Button>
                         <Button disabled={form.processing}>
                             {form.processing && (
                                 <LoaderCircle className="animate-spin" />
                             )}
-                            {ebook ? 'Save changes' : 'Create ebook'}
+                            {ebook ? 'Simpan perubahan' : 'Buat e-book'}
                         </Button>
                     </DialogFooter>
                 </form>

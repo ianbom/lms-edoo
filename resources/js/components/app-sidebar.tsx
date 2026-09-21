@@ -33,63 +33,63 @@ export function AppSidebar() {
     const { auth } = usePage<{ auth: Auth }>().props;
     const groups = [
         {
-            title: 'Overview',
+            title: 'Ringkasan',
             items: [
-                { title: 'Dashboard', href: dashboard(), icon: LayoutGrid },
+                { title: 'Dasbor', href: dashboard(), icon: LayoutGrid },
             ],
         },
         ...(auth.user.role === 'admin'
             ? [
                   {
-                      title: 'Learning Management',
+                      title: 'Manajemen Pembelajaran',
                       items: [
                           {
-                              title: 'Courses',
+                              title: 'Kelas',
                               href: courses(),
                               icon: Library,
                           },
                           {
-                              title: 'Course Materials',
+                              title: 'Modul Kelas',
                               href: '/admin/course-materials',
                               icon: Layers3,
                           },
                           {
-                              title: 'Learning Contents',
+                              title: 'Materi Pembelajaran',
                               href: '/admin/learning-contents',
                               icon: FileText,
                           },
                           {
-                              title: 'Course Categories',
+                              title: 'Kategori Kelas',
                               href: courseCategories(),
                               icon: Tags,
                           },
                           {
-                              title: 'Teachers',
+                              title: 'Instruktur',
                               href: teachers(),
                               icon: UserRound,
                           },
                       ],
                   },
                   {
-                      title: 'Library',
+                      title: 'Perpustakaan',
                       items: [
                           {
-                              title: 'Ebook Categories',
+                              title: 'Kategori E-book',
                               href: ebookCategories(),
                               icon: Tags,
                           },
                           {
-                              title: 'Ebooks',
+                              title: 'E-book',
                               href: ebooks(),
                               icon: Library,
                           },
                       ],
                   },
                   {
-                      title: 'User Management',
+                      title: 'Manajemen Pengguna',
                       items: [
                           {
-                              title: 'Students',
+                              title: 'Siswa',
                               href: students(),
                               icon: Users,
                           },

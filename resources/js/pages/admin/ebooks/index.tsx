@@ -25,6 +25,7 @@ type Pagination = {
     data: Ebook[];
     current_page: number;
     last_page: number;
+    per_page: number;
     prev_page_url: string | null;
     next_page_url: string | null;
 };
@@ -68,21 +69,21 @@ export default function EbooksIndex({
 
     return (
         <>
-            <Head title="Ebooks" />
+            <Head title='E-book' />
 
             <div className="space-y-6 p-4 md:p-6">
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                     <div>
                         <h1 className="text-2xl font-semibold tracking-tight">
-                            Ebooks
+                            E-book
                         </h1>
                         <p className="text-muted-foreground text-sm">
-                            Manage downloadable resources in the library.
+                            Kelola sumber belajar yang bisa diunduh di perpustakaan.
                         </p>
                     </div>
                     <Button onClick={() => openForm(null)}>
                         <Plus />
-                        Add ebook
+                        Tambah e-book
                     </Button>
                 </div>
 
@@ -101,7 +102,7 @@ export default function EbooksIndex({
                                 })
                             }
                             className="pl-9"
-                            placeholder="Search title or author"
+                            placeholder="Cari judul atau penulis"
                         />
                     </div>
                     <Select
@@ -114,10 +115,10 @@ export default function EbooksIndex({
                         }
                     >
                         <SelectTrigger className="w-full lg:w-52">
-                            <SelectValue placeholder="All categories" />
+                            <SelectValue placeholder='Semua kategori' />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="all">All categories</SelectItem>
+                            <SelectItem value="all">Semua kategori</SelectItem>
                             {categories.map((category) => (
                                 <SelectItem
                                     key={category.id}
@@ -138,10 +139,10 @@ export default function EbooksIndex({
                         }
                     >
                         <SelectTrigger className="w-full lg:w-44">
-                            <SelectValue placeholder="All statuses" />
+                            <SelectValue placeholder='Semua status' />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="all">All statuses</SelectItem>
+                            <SelectItem value="all">Semua status</SelectItem>
                             {statuses.map((status) => (
                                 <SelectItem key={status} value={status}>
                                     {formatStatus(status)}
@@ -149,7 +150,7 @@ export default function EbooksIndex({
                             ))}
                         </SelectContent>
                     </Select>
-                    <Button type="submit">Filter</Button>
+                    <Button type="submit">Terapkan filter</Button>
                     {(query.search || query.category || query.status) && (
                         <Button
                             type="button"
@@ -157,42 +158,49 @@ export default function EbooksIndex({
                             onClick={clearFilters}
                         >
                             <X />
-                            Clear
+                            Bersihkan
                         </Button>
                     )}
                 </form>
 
-                <div className="bg-card overflow-hidden rounded-xl border">
+                <div className="bg-card overflow-hidden border">
                     <div className="overflow-x-auto">
                         <table className="w-full min-w-250 text-left text-sm">
-                            <thead className="bg-muted/50 text-muted-foreground border-b text-xs uppercase">
+                            <thead className="bg-muted/50 border-b">
                                 <tr>
-                                    <th className="px-5 py-3 font-medium">
-                                        Ebook
+                                    <th className="px-5 py-3 font-bold">No.</th>
+                                    <th className="px-5 py-3 font-bold">
+                                        E-book
                                     </th>
-                                    <th className="px-5 py-3 font-medium">
-                                        Category
+                                    <th className="px-5 py-3 font-bold">
+                                        Kategori
                                     </th>
-                                    <th className="px-5 py-3 font-medium">
+                                    <th className="px-5 py-3 font-bold">
                                         Status
                                     </th>
-                                    <th className="px-5 py-3 font-medium">
+                                    <th className="px-5 py-3 font-bold">
                                         File
                                     </th>
-                                    <th className="px-5 py-3 font-medium">
-                                        Updated
+                                    <th className="px-5 py-3 font-bold">
+                                        Diperbarui
                                     </th>
-                                    <th className="px-5 py-3 text-right font-medium">
-                                        Actions
+                                    <th className="px-5 py-3 text-right font-bold">
+                                        Tindakan
                                     </th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y">
-                                {ebooks.data.map((ebook) => (
+                                {ebooks.data.map((ebook, ebookIndex) => (
                                     <tr
                                         key={ebook.id}
                                         className="hover:bg-muted/30"
                                     >
+                                        <td className="text-muted-foreground px-5 py-4">
+                                            {(ebooks.current_page - 1) *
+                                                ebooks.per_page +
+                                                ebookIndex +
+                                                1}
+                                        </td>
                                         <td className="max-w-md px-5 py-4">
                                             <div className="flex items-center gap-3">
                                                 {ebook.cover_url ? (
@@ -225,7 +233,7 @@ export default function EbooksIndex({
                                                     )}
                                                     <p className="text-muted-foreground mt-1 text-xs">
                                                         {ebook.author ??
-                                                            'No author'}
+                                                            'Penulis belum tersedia'}
                                                     </p>
                                                 </div>
                                             </div>
@@ -243,7 +251,7 @@ export default function EbooksIndex({
                                             </Badge>
                                         </td>
                                         <td className="text-muted-foreground px-5 py-4">
-                                            {ebook.file_name ?? 'No PDF'}
+                                            {ebook.file_name ?? 'PDF belum tersedia'}
                                             {ebook.total_pages && (
                                                 <span className="block text-xs">
                                                     {ebook.total_pages} pages
@@ -267,7 +275,7 @@ export default function EbooksIndex({
                                                     }
                                                 >
                                                     <Pencil />
-                                                    Edit
+                                                    Ubah
                                                 </Button>
                                                 <Button
                                                     variant="destructive"
@@ -277,7 +285,7 @@ export default function EbooksIndex({
                                                     }
                                                 >
                                                     <Trash2 />
-                                                    Delete
+                                                    Hapus
                                                 </Button>
                                             </div>
                                         </td>
@@ -290,24 +298,24 @@ export default function EbooksIndex({
                         <div className="flex flex-col items-center px-6 py-16 text-center">
                             <BookOpen className="text-muted-foreground size-10" />
                             <h2 className="mt-4 font-semibold">
-                                No ebooks found
+                                Belum ada e-book
                             </h2>
                             <p className="text-muted-foreground mt-1 text-sm">
-                                Add an ebook or change the current filters.
+                                Tambah e-book or change the current filters.
                             </p>
                             <Button
                                 className="mt-5"
                                 onClick={() => openForm(null)}
                             >
                                 <Plus />
-                                Add ebook
+                                Tambah e-book
                             </Button>
                         </div>
                     )}
                     {ebooks.last_page > 1 && (
                         <div className="flex items-center justify-between border-t px-5 py-4 text-sm">
                             <span className="text-muted-foreground">
-                                Page {ebooks.current_page} of {ebooks.last_page}
+                                Halaman {ebooks.current_page} dari {ebooks.last_page}
                             </span>
                             <div className="flex gap-2">
                                 <Button
@@ -317,7 +325,7 @@ export default function EbooksIndex({
                                     disabled={!ebooks.prev_page_url}
                                 >
                                     <Link href={ebooks.prev_page_url ?? '#'}>
-                                        Previous
+                                        Sebelumnya
                                     </Link>
                                 </Button>
                                 <Button
@@ -327,7 +335,7 @@ export default function EbooksIndex({
                                     disabled={!ebooks.next_page_url}
                                 >
                                     <Link href={ebooks.next_page_url ?? '#'}>
-                                        Next
+                                        Berikutnya
                                     </Link>
                                 </Button>
                             </div>
@@ -356,6 +364,6 @@ export default function EbooksIndex({
 
 EbooksIndex.layout = {
     breadcrumbs: [
-        { title: 'Ebooks', href: index() },
+        { title: 'E-book', href: index() },
     ] satisfies BreadcrumbItem[],
 };

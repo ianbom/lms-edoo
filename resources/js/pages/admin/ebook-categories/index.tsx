@@ -46,44 +46,48 @@ export default function EbookCategoriesIndex({
                     </div>
                     <Button onClick={() => openForm(null)}>
                         <Plus />
-                        Add category
+                        Tambah kategori
                     </Button>
                 </div>
 
-                <div className="bg-card overflow-hidden rounded-xl border">
+                <div className="bg-card overflow-hidden border">
                     <div className="overflow-x-auto">
                         <table className="w-full min-w-225 text-left text-sm">
-                            <thead className="bg-muted/50 text-muted-foreground border-b text-xs uppercase">
+                            <thead className="bg-muted/50 border-b">
                                 <tr>
-                                    <th className="px-5 py-3 font-medium">
-                                        Category
+                                    <th className="px-5 py-3 font-bold">No.</th>
+                                    <th className="px-5 py-3 font-bold">
+                                        Kategori
                                     </th>
-                                    <th className="px-5 py-3 font-medium">
+                                    <th className="px-5 py-3 font-bold">
                                         Slug
                                     </th>
-                                    <th className="px-5 py-3 font-medium">
-                                        Ebooks
+                                    <th className="px-5 py-3 font-bold">
+                                        E-book
                                     </th>
-                                    <th className="px-5 py-3 font-medium">
+                                    <th className="px-5 py-3 font-bold">
                                         Status
                                     </th>
-                                    <th className="px-5 py-3 font-medium">
-                                        Position
+                                    <th className="px-5 py-3 font-bold">
+                                        Urutan
                                     </th>
-                                    <th className="px-5 py-3 font-medium">
-                                        Updated
+                                    <th className="px-5 py-3 font-bold">
+                                        Diperbarui
                                     </th>
-                                    <th className="px-5 py-3 text-right font-medium">
-                                        Actions
+                                    <th className="px-5 py-3 text-right font-bold">
+                                        Tindakan
                                     </th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y">
-                                {categories.map((category) => (
+                                {categories.map((category, categoryIndex) => (
                                     <tr
                                         key={category.id}
                                         className="hover:bg-muted/30"
                                     >
+                                        <td className="text-muted-foreground px-5 py-4">
+                                            {categoryIndex + 1}
+                                        </td>
                                         <td className="max-w-md px-5 py-4">
                                             <div className="min-w-0">
                                                 <p className="font-medium">
@@ -111,7 +115,7 @@ export default function EbookCategoriesIndex({
                                                 }
                                             >
                                                 {category.is_active
-                                                    ? 'Active'
+                                                    ? 'Aktif'
                                                     : 'Inactive'}
                                             </Badge>
                                         </td>
@@ -131,7 +135,7 @@ export default function EbookCategoriesIndex({
                                                     }
                                                 >
                                                     <Pencil />
-                                                    Edit
+                                                    Ubah
                                                 </Button>
                                                 <Button
                                                     variant="destructive"
@@ -145,7 +149,7 @@ export default function EbookCategoriesIndex({
                                                     }
                                                 >
                                                     <Trash2 />
-                                                    Delete
+                                                    Hapus
                                                 </Button>
                                             </div>
                                         </td>
@@ -159,17 +163,17 @@ export default function EbookCategoriesIndex({
                         <div className="flex flex-col items-center px-6 py-16 text-center">
                             <BookOpen className="text-muted-foreground size-10" />
                             <h2 className="mt-4 font-semibold">
-                                No ebook categories
+                                Belum ada kategori e-book
                             </h2>
                             <p className="text-muted-foreground mt-1 text-sm">
-                                Create a category before adding ebooks.
+                                Buat kategori sebelum menambahkan e-book.
                             </p>
                             <Button
                                 className="mt-5"
                                 onClick={() => openForm(null)}
                             >
                                 <Plus />
-                                Add category
+                                Tambah kategori
                             </Button>
                         </div>
                     )}

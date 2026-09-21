@@ -47,10 +47,10 @@ export function DeleteCourseCategoryDialog({
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>Delete course category?</DialogTitle>
+                    <DialogTitle>Hapus kategori kelas?</DialogTitle>
                     <DialogDescription>
-                        “{category?.name}” will be removed from the active
-                        category list.
+                        “{category?.name}” akan dihapus dari daftar kategori
+                        aktif.
                     </DialogDescription>
                 </DialogHeader>
 
@@ -60,7 +60,7 @@ export function DeleteCourseCategoryDialog({
                         onClick={() => onOpenChange(false)}
                         disabled={processing}
                     >
-                        Cancel
+                        Batal
                     </Button>
                     <Button
                         variant="destructive"
@@ -70,7 +70,7 @@ export function DeleteCourseCategoryDialog({
                         {processing && (
                             <LoaderCircle className="animate-spin" />
                         )}
-                        Delete category
+                        Hapus kategori
                     </Button>
                 </DialogFooter>
             </DialogContent>

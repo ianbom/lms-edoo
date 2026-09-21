@@ -16,7 +16,11 @@ class LearningContentController extends Controller
 
     public function index(Request $request): Response
     {
-        $filters = $request->validate(['search' => ['nullable', 'string', 'max:255']]);
+        $filters = $request->validate([
+            'search' => ['nullable', 'string', 'max:255'],
+            'per_page' => ['nullable', 'integer', 'in:10,15,25'],
+        ]);
+        $filters['per_page'] = (int) ($filters['per_page'] ?? 15);
 
         return Inertia::render('admin/learning-contents/index', ['contents' => $this->service->paginate($filters), ...$this->service->options(), 'filters' => $filters]);
     }

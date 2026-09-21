@@ -79,17 +79,17 @@ export function CourseCategoryDialog({
                 <DialogHeader>
                     <DialogTitle>
                         {isEditing
-                            ? 'Edit course category'
-                            : 'Create course category'}
+                            ? 'Ubah kategori kelas'
+                            : 'Buat kategori kelas'}
                     </DialogTitle>
                     <DialogDescription>
-                        Use categories to group related courses in the catalog.
+                        Gunakan kategori untuk mengelompokkan kelas di katalog.
                     </DialogDescription>
                 </DialogHeader>
 
                 <form className="space-y-5" onSubmit={submit}>
                     <div className="grid gap-2">
-                        <Label htmlFor="course-category-name">Name</Label>
+                        <Label htmlFor="course-category-name">Nama</Label>
                         <Input
                             id="course-category-name"
                             value={form.data.name}
@@ -120,7 +120,7 @@ export function CourseCategoryDialog({
 
                     <div className="grid gap-2">
                         <Label htmlFor="course-category-description">
-                            Description
+                            Deskripsi
                         </Label>
                         <textarea
                             id="course-category-description"
@@ -141,13 +141,13 @@ export function CourseCategoryDialog({
                             onClick={close}
                             disabled={form.processing}
                         >
-                            Cancel
+                            Batal
                         </Button>
                         <Button disabled={form.processing}>
                             {form.processing && (
                                 <LoaderCircle className="animate-spin" />
                             )}
-                            {isEditing ? 'Save changes' : 'Create category'}
+                            {isEditing ? 'Simpan perubahan' : 'Buat kategori'}
                         </Button>
                     </DialogFooter>
                 </form>

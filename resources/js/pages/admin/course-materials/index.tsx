@@ -60,22 +60,22 @@ export default function CourseMaterialsIndex({
 
     return (
         <>
-            <Head title="Course Materials" />
+            <Head title="Modul Kelas" />
             <div className="space-y-6 p-4 md:p-6">
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                     <div>
                         <p className="text-primary text-xs font-semibold tracking-[0.18em] uppercase">
-                            Curriculum
+                            Kurikulum
                         </p>
                         <h1 className="mt-1 text-2xl font-semibold tracking-tight">
-                            Course Materials
+                            Modul Kelas
                         </h1>
                         <p className="text-muted-foreground text-sm">
-                            Manage the modules that structure each course.
+                            Kelola modul yang menyusun setiap kelas.
                         </p>
                     </div>
                     <Button onClick={() => openForm(null)}>
-                        <Plus /> Add material
+                        <Plus /> Tambah modul
                     </Button>
                 </div>
                 <form
@@ -90,10 +90,10 @@ export default function CourseMaterialsIndex({
                                 setQuery({ search: event.target.value })
                             }
                             className="pl-9"
-                            placeholder="Search materials or courses"
+                            placeholder="Cari modul atau kelas"
                         />
                     </div>
-                    <Button type="submit">Filter</Button>
+                    <Button type="submit">Terapkan filter</Button>
                     {query.search && (
                         <Button
                             type="button"
@@ -101,22 +101,22 @@ export default function CourseMaterialsIndex({
                             onClick={clearFilters}
                         >
                             <X />
-                            Clear
+                            Bersihkan
                         </Button>
                     )}
                 </form>
-                <div className="bg-card overflow-hidden rounded-2xl border shadow-sm">
+                <div className="bg-card overflow-hidden border">
                     <div className="overflow-x-auto">
                         <table className="w-full min-w-180 text-left text-sm">
-                            <thead className="bg-muted/40 border-b">
+                            <thead className="bg-muted/50 border-b">
                                 <tr>
-                                    <th className="px-5 py-3">No.</th>
-                                    <th>Material</th>
-                                    <th>Course</th>
-                                    <th>Contents</th>
-                                    <th>Status</th>
-                                    <th>Position</th>
-                                    <th className="text-right">Action</th>
+                                    <th className="px-5 py-3 font-bold">No.</th>
+                                    <th className="font-bold">Modul</th>
+                                    <th className="font-bold">Kelas</th>
+                                    <th className="font-bold">Materi</th>
+                                    <th className="font-bold">Status</th>
+                                    <th className="font-bold">Urutan</th>
+                                    <th className="text-right font-bold">Tindakan</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y">
@@ -140,7 +140,7 @@ export default function CourseMaterialsIndex({
                                                         </p>
                                                         <p className="text-muted-foreground text-xs">
                                                             {material.description ||
-                                                                'No description'}
+                                                                'Belum ada deskripsi'}
                                                         </p>
                                                     </div>
                                                 </div>
@@ -156,8 +156,8 @@ export default function CourseMaterialsIndex({
                                                     }
                                                 >
                                                     {material.is_published
-                                                        ? 'Published'
-                                                        : 'Draft'}
+                                                        ? 'Dipublikasikan'
+                                                        : 'Draf'}
                                                 </Badge>
                                             </td>
                                             <td>{material.position}</td>
@@ -169,7 +169,7 @@ export default function CourseMaterialsIndex({
                                                         openForm(material)
                                                     }
                                                 >
-                                                    <Pencil /> Edit
+                                                    <Pencil /> Ubah
                                                 </Button>
                                             </td>
                                         </tr>
@@ -182,17 +182,17 @@ export default function CourseMaterialsIndex({
                         <div className="px-6 py-16 text-center">
                             <Layers3 className="text-muted-foreground mx-auto size-10" />
                             <h2 className="mt-4 font-semibold">
-                                No course materials found
+                                Belum ada modul kelas.
                             </h2>
                             <p className="text-muted-foreground mt-1 text-sm">
-                                Create a material or change the current search.
+                                Tambah modul atau ubah kata pencarian.
                             </p>
                         </div>
                     )}
                     {materials.last_page > 1 && (
                         <div className="flex items-center justify-between border-t px-5 py-4 text-sm">
                             <span className="text-muted-foreground">
-                                Page {materials.current_page} of{' '}
+                                Halaman {materials.current_page} dari{' '}
                                 {materials.last_page}
                             </span>
                             <div className="flex gap-2">
@@ -203,7 +203,7 @@ export default function CourseMaterialsIndex({
                                     disabled={!materials.prev_page_url}
                                 >
                                     <Link href={materials.prev_page_url ?? '#'}>
-                                        Previous
+                                        Sebelumnya
                                     </Link>
                                 </Button>
                                 <Button
@@ -213,7 +213,7 @@ export default function CourseMaterialsIndex({
                                     disabled={!materials.next_page_url}
                                 >
                                     <Link href={materials.next_page_url ?? '#'}>
-                                        Next
+                                        Berikutnya
                                     </Link>
                                 </Button>
                             </div>

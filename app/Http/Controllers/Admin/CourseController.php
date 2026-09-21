@@ -27,6 +27,76 @@ class CourseController extends Controller
         return Inertia::render('admin/courses/create', $this->service->formOptions());
     }
 
+    public function show(Course $course)
+    {
+        $course->load([
+            'category:id,name',
+            'creator:id,name',
+            'teachers:id,name,photo_url,expertise',
+            'materials' => fn ($query) => $query
+                ->select('id', 'course_id', 'title', 'description', 'position', 'is_published')
+                ->with([
+                    'contents' => fn ($contentQuery) => $contentQuery->select(
+                        'id',
+                        'course_material_id',
+                        'type',
+                        'title',
+                        'description',
+                        'position',
+                        'video_duration_seconds',
+                        'is_published',
+                    ),
+                ]),
+        ]);
+
+        $contents = $course->materials->flatMap(
+            fn ($material) => $material->contents,
+        );
+
+        return Inertia::render('admin/courses/show', [
+            'course' => [
+                'id' => $course->id,
+                'title' => $course->title,
+                'slug' => $course->slug,
+                'short_description' => $course->short_description,
+                'description' => $course->description,
+                'thumbnail_url' => $course->thumbnail_url,
+                'banner_url' => $course->banner_url,
+                'level' => $course->level,
+                'estimated_duration_minutes' => $course->estimated_duration_minutes,
+                'status' => $course->status->value,
+                'published_at' => $course->published_at?->toISOString(),
+                'created_at' => $course->created_at?->toISOString(),
+                'category' => $course->category,
+                'creator' => $course->creator,
+                'teachers' => $course->teachers,
+                'materials' => $course->materials->map(fn ($material) => [
+                    'id' => $material->id,
+                    'title' => $material->title,
+                    'description' => $material->description,
+                    'position' => $material->position,
+                    'is_published' => $material->is_published,
+                    'contents' => $material->contents->map(fn ($content) => [
+                        'id' => $content->id,
+                        'type' => $content->type->value,
+                        'title' => $content->title,
+                        'description' => $content->description,
+                        'position' => $content->position,
+                        'video_duration_seconds' => $content->video_duration_seconds,
+                        'is_published' => $content->is_published,
+                    ])->values(),
+                ])->values(),
+                'statistics' => [
+                    'materials' => $course->materials->count(),
+                    'contents' => $contents->count(),
+                    'videos' => $contents->filter(fn ($content) => $content->type->value === 'video')->count(),
+                    'textbooks' => $contents->filter(fn ($content) => $content->type->value === 'textbook')->count(),
+                    'enrollments' => $course->enrollments()->count(),
+                ],
+            ],
+        ]);
+    }
+
     public function store(CourseRequest $request)
     {
         $course = $this->service->create($request);

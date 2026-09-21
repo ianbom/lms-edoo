@@ -18,15 +18,15 @@ export default function Profile() {
 
     return (
         <>
-            <Head title="Profile settings" />
+            <Head title='Pengaturan profil' />
 
-            <h1 className="sr-only">Profile settings</h1>
+            <h1 className="sr-only">Pengaturan profil</h1>
 
             <div className="space-y-6">
                 <Heading
                     variant="small"
-                    title="Profile"
-                    description="Update your name, phone number, and optional email address"
+                    title='Profil'
+                    description="Perbarui nama, nomor telepon, dan email opsional kamu."
                 />
 
                 <Form
@@ -39,7 +39,7 @@ export default function Profile() {
                     {({ processing, errors }) => (
                         <>
                             <div className="grid gap-2">
-                                <Label htmlFor="name">Name</Label>
+                                <Label htmlFor="name">Nama</Label>
 
                                 <Input
                                     id="name"
@@ -48,7 +48,7 @@ export default function Profile() {
                                     name="name"
                                     required
                                     autoComplete="name"
-                                    placeholder="Full name"
+                                    placeholder='Nama lengkap'
                                 />
 
                                 <InputError
@@ -58,7 +58,7 @@ export default function Profile() {
                             </div>
 
                             <div className="grid gap-2">
-                                <Label htmlFor="phone">Phone number</Label>
+                                <Label htmlFor="phone">Nomor telepon</Label>
 
                                 <Input
                                     id="phone"
@@ -68,7 +68,7 @@ export default function Profile() {
                                     name="phone"
                                     required
                                     autoComplete="tel"
-                                    placeholder="Phone number"
+                                    placeholder='Nomor telepon'
                                 />
 
                                 <InputError
@@ -79,7 +79,7 @@ export default function Profile() {
 
                             <div className="grid gap-2">
                                 <Label htmlFor="email">
-                                    Email address (optional)
+                                    Alamat email (opsional)
                                 </Label>
 
                                 <Input
@@ -89,7 +89,7 @@ export default function Profile() {
                                     defaultValue={auth.user.email ?? ''}
                                     name="email"
                                     autoComplete="email"
-                                    placeholder="Email address"
+                                    placeholder='Alamat email'
                                 />
 
                                 <InputError
@@ -103,7 +103,7 @@ export default function Profile() {
                                     disabled={processing}
                                     data-test="update-profile-button"
                                 >
-                                    Save
+                                    Simpan
                                 </Button>
                             </div>
                         </>
@@ -119,7 +119,7 @@ export default function Profile() {
 Profile.layout = {
     breadcrumbs: [
         {
-            title: 'Profile settings',
+            title: 'Pengaturan profil',
             href: edit(),
         },
     ],

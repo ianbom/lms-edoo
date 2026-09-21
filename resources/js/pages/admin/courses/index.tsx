@@ -51,19 +51,19 @@ export default function CoursesIndex({
 
     return (
         <>
-            <Head title="Courses" />
+            <Head title='Kelas' />
             <div className="space-y-6 p-4 md:p-6">
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                     <div>
-                        <h1 className="text-2xl font-semibold">Courses</h1>
+                        <h1 className="text-2xl font-semibold">Kelas</h1>
                         <p className="text-muted-foreground text-sm">
-                            Manage courses and learning content.
+                            Kelola kelas dan materi pembelajaran.
                         </p>
                     </div>
                     <Button asChild>
                         <Link href={create()}>
                             <Plus />
-                            Add course
+                            Tambah kelas
                         </Link>
                     </Button>
                 </div>
@@ -79,10 +79,10 @@ export default function CoursesIndex({
                                 setQuery({ search: event.target.value })
                             }
                             className="pl-9"
-                            placeholder="Search courses"
+                            placeholder='Cari kelas'
                         />
                     </div>
-                    <Button type="submit">Filter</Button>
+                    <Button type="submit">Terapkan filter</Button>
                     {query.search && (
                         <Button
                             type="button"
@@ -90,24 +90,24 @@ export default function CoursesIndex({
                             onClick={clearFilters}
                         >
                             <X />
-                            Clear
+                            Bersihkan
                         </Button>
                     )}
                 </form>
-                <div className="bg-card overflow-hidden rounded-xl border">
+                <div className="bg-card overflow-hidden border">
                     <div className="overflow-x-auto">
                         <table className="w-full min-w-225 text-left text-sm">
                             <thead className="bg-muted/50 border-b">
                                 <tr>
-                                    <th className="px-5 py-3">No.</th>
-                                    <th className="p-4">Course</th>
-                                    <th>Category</th>
-                                    <th>Status</th>
-                                    <th>Level</th>
-                                    <th>Materials</th>
-                                    <th>Contents</th>
-                                    <th>Teachers</th>
-                                    <th className="text-right">Actions</th>
+                                    <th className="px-5 py-3 font-bold">No.</th>
+                                    <th className="p-4 font-bold">Kelas</th>
+                                    <th className="font-bold">Kategori</th>
+                                    <th className="font-bold">Status</th>
+                                    <th className="font-bold">Tingkat</th>
+                                    <th className="font-bold">Modul</th>
+                                    <th className="font-bold">Materi</th>
+                                    <th className="font-bold">Instruktur</th>
+                                    <th className="text-center font-bold">Tindakan</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y">
@@ -138,7 +138,7 @@ export default function CoursesIndex({
                                                     <Link
                                                         href={edit(course.id)}
                                                     >
-                                                        Edit
+                                                        Ubah
                                                     </Link>
                                                 </Button>
                                                 <Button size="sm" asChild>
@@ -150,6 +150,17 @@ export default function CoursesIndex({
                                                         Builder
                                                     </Link>
                                                 </Button>
+                                                <Button
+                                                    size="sm"
+                                                    variant="ghost"
+                                                    asChild
+                                                >
+                                                    <Link
+                                                        href={`/admin/courses/${course.id}`}
+                                                    >
+                                                        Detail
+                                                    </Link>
+                                                </Button>
                                             </div>
                                         </td>
                                     </tr>
@@ -159,16 +170,16 @@ export default function CoursesIndex({
                     </div>
                     {courses.data.length === 0 && (
                         <div className="px-6 py-16 text-center">
-                            <h2 className="font-semibold">No courses found</h2>
+                            <h2 className="font-semibold">Belum ada kelas</h2>
                             <p className="text-muted-foreground mt-1 text-sm">
-                                Add a course or change the current search.
+                                Tambah kelas atau ubah kata pencarian.
                             </p>
                         </div>
                     )}
                     {courses.last_page > 1 && (
                         <div className="flex items-center justify-between border-t px-5 py-4 text-sm">
                             <span className="text-muted-foreground">
-                                Page {courses.current_page} of{' '}
+                                Halaman {courses.current_page} dari{' '}
                                 {courses.last_page}
                             </span>
                             <div className="flex gap-2">
@@ -179,7 +190,7 @@ export default function CoursesIndex({
                                     disabled={!courses.prev_page_url}
                                 >
                                     <Link href={courses.prev_page_url ?? '#'}>
-                                        Previous
+                                        Sebelumnya
                                     </Link>
                                 </Button>
                                 <Button
@@ -189,7 +200,7 @@ export default function CoursesIndex({
                                     disabled={!courses.next_page_url}
                                 >
                                     <Link href={courses.next_page_url ?? '#'}>
-                                        Next
+                                        Berikutnya
                                     </Link>
                                 </Button>
                             </div>

@@ -46,52 +46,56 @@ export default function CourseCategoriesIndex({
 
     return (
         <>
-            <Head title="Course Categories" />
+            <Head title="Kategori Kelas" />
 
             <div className="space-y-6 p-4 md:p-6">
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                     <div className="space-y-1">
                         <h1 className="text-2xl font-semibold tracking-tight">
-                            Course Categories
+                            Kategori Kelas
                         </h1>
                         <p className="text-muted-foreground text-sm">
-                            Organize courses into clear learning topics.
+                            Kelompokkan kelas ke topik belajar yang rapi.
                         </p>
                     </div>
                     <Button onClick={openCreateDialog}>
                         <Plus />
-                        Add category
+                        Tambah kategori
                     </Button>
                 </div>
 
-                <div className="bg-card overflow-hidden rounded-xl border">
+                <div className="bg-card overflow-hidden border">
                     <div className="overflow-x-auto">
                         <table className="w-full min-w-175 text-left text-sm">
-                            <thead className="bg-muted/50 text-muted-foreground border-b text-xs tracking-wide uppercase">
+                            <thead className="bg-muted/50 border-b">
                                 <tr>
-                                    <th className="px-5 py-3 font-medium">
-                                        Category
+                                    <th className="px-5 py-3 font-bold">No.</th>
+                                    <th className="px-5 py-3 font-bold">
+                                        Kategori
                                     </th>
-                                    <th className="px-5 py-3 font-medium">
+                                    <th className="px-5 py-3 font-bold">
                                         Slug
                                     </th>
-                                    <th className="px-5 py-3 font-medium">
-                                        Courses
+                                    <th className="px-5 py-3 font-bold">
+                                        Kelas
                                     </th>
-                                    <th className="px-5 py-3 font-medium">
-                                        Updated
+                                    <th className="px-5 py-3 font-bold">
+                                        Diperbarui
                                     </th>
-                                    <th className="px-5 py-3 text-right font-medium">
-                                        Actions
+                                    <th className="px-5 py-3 text-right font-bold">
+                                        Tindakan
                                     </th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y">
-                                {categories.map((category) => (
+                                {categories.map((category, categoryIndex) => (
                                     <tr
                                         key={category.id}
                                         className="hover:bg-muted/30"
                                     >
+                                        <td className="text-muted-foreground px-5 py-4">
+                                            {categoryIndex + 1}
+                                        </td>
                                         <td className="max-w-md px-5 py-4">
                                             <p className="font-medium">
                                                 {category.name}
@@ -121,7 +125,7 @@ export default function CourseCategoriesIndex({
                                                     }
                                                 >
                                                     <Pencil />
-                                                    Edit
+                                                    Ubah
                                                 </Button>
                                                 <Button
                                                     variant="destructive"
@@ -143,7 +147,7 @@ export default function CourseCategoriesIndex({
                                                     }
                                                 >
                                                     <Trash2 />
-                                                    Delete
+                                                    Hapus
                                                 </Button>
                                             </div>
                                         </td>
@@ -157,15 +161,15 @@ export default function CourseCategoriesIndex({
                         <div className="flex flex-col items-center px-6 py-16 text-center">
                             <Tags className="text-muted-foreground size-10" />
                             <h2 className="mt-4 font-semibold">
-                                No course categories
+                                Belum ada kategori kelas
                             </h2>
                             <p className="text-muted-foreground mt-1 max-w-sm text-sm">
-                                Create your first category before adding
-                                courses.
+                                Buat kategori pertama sebelum menambahkan
+                                kelas.
                             </p>
                             <Button className="mt-5" onClick={openCreateDialog}>
                                 <Plus />
-                                Add category
+                                Tambah kategori
                             </Button>
                         </div>
                     )}
@@ -191,7 +195,7 @@ export default function CourseCategoriesIndex({
 CourseCategoriesIndex.layout = {
     breadcrumbs: [
         {
-            title: 'Course Categories',
+            title: 'Kategori Kelas',
             href: courseCategories(),
         },
     ] satisfies BreadcrumbItem[],

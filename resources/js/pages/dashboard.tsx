@@ -40,35 +40,35 @@ type DashboardProps = {
 };
 
 const enrollmentConfig = {
-    value: { label: 'Enrollments', color: 'var(--chart-1)' },
+    value: { label: 'Pendaftaran', color: 'var(--chart-1)' },
 };
 const statusConfig = {
-    value: { label: 'Courses', color: 'var(--chart-2)' },
+    value: { label: 'Kelas', color: 'var(--chart-2)' },
 };
 const topCourseConfig = {
-    value: { label: 'Enrollments', color: 'var(--chart-3)' },
+    value: { label: 'Pendaftaran', color: 'var(--chart-3)' },
 };
 
 const cards = [
-    { key: 'students', label: 'Students', icon: Users },
-    { key: 'courses', label: 'Courses', icon: GraduationCap },
-    { key: 'publishedCourses', label: 'Published courses', icon: Activity },
-    { key: 'teachers', label: 'Teachers', icon: Users },
-    { key: 'ebooks', label: 'Ebooks', icon: BookOpen },
-    { key: 'enrollments', label: 'Enrollments', icon: Library },
+    { key: 'students', label: 'Siswa', icon: Users },
+    { key: 'courses', label: 'Kelas', icon: GraduationCap },
+    { key: 'publishedCourses', label: 'Kelas terbit', icon: Activity },
+    { key: 'teachers', label: 'Instruktur', icon: Users },
+    { key: 'ebooks', label: 'E-book', icon: BookOpen },
+    { key: 'enrollments', label: 'Pendaftaran', icon: Library },
 ] as const;
 
 export default function Dashboard({ stats, charts }: DashboardProps) {
     return (
         <>
-            <Head title="Dashboard" />
+            <Head title='Dasbor' />
             <div className="space-y-6 p-4 md:p-6">
                 <div>
                     <h1 className="text-2xl font-semibold tracking-tight">
-                        Dashboard
+                        Dasbor
                     </h1>
                     <p className="text-muted-foreground text-sm">
-                        A current view of your learning platform.
+                        Ringkasan terbaru platform belajar kamu.
                     </p>
                 </div>
 
@@ -95,7 +95,7 @@ export default function Dashboard({ stats, charts }: DashboardProps) {
                 <div className="grid gap-4 xl:grid-cols-2">
                     <Card>
                         <CardHeader>
-                            <CardTitle>Enrollment trend</CardTitle>
+                            <CardTitle>Tren pendaftaran</CardTitle>
                         </CardHeader>
                         <CardContent>
                             <ChartContainer
@@ -128,7 +128,7 @@ export default function Dashboard({ stats, charts }: DashboardProps) {
                     </Card>
                     <Card>
                         <CardHeader>
-                            <CardTitle>Course status</CardTitle>
+                            <CardTitle>Status kelas</CardTitle>
                         </CardHeader>
                         <CardContent>
                             <ChartContainer
@@ -161,7 +161,7 @@ export default function Dashboard({ stats, charts }: DashboardProps) {
 
                 <Card>
                     <CardHeader>
-                        <CardTitle>Top courses by enrollment</CardTitle>
+                        <CardTitle>Kelas dengan pendaftar terbanyak</CardTitle>
                     </CardHeader>
                     <CardContent>
                         {charts.topCourses.length > 0 ? (
@@ -196,7 +196,7 @@ export default function Dashboard({ stats, charts }: DashboardProps) {
                             </ChartContainer>
                         ) : (
                             <div className="text-muted-foreground flex h-80 items-center justify-center text-sm">
-                                No course data yet.
+                                Belum ada data kelas.
                             </div>
                         )}
                     </CardContent>
@@ -209,7 +209,7 @@ export default function Dashboard({ stats, charts }: DashboardProps) {
 Dashboard.layout = {
     breadcrumbs: [
         {
-            title: 'Dashboard',
+            title: 'Dasbor',
             href: dashboard(),
         },
     ],

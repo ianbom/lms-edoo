@@ -73,16 +73,16 @@ export function CourseMaterialDialog({
                 <DialogHeader>
                     <DialogTitle>
                         {material
-                            ? 'Edit course material'
-                            : 'Create course material'}
+                            ? 'Ubah modul kelas'
+                            : 'Buat modul kelas'}
                     </DialogTitle>
                     <DialogDescription>
-                        Organize a course into a clear learning module.
+                        Susun kelas menjadi modul pembelajaran yang rapi.
                     </DialogDescription>
                 </DialogHeader>
                 <form className="space-y-5" onSubmit={submit}>
                     <div className="grid gap-2">
-                        <Label>Course</Label>
+                        <Label>Kelas</Label>
                         <Select
                             value={form.data.course_id}
                             onValueChange={(value) =>
@@ -90,7 +90,7 @@ export function CourseMaterialDialog({
                             }
                         >
                             <SelectTrigger>
-                                <SelectValue placeholder="Select course" />
+                                <SelectValue placeholder='Pilih kelas' />
                             </SelectTrigger>
                             <SelectContent>
                                 {courses.map((course) => (
@@ -106,7 +106,7 @@ export function CourseMaterialDialog({
                         <InputError message={form.errors.course_id} />
                     </div>
                     <div className="grid gap-2">
-                        <Label htmlFor="material-title">Title</Label>
+                        <Label htmlFor="material-title">Judul</Label>
                         <Input
                             id="material-title"
                             value={form.data.title}
@@ -119,7 +119,7 @@ export function CourseMaterialDialog({
                     </div>
                     <div className="grid gap-2">
                         <Label htmlFor="material-description">
-                            Description
+                            Deskripsi
                         </Label>
                         <textarea
                             id="material-description"
@@ -132,7 +132,7 @@ export function CourseMaterialDialog({
                         <InputError message={form.errors.description} />
                     </div>
                     <div className="grid gap-2">
-                        <Label htmlFor="material-position">Position</Label>
+                        <Label htmlFor="material-position">Urutan</Label>
                         <Input
                             id="material-position"
                             type="number"
@@ -155,7 +155,7 @@ export function CourseMaterialDialog({
                                 form.setData('is_published', checked === true)
                             }
                         />{' '}
-                        Published
+                        Dipublikasikan
                     </label>
                     <DialogFooter>
                         <Button
@@ -164,13 +164,13 @@ export function CourseMaterialDialog({
                             onClick={() => onOpenChange(false)}
                             disabled={form.processing}
                         >
-                            Cancel
+                            Batal
                         </Button>
                         <Button disabled={form.processing}>
                             {form.processing && (
                                 <LoaderCircle className="animate-spin" />
                             )}
-                            {material ? 'Save changes' : 'Create material'}
+                            {material ? 'Simpan perubahan' : 'Buat modul'}
                         </Button>
                     </DialogFooter>
                 </form>

@@ -40,49 +40,53 @@ export default function TeachersIndex({ teachers }: { teachers: Teachers }) {
 
     return (
         <>
-            <Head title="Teachers" />
+            <Head title='Instruktur' />
 
             <div className="space-y-6 p-4 md:p-6">
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                     <div className="space-y-1">
                         <h1 className="text-2xl font-semibold tracking-tight">
-                            Teachers
+                            Instruktur
                         </h1>
                         <p className="text-muted-foreground text-sm">
-                            Manage instructor profiles used across courses.
+                            Kelola profil instruktur yang digunakan di berbagai kelas.
                         </p>
                     </div>
                     <Button onClick={openCreateDialog}>
                         <Plus />
-                        Add teacher
+                        Tambah instruktur
                     </Button>
                 </div>
 
-                <div className="bg-card overflow-hidden rounded-xl border">
+                <div className="bg-card overflow-hidden border">
                     <div className="overflow-x-auto">
                         <table className="w-full min-w-175 text-left text-sm">
-                            <thead className="bg-muted/50 text-muted-foreground border-b text-xs tracking-wide uppercase">
+                            <thead className="bg-muted/50 border-b">
                                 <tr>
-                                    <th className="px-5 py-3 font-medium">
-                                        Teacher
+                                    <th className="px-5 py-3 font-bold">No.</th>
+                                    <th className="px-5 py-3 font-bold">
+                                        Instruktur
                                     </th>
-                                    <th className="px-5 py-3 font-medium">
-                                        Courses
+                                    <th className="px-5 py-3 font-bold">
+                                        Kelas
                                     </th>
-                                    <th className="px-5 py-3 font-medium">
-                                        Updated
+                                    <th className="px-5 py-3 font-bold">
+                                        Diperbarui
                                     </th>
-                                    <th className="px-5 py-3 text-right font-medium">
-                                        Actions
+                                    <th className="px-5 py-3 text-right font-bold">
+                                        Tindakan
                                     </th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y">
-                                {teachers.data.map((teacher) => (
+                                {teachers.data.map((teacher, teacherIndex) => (
                                     <tr
                                         key={teacher.id}
                                         className="hover:bg-muted/30"
                                     >
+                                        <td className="text-muted-foreground px-5 py-4">
+                                            {teacherIndex + 1}
+                                        </td>
                                         <td className="px-5 py-4">
                                             <div className="flex items-center gap-3">
                                                 {teacher.photo_url ? (
@@ -122,7 +126,7 @@ export default function TeachersIndex({ teachers }: { teachers: Teachers }) {
                                                 }
                                             >
                                                 <Pencil />
-                                                Edit
+                                                Ubah
                                             </Button>
                                         </td>
                                     </tr>
@@ -134,14 +138,14 @@ export default function TeachersIndex({ teachers }: { teachers: Teachers }) {
                     {teachers.data.length === 0 && (
                         <div className="flex flex-col items-center px-6 py-16 text-center">
                             <UserRound className="text-muted-foreground size-10" />
-                            <h2 className="mt-4 font-semibold">No teachers</h2>
+                            <h2 className="mt-4 font-semibold">Belum ada instruktur</h2>
                             <p className="text-muted-foreground mt-1 max-w-sm text-sm">
-                                Add the first instructor profile for your
-                                courses.
+                                Tambahkan profil instruktur pertama untuk
+                                kelasmu.
                             </p>
                             <Button className="mt-5" onClick={openCreateDialog}>
                                 <Plus />
-                                Add teacher
+                                Tambah instruktur
                             </Button>
                         </div>
                     )}
@@ -162,7 +166,7 @@ export default function TeachersIndex({ teachers }: { teachers: Teachers }) {
 TeachersIndex.layout = {
     breadcrumbs: [
         {
-            title: 'Teachers',
+            title: 'Instruktur',
             href: teachersIndex(),
         },
     ] satisfies BreadcrumbItem[],

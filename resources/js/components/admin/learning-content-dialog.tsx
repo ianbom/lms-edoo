@@ -80,20 +80,21 @@ export function LearningContentDialog({
                 !nextOpen && !form.processing && onOpenChange(false)
             }
         >
-            <DialogContent className="sm:max-w-2xl">
-                <DialogHeader>
+            <DialogContent className="flex max-h-[calc(100vh-2rem)] flex-col overflow-hidden sm:max-w-2xl">
+                <DialogHeader className="shrink-0">
                     <DialogTitle>
                         {content
-                            ? 'Edit learning content'
-                            : 'Create learning content'}
+                            ? 'Ubah materi'
+                            : 'Buat materi pembelajaran'}
                     </DialogTitle>
                     <DialogDescription>
-                        Add a video lesson or textbook chapter to a material.
+                        Tambahkan video atau bab bacaan ke dalam modul.
                     </DialogDescription>
                 </DialogHeader>
-                <form className="space-y-5" onSubmit={submit}>
+                <form className="flex min-h-0 flex-1 flex-col" onSubmit={submit}>
+                    <div className="min-h-0 flex-1 space-y-5 overflow-y-auto px-1 py-1 pr-3">
                     <div className="grid gap-2">
-                        <Label>Material</Label>
+                        <Label>Modul</Label>
                         <Select
                             value={form.data.course_material_id}
                             onValueChange={(value) =>
@@ -101,7 +102,7 @@ export function LearningContentDialog({
                             }
                         >
                             <SelectTrigger>
-                                <SelectValue placeholder="Select material" />
+                                <SelectValue placeholder='Pilih modul' />
                             </SelectTrigger>
                             <SelectContent>
                                 {materials.map((material) => (
@@ -119,7 +120,7 @@ export function LearningContentDialog({
                     </div>
                     <div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_180px]">
                         <div className="grid gap-2">
-                            <Label htmlFor="content-title">Title</Label>
+                            <Label htmlFor="content-title">Judul</Label>
                             <Input
                                 id="content-title"
                                 value={form.data.title}
@@ -131,7 +132,7 @@ export function LearningContentDialog({
                             <InputError message={form.errors.title} />
                         </div>
                         <div className="grid gap-2">
-                            <Label>Type</Label>
+                            <Label>Jenis</Label>
                             <Select
                                 value={form.data.type}
                                 onValueChange={(value) =>
@@ -147,7 +148,7 @@ export function LearningContentDialog({
                                 <SelectContent>
                                     <SelectItem value="video">Video</SelectItem>
                                     <SelectItem value="textbook">
-                                        Textbook
+                                        Bacaan
                                     </SelectItem>
                                 </SelectContent>
                             </Select>
@@ -156,7 +157,7 @@ export function LearningContentDialog({
                     </div>
                     {form.data.type === 'video' ? (
                         <div className="grid gap-2">
-                            <Label htmlFor="youtube-url">YouTube URL</Label>
+                            <Label htmlFor="youtube-url">URL YouTube</Label>
                             <Input
                                 id="youtube-url"
                                 value={form.data.youtube_url}
@@ -172,7 +173,7 @@ export function LearningContentDialog({
                         </div>
                     ) : (
                         <div className="grid gap-2">
-                            <Label>Textbook content</Label>
+                            <Label>Isi bacaan</Label>
                             <TextbookEditor
                                 value={form.data.textbook_content}
                                 onChange={(value) =>
@@ -185,7 +186,7 @@ export function LearningContentDialog({
                         </div>
                     )}
                     <div className="grid gap-2">
-                        <Label htmlFor="content-description">Description</Label>
+                        <Label htmlFor="content-description">Deskripsi</Label>
                         <textarea
                             id="content-description"
                             value={form.data.description}
@@ -198,7 +199,7 @@ export function LearningContentDialog({
                     </div>
                     <div className="grid gap-4 sm:grid-cols-2">
                         <div className="grid gap-2">
-                            <Label htmlFor="content-position">Position</Label>
+                            <Label htmlFor="content-position">Urutan</Label>
                             <Input
                                 id="content-position"
                                 type="number"
@@ -216,7 +217,7 @@ export function LearningContentDialog({
                         </div>
                         <div className="grid gap-2">
                             <Label htmlFor="attachment-url">
-                                Attachment URL
+                                URL lampiran
                             </Label>
                             <Input
                                 id="attachment-url"
@@ -227,7 +228,7 @@ export function LearningContentDialog({
                                         event.target.value,
                                     )
                                 }
-                                placeholder="Optional"
+                                placeholder='Opsional'
                             />
                             <InputError message={form.errors.attachment_url} />
                         </div>
@@ -239,22 +240,23 @@ export function LearningContentDialog({
                                 form.setData('is_published', checked === true)
                             }
                         />{' '}
-                        Published
+                        Dipublikasikan
                     </label>
-                    <DialogFooter>
+                    </div>
+                    <DialogFooter className="shrink-0 border-t bg-background pt-4">
                         <Button
                             type="button"
                             variant="outline"
                             onClick={() => onOpenChange(false)}
                             disabled={form.processing}
                         >
-                            Cancel
+                            Batal
                         </Button>
                         <Button disabled={form.processing}>
                             {form.processing && (
                                 <LoaderCircle className="animate-spin" />
                             )}
-                            {content ? 'Save changes' : 'Create content'}
+                            {content ? 'Simpan perubahan' : 'Buat materi'}
                         </Button>
                     </DialogFooter>
                 </form>

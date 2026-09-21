@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { HtmlRender } from '@/components/html-render';
 import { VideoPlayer } from '@/components/video-player';
 
 type Progress = {
@@ -166,7 +167,7 @@ function Curriculum({
 
             <div className="border-t border-[#e3eaf5] bg-[#f8faff] px-6 py-5">
                 <p className="text-[11px] font-extrabold tracking-[0.035em] text-[#91a1bf] uppercase">
-                    Progress Pembelajaran
+                    Progres Pembelajaran
                 </p>
                 <div className="mt-3 flex items-center gap-3 text-sm text-[#536889]">
                     <span
@@ -214,7 +215,7 @@ export default function Study({
         <>
             <Head title={`${course.title} · Belajar`} />
             <div className="min-h-screen bg-[#fbfcfe] xl:grid xl:grid-cols-[minmax(0,1fr)_420px]">
-                <main className="min-w-0 px-5 py-8 sm:px-8 lg:px-10 xl:px-10 xl:py-14 2xl:px-12">
+                <main className="min-w-0 px-5 py-8 sm:px-8 lg:px-10 xl:px-10 xl:py-8 2xl:px-12">
                     {selectedContent ? (
                         <div className="mx-auto w-full max-w-6xl">
                             <div className="mb-8 flex items-start gap-5">
@@ -256,20 +257,9 @@ export default function Study({
                                     )}
                                 </div>
                             ) : (
-                                <article
-                                    className="prose prose-slate prose-headings:text-[#071842] prose-a:text-primary min-h-96 max-w-none rounded-2xl border border-[#dce5f1] bg-white p-6 text-[#263a63] shadow-[0_16px_36px_rgba(25,54,95,.08)] sm:p-9"
-                                    dangerouslySetInnerHTML={{
-                                        __html:
-                                            selectedContent.textbook_content ||
-                                            '<p>Isi materi belum tersedia.</p>',
-                                    }}
+                                <HtmlRender
+                                    html={selectedContent.textbook_content}
                                 />
-                            )}
-
-                            {selectedContent.description && (
-                                <p className="mt-5 max-w-4xl text-[16px] leading-7 text-[#627395]">
-                                    {selectedContent.description}
-                                </p>
                             )}
 
                             <Button
@@ -292,6 +282,12 @@ export default function Study({
                                         ? 'Selesaikan Video'
                                         : 'Selesaikan Materi'}
                             </Button>
+
+                            {selectedContent.description && (
+                                <p className="mt-5 max-w-4xl text-[16px] leading-7 text-[#627395]">
+                                    {selectedContent.description}
+                                </p>
+                            )}
                         </div>
                     ) : (
                         <div className="flex min-h-[70vh] flex-col items-center justify-center px-6 text-center">
@@ -300,8 +296,7 @@ export default function Study({
                                 Belum ada materi
                             </h1>
                             <p className="mt-2 text-sm text-[#5a73a1]">
-                                Materi kelas akan muncul di sini setelah
-                                dipublikasikan.
+                                Materi kelas akan muncul setelah dipublikasikan.
                             </p>
                         </div>
                     )}
@@ -321,7 +316,7 @@ export default function Study({
                 <div className="fixed inset-0 z-60 xl:hidden">
                     <button
                         type="button"
-                        aria-label="Tutup daftar materi"
+                        aria-label='Tutup daftar materi'
                         className="absolute inset-0 bg-[#071750]/40"
                         onClick={() => setMobileCurriculumOpen(false)}
                     />
@@ -331,7 +326,7 @@ export default function Study({
                                 variant="ghost"
                                 size="icon"
                                 onClick={() => setMobileCurriculumOpen(false)}
-                                aria-label="Tutup daftar materi"
+                                aria-label='Tutup daftar materi'
                             >
                                 <X />
                             </Button>

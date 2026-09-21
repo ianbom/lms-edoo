@@ -1,16 +1,29 @@
-import { Link, usePage } from '@inertiajs/react';
+import { Link, router, usePage } from '@inertiajs/react';
 import {
     BookOpen,
     CircleUserRound,
     GraduationCap,
     Home,
+    LoaderCircle,
+    LogOut,
 } from 'lucide-react';
+import { useState } from 'react';
 import AppLogo from '@/components/app-logo';
+import { Button } from '@/components/ui/button';
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from '@/components/ui/dialog';
+import { logout } from '@/routes';
 
 const navItems = [
-    { label: 'Dashboard', href: '/dashboard', icon: Home },
+    { label: 'Dasbor', href: '/dashboard', icon: Home },
     { label: 'Kelas Saya', href: '/student/classes', icon: BookOpen },
-    { label: 'E-Books', href: '/student/ebooks', icon: GraduationCap },
+    { label: 'E-Book', href: '/student/ebooks', icon: GraduationCap },
     { label: 'Profil', href: '/student/profile', icon: CircleUserRound },
 ];
 
@@ -20,30 +33,45 @@ export default function StudentLayout({
     children: React.ReactNode;
 }) {
     const page = usePage();
+    const [logoutOpen, setLogoutOpen] = useState(false);
+    const [logoutProcessing, setLogoutProcessing] = useState(false);
     const isActive = (href: string): boolean =>
         href === '/dashboard' ? page.url === href : page.url.startsWith(href);
 
+    const confirmLogout = (): void => {
+        router.flushAll();
+        router.post(
+            logout.url(),
+            {},
+            {
+                onStart: () => setLogoutProcessing(true),
+                onFinish: () => setLogoutProcessing(false),
+                onSuccess: () => setLogoutOpen(false),
+            },
+        );
+    };
+
     return (
         <div className="min-h-screen bg-[#f8fbff] font-sans text-[#111d60]">
-            <aside className="fixed inset-y-0 left-0 z-40 hidden w-[246px] rounded-r-[18px] border-r border-[#0b61d4] bg-[#0754c9] shadow-[8px_0_30px_rgba(4,39,105,.16)] lg:block">
+            <aside className="fixed inset-y-0 left-0 z-40 hidden w-[246px] rounded-r-[18px] border-r border-[#dce8f7] bg-white shadow-[8px_0_30px_rgba(32,78,133,.08)] lg:block">
                 <div className="flex h-full min-h-0 flex-col overflow-x-hidden overflow-y-auto px-5 py-5">
                     <Link
                         href="/dashboard"
-                        className="mb-1 flex min-h-14 items-center rounded-xl bg-white px-3 shadow-[0_6px_18px_rgba(4,39,105,.2)]"
+                        className="mb-1 flex min-h-14 items-center"
                         aria-label="Kembali ke dashboard"
                     >
                         <AppLogo />
                     </Link>
 
                     <nav className="mt-4 space-y-1.5">
-                        {navItems.map((item) => {
+                        {navItems.slice(0, -1).map((item) => {
                             const active = isActive(item.href);
 
                             return (
                                 <Link
                                     key={item.label}
                                     href={item.href}
-                                    className={`flex h-12 items-center gap-4 rounded-xl px-3.5 text-[13px] font-medium transition ${active ? 'bg-white font-bold text-[#075bd5] shadow-[0_4px_12px_rgba(4,39,105,.16)]' : 'text-white/80 hover:bg-white/15 hover:text-white'}`}
+                                    className={`flex h-12 items-center gap-4 rounded-xl px-3.5 text-[13px] font-medium transition ${active ? 'bg-[#e8f3ff] font-bold text-[#075bd5] shadow-[0_4px_12px_rgba(32,78,133,.08)]' : 'text-[#7183a2] hover:bg-[#f1f6fc] hover:text-[#075bd5]'}`}
                                 >
                                     <item.icon
                                         size={20}
@@ -54,6 +82,35 @@ export default function StudentLayout({
                             );
                         })}
                     </nav>
+
+                    <div className="mt-auto space-y-1.5 border-t border-[#e5eef9] pt-4">
+                        {(() => {
+                            const item = navItems[navItems.length - 1];
+                            const active = isActive(item.href);
+
+                            return (
+                                <Link
+                                    href={item.href}
+                                    className={`flex h-12 items-center gap-4 rounded-xl px-3.5 text-[13px] font-medium transition ${active ? 'bg-[#e8f3ff] font-bold text-[#075bd5] shadow-[0_4px_12px_rgba(32,78,133,.08)]' : 'text-[#7183a2] hover:bg-[#f1f6fc] hover:text-[#075bd5]'}`}
+                                >
+                                    <item.icon
+                                        size={20}
+                                        strokeWidth={active ? 2.7 : 2}
+                                    />
+                                    {item.label}
+                                </Link>
+                            );
+                        })()}
+                        <Button
+                            type="button"
+                            variant="ghost"
+                            className="h-12 w-full justify-start gap-4 rounded-xl px-3.5 text-[13px] font-medium text-[#7183a2] hover:bg-red-50 hover:text-red-600"
+                            onClick={() => setLogoutOpen(true)}
+                        >
+                            <LogOut size={20} />
+                            Keluar
+                        </Button>
+                    </div>
                 </div>
             </aside>
 
@@ -83,6 +140,46 @@ export default function StudentLayout({
                     })}
                 </div>
             </nav>
+
+            <Dialog
+                open={logoutOpen}
+                onOpenChange={(open) => {
+                    if (!logoutProcessing) {
+                        setLogoutOpen(open);
+                    }
+                }}
+            >
+                <DialogContent className="sm:max-w-md">
+                    <DialogHeader>
+                        <DialogTitle>Keluar dari akun?</DialogTitle>
+                        <DialogDescription>
+                            Kamu perlu masuk kembali untuk melanjutkan proses
+                            belajar.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter>
+                        <Button
+                            type="button"
+                            variant="outline"
+                            disabled={logoutProcessing}
+                            onClick={() => setLogoutOpen(false)}
+                        >
+                            Batal
+                        </Button>
+                        <Button
+                            type="button"
+                            variant="destructive"
+                            disabled={logoutProcessing}
+                            onClick={confirmLogout}
+                        >
+                            {logoutProcessing && (
+                                <LoaderCircle className="animate-spin" />
+                            )}
+                            Ya, Keluar
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }

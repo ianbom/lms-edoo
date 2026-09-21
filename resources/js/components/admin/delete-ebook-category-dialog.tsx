@@ -42,10 +42,10 @@ export function DeleteEbookCategoryDialog({
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>Delete ebook category?</DialogTitle>
+                    <DialogTitle>Hapus kategori e-book?</DialogTitle>
                     <DialogDescription>
-                        “{category?.name}” will be removed from the active
-                        category list.
+                        “{category?.name}” akan dihapus dari daftar kategori
+                        aktif.
                     </DialogDescription>
                 </DialogHeader>
                 <DialogFooter>
@@ -54,7 +54,7 @@ export function DeleteEbookCategoryDialog({
                         onClick={() => onOpenChange(false)}
                         disabled={processing}
                     >
-                        Cancel
+                        Batal
                     </Button>
                     <Button
                         variant="destructive"
@@ -64,7 +64,7 @@ export function DeleteEbookCategoryDialog({
                         {processing && (
                             <LoaderCircle className="animate-spin" />
                         )}
-                        Delete category
+                        Hapus kategori
                     </Button>
                 </DialogFooter>
             </DialogContent>

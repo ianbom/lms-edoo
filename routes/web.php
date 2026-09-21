@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\TeacherController;
 use App\Http\Controllers\CourseCatalogController;
 use App\Http\Controllers\CourseDetailController;
 use App\Http\Controllers\CourseEnrollmentController;
+use App\Http\Controllers\EbookCatalogController;
 use App\Http\Controllers\StudentClassController;
 use App\Http\Controllers\StudentEbookController;
 use App\Http\Controllers\StudentProfileController;
@@ -23,6 +24,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', WelcomeController::class)->name('home');
 Route::get('courses', CourseCatalogController::class)->name('courses.index');
 Route::get('courses/{course:slug}', CourseDetailController::class)->name('courses.show');
+Route::get('ebooks', EbookCatalogController::class)->name('ebooks.index');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', DashboardController::class)->name('dashboard');
@@ -43,7 +45,7 @@ Route::prefix('admin')
     ->middleware(['auth', 'verified', 'admin'])
     ->group(function () {
         Route::resource('courses', CourseController::class)
-            ->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
+            ->only(['index', 'create', 'store', 'show', 'edit', 'update', 'destroy']);
         Route::get('courses/{course}/builder', [CourseBuilderController::class, 'show'])->name('courses.builder');
         Route::put('courses/{course}/builder', [CourseBuilderController::class, 'update'])->name('courses.builder.update');
         Route::resource('course-materials', CourseMaterialController::class)
@@ -58,6 +60,8 @@ Route::prefix('admin')
             ->only(['index', 'store', 'update', 'destroy']);
         Route::resource('students', StudentController::class)
             ->only(['index', 'store']);
+        Route::get('students/{student}/progress', [StudentController::class, 'progress'])
+            ->name('students.progress');
         Route::resource('teachers', TeacherController::class)
             ->only(['index', 'store', 'update']);
     });

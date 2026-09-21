@@ -11,6 +11,7 @@ import {
     UserRound,
     Video,
 } from 'lucide-react';
+import { VideoPlayer } from '@/components/video-player';
 import {
     Card,
     CardContent,
@@ -77,13 +78,9 @@ function Preview({ course }: { course: Course }) {
     if (course.preview_video_id) {
         return (
             <div className="bg-primary/10 aspect-video overflow-hidden rounded-[3px] shadow-sm">
-                <iframe
-                    className="size-full"
-                    src={`https://www.youtube.com/embed/${encodeURIComponent(course.preview_video_id)}?rel=0&modestbranding=1`}
-                    title={`Preview ${course.title}`}
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    referrerPolicy="strict-origin-when-cross-origin"
-                    allowFullScreen
+                <VideoPlayer
+                    videoId={course.preview_video_id}
+                    title={`Pratinjau ${course.title}`}
                 />
             </div>
         );
@@ -169,8 +166,7 @@ export default function CourseDetail({ course }: { course: Course }) {
                                                         className="flex items-center gap-2 text-[12px] text-[#16316B]"
                                                     >
                                                         <span className="bg-secondary text-primary grid size-5 shrink-0 place-items-center rounded-full">
-                                                            {content.type ===
-                                                                'video' ? (
+                                                            {content.type === 'video' ? (
                                                                 <PlayCircle
                                                                     size={13}
                                                                 />
@@ -183,8 +179,7 @@ export default function CourseDetail({ course }: { course: Course }) {
                                                         <span className="min-w-0 flex-1 truncate">
                                                             {content.title}
                                                         </span>
-                                                        {content.type ===
-                                                            'video' && (
+                                                        {content.type === 'video' && (
                                                                 <span className="text-[11px] text-[#6980A5]">
                                                                     {formatDuration(
                                                                         content.video_duration_seconds,
@@ -209,11 +204,8 @@ export default function CourseDetail({ course }: { course: Course }) {
                     <aside className="self-start lg:sticky lg:top-20">
                         <Card className="gap-0 rounded-[7px] border-[#DAE1EC] py-0 shadow-[0_2px_5px_rgba(12,35,78,0.05)]">
                             <CardHeader className="px-5 pt-5 pb-2">
-                                <CardDescription className="text-[11px] text-[#596B8C]">
-                                    Kelas Gratis
-                                </CardDescription>
                                 <CardTitle className="text-[25px] font-extrabold tracking-[-0.5px] text-[#162035]">
-                                    Gratis
+                                    Daftar Sekarang
                                 </CardTitle>
                             </CardHeader>
                             <CardContent className="grid grid-cols-2 gap-x-6 gap-y-3 px-5 pb-3 text-[12px] text-[#4C607E]">
@@ -239,20 +231,6 @@ export default function CourseDetail({ course }: { course: Course }) {
                                     {course.modules_count} Modul
                                 </span>
                                 <span className="flex items-center gap-2">
-                                    <CheckCircle2
-                                        size={15}
-                                        className="text-primary"
-                                    />
-                                    0 Kuis
-                                </span>
-                                <span className="col-span-2 flex items-center gap-2 italic">
-                                    <BookOpen
-                                        size={15}
-                                        className="text-primary"
-                                    />
-                                    Belajar mandiri
-                                </span>
-                                <span className="col-span-2 flex items-center gap-2">
                                     <CalendarDays
                                         size={15}
                                         className="text-primary"
@@ -269,7 +247,7 @@ export default function CourseDetail({ course }: { course: Course }) {
                                 >
                                     {enrolling
                                         ? 'Mendaftarkan...'
-                                        : 'Daftar Kelas'}{' '}
+                                        : 'Daftar Sekarang'}{' '}
                                     <PlayCircle size={15} />
                                 </button>
                             </CardFooter>
@@ -278,7 +256,7 @@ export default function CourseDetail({ course }: { course: Course }) {
                         <Card className="mt-3 gap-0 rounded-[7px] border-[#DAE1EC] py-0 shadow-[0_2px_5px_rgba(12,35,78,0.04)]">
                             <CardHeader className="px-5 pt-4 pb-3">
                                 <CardDescription className="text-[10px] font-semibold text-[#596B8C] uppercase">
-                                    Trainer kelas
+                                    Instruktur kelas
                                 </CardDescription>
                             </CardHeader>
                             <CardContent className="flex items-center gap-3 px-5 pb-4">

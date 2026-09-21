@@ -17,7 +17,7 @@ type Props = {
 export default function Login({ status }: Props) {
     return (
         <>
-            <Head title="Log in" />
+            <Head title='Masuk' />
 
             <Form
                 {...store.form()}

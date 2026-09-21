@@ -105,14 +105,14 @@ export default function CourseBuilder({ course }: { course: Course }) {
                             </div>
                             <div>
                                 <p className="text-primary text-xs font-semibold tracking-[0.18em] uppercase">
-                                    Curriculum workspace
+                                    Ruang kerja kurikulum
                                 </p>
                                 <h1 className="mt-1 text-2xl font-semibold tracking-tight">
                                     {course.title}
                                 </h1>
                                 <p className="text-muted-foreground mt-1 text-sm">
-                                    Build a clear learning path from modules and
-                                    lessons.
+                                    Susun alur belajar yang jelas dari modul dan
+                                    materi.
                                 </p>
                             </div>
                         </div>
@@ -134,7 +134,7 @@ export default function CourseBuilder({ course }: { course: Course }) {
                                 disabled={form.processing}
                                 className="h-10"
                             >
-                                {form.processing ? 'Saving...' : 'Save builder'}
+                                {form.processing ? 'Menyimpan...' : 'Simpan penyusun kelas'}
                             </Button>
                         </div>
                     </div>
@@ -157,14 +157,14 @@ export default function CourseBuilder({ course }: { course: Course }) {
                                     <div className="flex flex-wrap items-center gap-2">
                                         <span className="font-semibold">
                                             {material.title ||
-                                                `Untitled material ${materialIndex + 1}`}
+                                                `Modul tanpa judul ${materialIndex + 1}`}
                                         </span>
                                         {material.is_published && (
                                             <span
                                                 className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-1 text-[11px] font-medium text-emerald-700"
                                             >
                                                 <CheckCircle2 className="size-3" />{' '}
-                                                Published
+                                                Dipublikasikan
                                             </span>
                                         )}
                                     </div>
@@ -183,7 +183,7 @@ export default function CourseBuilder({ course }: { course: Course }) {
                                         <Label
                                             htmlFor={`material-title-${materialIndex}`}
                                         >
-                                            Material title
+                                            Judul modul
                                         </Label>
                                         <Input
                                             id={`material-title-${materialIndex}`}
@@ -193,7 +193,7 @@ export default function CourseBuilder({ course }: { course: Course }) {
                                                     title: event.target.value,
                                                 })
                                             }
-                                            placeholder="e.g. Getting started"
+                                            placeholder="contoh: Mulai dari sini"
                                             required
                                         />
                                     </div>
@@ -212,13 +212,13 @@ export default function CourseBuilder({ course }: { course: Course }) {
                                                     )
                                                 }
                                             />{' '}
-                                            Published
+                                            Dipublikasikan
                                         </label>
                                         <Button
                                             type="button"
                                             variant="ghost"
                                             size="icon"
-                                            aria-label="Delete material"
+                                            aria-label="Hapus modul"
                                             onClick={() =>
                                                 form.setData(
                                                     'materials',
@@ -251,7 +251,7 @@ export default function CourseBuilder({ course }: { course: Course }) {
                                                 description: event.target.value,
                                             })
                                         }
-                                        placeholder="What will learners cover in this material?"
+                                        placeholder="Apa yang akan dipelajari peserta di modul ini?"
                                         className="bg-background focus-visible:border-ring focus-visible:ring-ring/50 min-h-20 resize-y rounded-lg border p-3 text-sm transition outline-none focus-visible:ring-[3px]"
                                     />
                                 </div>
@@ -259,11 +259,11 @@ export default function CourseBuilder({ course }: { course: Course }) {
                                     <div className="flex items-center justify-between">
                                         <div>
                                             <p className="text-sm font-semibold">
-                                                Learning contents
+                                                Materi pembelajaran
                                             </p>
                                             <p className="text-muted-foreground text-xs">
-                                                Add video lessons or textbook
-                                                chapters.
+                                                Tambahkan video pembelajaran atau
+                                                bab bacaan.
                                             </p>
                                         </div>
                                         <span className="bg-background rounded-full border px-2.5 py-1 text-xs font-medium">
@@ -293,7 +293,7 @@ export default function CourseBuilder({ course }: { course: Course }) {
                                                             <Label
                                                                 htmlFor={`content-title-${materialIndex}-${contentIndex}`}
                                                             >
-                                                                Content title
+                                                                Judul materi
                                                             </Label>
                                                             <Input
                                                                 id={`content-title-${materialIndex}-${contentIndex}`}
@@ -313,7 +313,7 @@ export default function CourseBuilder({ course }: { course: Course }) {
                                                                         },
                                                                     )
                                                                 }
-                                                                placeholder="e.g. Welcome to the course"
+                                                                placeholder="contoh: Selamat datang di kelas"
                                                                 required
                                                             />
                                                         </div>
@@ -348,7 +348,7 @@ export default function CourseBuilder({ course }: { course: Course }) {
                                                                     <SelectItem value="textbook">
                                                                         <span className="flex items-center gap-2">
                                                                             <BookOpen className="size-4" />{' '}
-                                                                            Textbook
+                                                                            Bacaan
                                                                         </span>
                                                                     </SelectItem>
                                                                 </SelectContent>
@@ -359,7 +359,7 @@ export default function CourseBuilder({ course }: { course: Course }) {
                                                         type="button"
                                                         variant="ghost"
                                                         size="icon"
-                                                        aria-label="Delete content"
+                                                        aria-label="Hapus materi"
                                                         onClick={() => {
                                                             const materials = [
                                                                 ...form.data
@@ -423,7 +423,7 @@ export default function CourseBuilder({ course }: { course: Course }) {
                                                 ) : (
                                                     <div className="grid gap-2">
                                                         <Label>
-                                                            Textbook content
+                                                            Isi bacaan
                                                         </Label>
                                                         <TextbookEditor
                                                             value={
@@ -469,7 +469,7 @@ export default function CourseBuilder({ course }: { course: Course }) {
                                                                 },
                                                             )
                                                         }
-                                                        placeholder="Add a short lesson summary"
+                                                        placeholder="Tambahkan ringkasan singkat materi"
                                                         className="bg-background focus-visible:border-ring focus-visible:ring-ring/50 min-h-16 resize-y rounded-lg border p-3 text-sm transition outline-none focus-visible:ring-[3px]"
                                                     />
                                                 </div>
@@ -492,7 +492,7 @@ export default function CourseBuilder({ course }: { course: Course }) {
                                                             )
                                                         }
                                                     />{' '}
-                                                    Publish this content
+                                                    Publikasikan materi ini
                                                 </label>
                                             </div>
                                         ),
@@ -519,7 +519,7 @@ export default function CourseBuilder({ course }: { course: Course }) {
                                         form.setData('materials', materials);
                                     }}
                                 >
-                                    <Plus /> Add content
+                                    <Plus /> Tambah materi
                                 </Button>
                             </div>
                         </details>
@@ -530,10 +530,10 @@ export default function CourseBuilder({ course }: { course: Course }) {
                             variant="outline"
                             onClick={addMaterial}
                         >
-                            <Plus /> Add material
+                            <Plus /> Tambah modul
                         </Button>
                         <p className="text-muted-foreground text-xs">
-                            Materials are saved in their current order.
+                            Modul disimpan sesuai urutan saat ini.
                         </p>
                     </div>
                 </form>

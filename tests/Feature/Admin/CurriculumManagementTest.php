@@ -124,3 +124,36 @@ test('course material pagination retains the search query', function () {
             ->has('materials.data', 15)
             ->where('materials.next_page_url', route('admin.course-materials.index', ['search' => 'Module', 'page' => 2])));
 });
+
+test('learning content pagination supports per page and retains filters', function () {
+    $admin = User::factory()->create(['role' => UserRole::Admin]);
+    $category = CourseCategory::create(['name' => 'Web', 'slug' => 'web']);
+    $course = Course::create(['course_category_id' => $category->id, 'title' => 'Laravel Mastery', 'slug' => 'laravel-mastery']);
+    $material = CourseMaterial::create(['course_id' => $course->id, 'title' => 'Dasar Laravel', 'position' => 0]);
+
+    foreach (range(1, 11) as $position) {
+        LearningContent::create([
+            'course_material_id' => $material->id,
+            'type' => 'video',
+            'title' => "Pelajaran {$position}",
+            'position' => $position,
+        ]);
+    }
+
+    $this->actingAs($admin)
+        ->get('/admin/learning-contents?search=Pelajaran&per_page=10')
+        ->assertOk()
+        ->assertInertia(fn (Assert $page) => $page
+            ->where('filters.search', 'Pelajaran')
+            ->where('filters.per_page', 10)
+            ->has('contents.data', 10)
+            ->where('contents.per_page', 10)
+            ->where(
+                'contents.next_page_url',
+                route('admin.learning-contents.index', [
+                    'search' => 'Pelajaran',
+                    'per_page' => 10,
+                    'page' => 2,
+                ]),
+            ));
+});

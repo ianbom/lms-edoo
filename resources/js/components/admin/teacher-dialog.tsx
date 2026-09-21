@@ -76,16 +76,16 @@ export function TeacherDialog({
             <DialogContent className="sm:max-w-lg">
                 <DialogHeader>
                     <DialogTitle>
-                        {isEditing ? 'Edit teacher' : 'Add teacher'}
+                        {isEditing ? 'Ubah instruktur' : 'Tambah instruktur'}
                     </DialogTitle>
                     <DialogDescription>
-                        Add the instructor details shown on course pages.
+                        Tambahkan data instruktur yang akan tampil di halaman kelas.
                     </DialogDescription>
                 </DialogHeader>
 
                 <form className="space-y-5" onSubmit={submit}>
                     <div className="grid gap-2">
-                        <Label htmlFor="teacher-name">Name</Label>
+                        <Label htmlFor="teacher-name">Nama</Label>
                         <Input
                             id="teacher-name"
                             value={form.data.name}
@@ -99,20 +99,20 @@ export function TeacherDialog({
                         <InputError message={form.errors.name} />
                     </div>
                     <div className="grid gap-2">
-                        <Label htmlFor="teacher-expertise">Expertise</Label>
+                        <Label htmlFor="teacher-expertise">Keahlian</Label>
                         <Input
                             id="teacher-expertise"
                             value={form.data.expertise}
                             onChange={(event) =>
                                 form.setData('expertise', event.target.value)
                             }
-                            placeholder="Backend Development"
+                            placeholder='Pengembangan Backend'
                             aria-invalid={Boolean(form.errors.expertise)}
                         />
                         <InputError message={form.errors.expertise} />
                     </div>
                     <div className="grid gap-2">
-                        <Label htmlFor="teacher-photo">Photo</Label>
+                        <Label htmlFor="teacher-photo">Foto</Label>
                         <Input
                             id="teacher-photo"
                             type="file"
@@ -134,13 +134,13 @@ export function TeacherDialog({
                             onClick={close}
                             disabled={form.processing}
                         >
-                            Cancel
+                            Batal
                         </Button>
                         <Button disabled={form.processing}>
                             {form.processing && (
                                 <LoaderCircle className="animate-spin" />
                             )}
-                            {isEditing ? 'Save changes' : 'Create teacher'}
+                            {isEditing ? 'Simpan perubahan': 'Buat instruktur'}
                         </Button>
                     </DialogFooter>
                 </form>

@@ -68,7 +68,7 @@ export default function StudentDashboard({
     ebooks,
 }: DashboardProps) {
     const { auth } = usePage<{ auth: { user?: { name?: string } } }>().props;
-    const studentName = auth.user?.name ?? 'Student';
+    const studentName = auth.user?.name ?? 'Siswa';
     const continueCourses = enrollments.filter((course) => course.status !== 'completed').slice(0, 2);
     const statCards = [
         { label: 'Kelas Saya', value: stats.enrolled, detail: 'Total kelas yang diikuti', icon: MonitorPlay },
@@ -78,10 +78,10 @@ export default function StudentDashboard({
 
     return (
         <>
-            <Head title="Dashboard Student" />
+            <Head title="Dasbor Siswa" />
             <div className="px-5 pb-6 sm:px-7 lg:px-7">
                 <section className="pt-5">
-                    <p className="text-[11px] font-semibold tracking-[0.12em] text-[#1262d7] uppercase">Dashboard Belajar</p>
+                    <p className="text-[11px] font-semibold tracking-[0.12em] text-[#1262d7] uppercase">Dasbor Belajar</p>
                     <h1 className="mt-1 text-2xl font-extrabold tracking-[-0.7px] text-[#10195b] sm:text-[28px]">Selamat datang, {studentName}!</h1>
                     <p className="mt-1 text-sm text-[#526b9d]">Siap melanjutkan perjalanan belajarmu hari ini?</p>
                 </section>
@@ -91,7 +91,7 @@ export default function StudentDashboard({
                         <article key={label} className="rounded-xl border border-[#dce8f6] bg-white p-4 shadow-[0_4px_16px_rgba(35,80,135,.04)]">
                             <div className="flex items-center justify-between"><span className="text-xs text-[#6279a5]">{label}</span><Icon size={18} className="text-[#1262d7]" /></div>
                             <p className="mt-2 text-2xl font-extrabold text-[#111c5b]">{value}</p>
-                            <p className="mt-1 text-[10px] text-[#7183a2]">{detail}</p>
+                            <p className="mt-1 text-xs text-[#7183a2]">{detail}</p>
                         </article>
                     ))}
                 </section>
@@ -105,13 +105,13 @@ export default function StudentDashboard({
                                     <article key={course.id} className="grid min-h-[194px] grid-cols-[46%_1fr] overflow-hidden rounded-xl border border-[#dce8f6] bg-white p-3 shadow-[0_4px_16px_rgba(35,80,135,.04)]">
                                         <img src={course.thumbnail_url ?? '/course-placeholder.svg'} className="h-full min-h-[168px] w-full rounded-lg object-cover" alt="" />
                                         <div className="flex flex-col pl-3">
-                                            <span className="w-fit rounded-md bg-[#e5f2ff] px-2 py-1 text-[8px] text-[#1262d7]">{course.category ?? 'Kelas Online'}</span>
+                                            <span className="w-fit rounded-md bg-[#e5f2ff] px-2 py-1 text-[10px] text-[#1262d7]">{course.category ?? 'Kelas online'}</span>
                                             <h3 className="mt-1 text-[14px] leading-[1.15] font-extrabold text-[#10195b]">{course.title}</h3>
-                                            <p className="mt-2 flex items-center gap-2 text-[10px] text-[#526b9d]"><UserRound size={13} />{course.teacher ?? 'Instruktur belum tersedia'}</p>
-                                            <p className="mt-2 flex items-center gap-2 text-[10px] text-[#526b9d]"><BookOpen size={13} />{course.materials_count} materi</p>
+                                            <p className="mt-2 flex items-center gap-2 text-xs text-[#526b9d]"><UserRound size={13} />{course.teacher ?? 'Instruktur belum tersedia'}</p>
+                                            <p className="mt-2 flex items-center gap-2 text-xs text-[#526b9d]"><BookOpen size={13} />{course.materials_count} materi</p>
                                             <div className="mt-3"><Progress value={course.progress} /></div>
-                                            <p className="mt-3 line-clamp-1 text-[9px] text-[#6279a5]">Materi terakhir: {course.last_learning_content ?? 'Belum dimulai'}</p>
-                                            <Link href={`/student/classes/${course.slug}/study`} className="mt-auto flex h-8 items-center justify-center gap-2 rounded-md bg-[#1167e8] text-[11px] font-semibold text-white">Lanjutkan <ArrowRight size={14} /></Link>
+                                            <p className="mt-3 line-clamp-1 text-[11px] text-[#6279a5]">Materi terakhir: {course.last_learning_content ?? 'Belum dimulai'}</p>
+                                            <Link href={`/student/classes/${course.slug}/study`} className="mt-auto flex h-8 items-center justify-center gap-2 rounded-md bg-[#1167e8] text-xs font-semibold text-white">Lanjutkan <ArrowRight size={14} /></Link>
                                         </div>
                                     </article>
                                 ))}
@@ -121,14 +121,14 @@ export default function StudentDashboard({
                     <div>
                         <Title href="/student/classes">Aktivitas Terbaru</Title>
                         {recentActivities.length ? <div className="divide-y divide-[#e8eff8] rounded-xl border border-[#dce8f6] bg-white px-4">{recentActivities.map((item, index) => (
-                            <div key={`${item.title}-${index}`} className="flex items-center gap-3 py-3"><span className="grid size-8 shrink-0 place-items-center rounded-full bg-[#e8f3ff] text-[#1262d7]">{item.type === 'completed' ? <CheckCircle2 size={15} /> : <Clock3 size={15} />}</span><div className="min-w-0 flex-1"><p className="truncate text-xs font-semibold text-[#17235f]">{item.title}</p><p className="truncate text-[10px] text-[#7183a2]">{item.subtitle}</p></div><span className="shrink-0 text-[10px] text-[#7183a2]">{item.time}</span></div>
+                            <div key={`${item.title}-${index}`} className="flex items-center gap-3 py-3"><span className="grid size-8 shrink-0 place-items-center rounded-full bg-[#e8f3ff] text-[#1262d7]">{item.type === 'completed' ? <CheckCircle2 size={15} /> : <Clock3 size={15} />}</span><div className="min-w-0 flex-1"><p className="truncate text-[13px] font-semibold text-[#17235f]">{item.title}</p><p className="truncate text-xs text-[#7183a2]">{item.subtitle}</p></div><span className="shrink-0 text-[11px] text-[#7183a2]">{item.time}</span></div>
                         ))}</div> : <EmptyState>Belum ada aktivitas belajar.</EmptyState>}
                     </div>
                 </section>
 
                 <section className="mt-5">
                     <Title href="/student/ebooks">E-Book untuk Anda</Title>
-                    {ebooks.length ? <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">{ebooks.map((ebook) => <a key={ebook.id} href={ebook.file_url} target="_blank" rel="noreferrer" className="flex gap-3 rounded-xl border border-[#dce8f6] bg-white p-3"><div className="grid size-20 shrink-0 place-items-center overflow-hidden rounded-lg bg-[#e8f3ff] text-[#1262d7]">{ebook.cover_url ? <img src={ebook.cover_url} className="size-full object-cover" alt="" /> : <BookOpen size={25} />}</div><div className="min-w-0"><h3 className="line-clamp-2 text-sm font-bold text-[#10195b]">{ebook.title}</h3><p className="mt-1 text-[10px] text-[#526b9d]">{ebook.author ?? 'Penulis belum tersedia'}</p><p className="mt-2 flex items-center gap-1 text-[10px] text-[#7183a2]"><FileText size={12} />{ebook.total_pages ? `${ebook.total_pages} halaman` : 'E-book PDF'}</p></div></a>)}</div> : <EmptyState>Belum ada e-book tersedia.</EmptyState>}
+                    {ebooks.length ? <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">{ebooks.map((ebook) => <a key={ebook.id} href={ebook.file_url} target="_blank" rel="noreferrer" className="flex gap-3 rounded-xl border border-[#dce8f6] bg-white p-3"><div className="grid size-20 shrink-0 place-items-center overflow-hidden rounded-lg bg-[#e8f3ff] text-[#1262d7]">{ebook.cover_url ? <img src={ebook.cover_url} className="size-full object-cover" alt="" /> : <BookOpen size={25} />}</div><div className="min-w-0"><h3 className="line-clamp-2 text-sm font-bold text-[#10195b]">{ebook.title}</h3><p className="mt-1 text-xs text-[#526b9d]">{ebook.author ?? 'Penulis belum tersedia'}</p><p className="mt-2 flex items-center gap-1 text-xs text-[#7183a2]"><FileText size={12} />{ebook.total_pages ? `${ebook.total_pages} halaman` : 'E-book PDF'}</p></div></a>)}</div> : <EmptyState>Belum ada e-book tersedia.</EmptyState>}
                 </section>
             </div>
         </>

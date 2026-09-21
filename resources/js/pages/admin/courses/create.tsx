@@ -13,12 +13,12 @@ export default function CreateCourse({
 }) {
     return (
         <>
-            <Head title="Create Course" />
+            <Head title='Buat Kelas' />
             <div className="space-y-6 p-4 md:p-6">
                 <div>
-                    <h1 className="text-2xl font-semibold">Create Course</h1>
+                    <h1 className="text-2xl font-semibold">Buat Kelas</h1>
                     <p className="text-muted-foreground text-sm">
-                        Create course details before adding learning materials.
+                        Isi detail kelas sebelum menambahkan materi pembelajaran.
                     </p>
                 </div>
                 <CourseForm

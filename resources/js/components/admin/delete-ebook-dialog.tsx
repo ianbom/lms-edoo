@@ -35,9 +35,9 @@ export function DeleteEbookDialog({ ebook, open, onOpenChange }: Props) {
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>Delete ebook?</DialogTitle>
+                    <DialogTitle>Hapus e-book?</DialogTitle>
                     <DialogDescription>
-                        “{ebook?.title}” will be removed from the ebook catalog.
+                        “{ebook?.title}” akan dihapus dari katalog e-book.
                     </DialogDescription>
                 </DialogHeader>
                 <DialogFooter>
@@ -46,7 +46,7 @@ export function DeleteEbookDialog({ ebook, open, onOpenChange }: Props) {
                         onClick={() => onOpenChange(false)}
                         disabled={processing}
                     >
-                        Cancel
+                        Batal
                     </Button>
                     <Button
                         variant="destructive"
@@ -56,7 +56,7 @@ export function DeleteEbookDialog({ ebook, open, onOpenChange }: Props) {
                         {processing && (
                             <LoaderCircle className="animate-spin" />
                         )}
-                        Delete ebook
+                        Hapus e-book
                     </Button>
                 </DialogFooter>
             </DialogContent>

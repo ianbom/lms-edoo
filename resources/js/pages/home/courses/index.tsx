@@ -127,20 +127,20 @@ export default function CourseCatalog({
                 <div className="mx-auto max-w-[1356px]">
                     <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
                         <div>
-                            <h1 className="text-[40px] leading-none font-extrabold tracking-[-1.8px] text-[#071457] sm:text-[44px]">
+                            <h1 className="text-[30px] leading-none font-extrabold tracking-[-1.2px] text-[#071457] sm:text-[34px]">
                                 Kelas Populer
                             </h1>
-                            <p className="mt-1 text-[21px] leading-tight text-[#60709A]">
-                                Pilih kelas yang sesuai dengan kebutuhan Anda
+                            <p className="mt-1 text-[15px] leading-tight text-[#60709A] sm:text-base">
+                                Pilih kelas yang sesuai dengan kebutuhanmu
                             </p>
                         </div>
                         <nav
-                            className="flex max-w-full gap-3 overflow-x-auto pb-1 lg:pt-1"
+                            className="flex max-w-full gap-2 overflow-x-auto pb-1 lg:pt-1"
                             aria-label="Filter kategori kelas"
                         >
                             <Link
                                 href={courseUrl('', filters.search)}
-                                className={`shrink-0 rounded-full border px-8 py-3 text-[15px] font-medium transition ${
+                                className={`shrink-0 rounded-full border px-4 py-2 text-[13px] font-medium transition ${
                                     !filters.category
                                         ? 'border-[#105BDD] bg-[#105BDD] text-white shadow-[0_4px_8px_rgba(16,91,221,0.22)]'
                                         : 'border-[#D9E4F5] bg-white text-[#50618C] hover:border-[#105BDD] hover:text-[#105BDD]'
@@ -155,7 +155,7 @@ export default function CourseCatalog({
                                         category.slug,
                                         filters.search,
                                     )}
-                                    className={`shrink-0 rounded-full border px-8 py-3 text-[15px] font-medium transition ${
+                                    className={`shrink-0 rounded-full border px-4 py-2 text-[13px] font-medium transition ${
                                         filters.category === category.slug
                                             ? 'border-[#105BDD] bg-[#105BDD] text-white shadow-[0_4px_8px_rgba(16,91,221,0.22)]'
                                             : 'border-[#D9E4F5] bg-white text-[#50618C] hover:border-[#105BDD] hover:text-[#105BDD]'
@@ -186,7 +186,7 @@ export default function CourseCatalog({
                         <div className="mt-5 rounded-[14px] border border-dashed border-[#C9D9F0] bg-white px-6 py-20 text-center">
                             <Search className="mx-auto size-9 text-[#105BDD]" />
                             <h2 className="mt-4 text-xl font-bold text-[#071457]">
-                                Kelas tidak ditemukan
+                                Kelas belum ditemukan
                             </h2>
                             <p className="mt-1 text-[#60709A]">
                                 Coba kata kunci atau kategori lain.

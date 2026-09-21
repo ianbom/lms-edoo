@@ -85,26 +85,25 @@ export function CourseForm({
                 <section className="bg-card rounded-2xl border p-5 shadow-sm md:p-6">
                     <div className="mb-5">
                         <p className="text-primary text-xs font-semibold tracking-[0.18em] uppercase">
-                            01 · Foundation
+                            01 · Dasar
                         </p>
                         <h2 className="mt-1 text-lg font-semibold">
-                            Core details
+                            Detail utama
                         </h2>
                         <p className="text-muted-foreground mt-1 text-sm">
-                            Give this course a clear identity learners can
-                            recognize.
+                            Buat identitas kelas yang mudah dikenali peserta.
                         </p>
                     </div>
                     <div className="grid gap-5 md:grid-cols-2">
                         <div className="grid gap-2 md:col-span-2">
-                            <Label htmlFor="course-title">Title</Label>
+                            <Label htmlFor="course-title">Judul</Label>
                             <Input
                                 id="course-title"
                                 value={form.data.title}
                                 onChange={(event) =>
                                     form.setData('title', event.target.value)
                                 }
-                                placeholder="e.g. Product Design Fundamentals"
+                                placeholder="contoh: Dasar-Dasar Desain Produk"
                                 required
                             />
                             <InputError message={form.errors.title} />
@@ -123,7 +122,7 @@ export function CourseForm({
                             <InputError message={form.errors.slug} />
                         </div>
                         <div className="grid gap-2">
-                            <Label>Category</Label>
+                            <Label>Kategori</Label>
                             <Select
                                 value={String(form.data.course_category_id)}
                                 onValueChange={(value) =>
@@ -134,7 +133,7 @@ export function CourseForm({
                                 }
                             >
                                 <SelectTrigger>
-                                    <SelectValue placeholder="Select category" />
+                                    <SelectValue placeholder='Pilih kategori' />
                                 </SelectTrigger>
                                 <SelectContent>
                                     {categories.map((category) => (
@@ -157,20 +156,19 @@ export function CourseForm({
                 <section className="bg-card rounded-2xl border p-5 shadow-sm md:p-6">
                     <div className="mb-5">
                         <p className="text-primary text-xs font-semibold tracking-[0.18em] uppercase">
-                            02 · Narrative
+                            02 · Cerita kelas
                         </p>
                         <h2 className="mt-1 text-lg font-semibold">
-                            Course description
+                            Deskripsi kelas
                         </h2>
                         <p className="text-muted-foreground mt-1 text-sm">
-                            Explain the value of the course before learners
-                            start.
+                            Jelaskan manfaat kelas sebelum peserta mulai belajar.
                         </p>
                     </div>
                     <div className="space-y-5">
                         <div className="grid gap-2">
                             <Label htmlFor="course-short-description">
-                                Short description
+                                Deskripsi singkat
                             </Label>
                             <Input
                                 id="course-short-description"
@@ -181,7 +179,7 @@ export function CourseForm({
                                         event.target.value,
                                     )
                                 }
-                                placeholder="A concise promise for the course card"
+                                placeholder='Ringkasan singkat untuk kartu kelas'
                             />
                             <InputError
                                 message={form.errors.short_description}
@@ -189,7 +187,7 @@ export function CourseForm({
                         </div>
                         <div className="grid gap-2">
                             <Label htmlFor="course-description">
-                                Description
+                                Deskripsi
                             </Label>
                             <textarea
                                 id="course-description"
@@ -200,7 +198,7 @@ export function CourseForm({
                                         event.target.value,
                                     )
                                 }
-                                placeholder="Describe outcomes, audience, and what learners will build..."
+                                placeholder='Jelaskan hasil belajar, target peserta, dan hal yang akan dibuat...'
                                 className="bg-background focus-visible:border-ring focus-visible:ring-ring/50 min-h-40 resize-y rounded-lg border p-3 text-sm transition outline-none focus-visible:ring-[3px]"
                             />
                             <InputError message={form.errors.description} />
@@ -214,29 +212,28 @@ export function CourseForm({
                             03 · Delivery
                         </p>
                         <h2 className="mt-1 text-lg font-semibold">
-                            Delivery & visibility
+                            Penyajian dan visibilitas
                         </h2>
                         <p className="text-muted-foreground mt-1 text-sm">
-                            Set the learner-facing level, duration, and
-                            publishing state.
+                            Atur tingkat, durasi, dan status publikasi kelas.
                         </p>
                     </div>
                     <div className="grid gap-5 md:grid-cols-3">
                         <div className="grid gap-2">
-                            <Label htmlFor="course-level">Level</Label>
+                            <Label htmlFor="course-level">Tingkat</Label>
                             <Input
                                 id="course-level"
                                 value={form.data.level}
                                 onChange={(event) =>
                                     form.setData('level', event.target.value)
                                 }
-                                placeholder="Beginner"
+                                placeholder='Pemula'
                             />
                             <InputError message={form.errors.level} />
                         </div>
                         <div className="grid gap-2">
                             <Label htmlFor="course-duration">
-                                Duration (minutes)
+                                Durasi (menit)
                             </Label>
                             <Input
                                 id="course-duration"
@@ -285,10 +282,10 @@ export function CourseForm({
                             04 · People
                         </p>
                         <h2 className="mt-1 text-lg font-semibold">
-                            Instructors
+                            Instruktur
                         </h2>
                         <p className="text-muted-foreground mt-1 text-sm">
-                            Choose who appears as the teaching team.
+                            Pilih instruktur yang akan ditampilkan.
                         </p>
                     </div>
                     <div className="grid gap-2 md:grid-cols-2">
@@ -320,15 +317,15 @@ export function CourseForm({
                             <Image className="size-5" />
                         </div>
                         <div>
-                            <h2 className="font-semibold">Course media</h2>
+                            <h2 className="font-semibold">Media kelas</h2>
                             <p className="text-muted-foreground text-xs">
-                                JPG, PNG, or WEBP
+                                JPG, PNG, atau WEBP
                             </p>
                         </div>
                     </div>
                     <div className="space-y-4">
                         <div className="grid gap-2">
-                            <Label htmlFor="course-thumbnail">Thumbnail</Label>
+                            <Label htmlFor="course-thumbnail">Gambar mini</Label>
                             <Input
                                 id="course-thumbnail"
                                 type="file"
@@ -342,7 +339,7 @@ export function CourseForm({
                                 className="h-auto cursor-pointer px-3 py-2 text-xs"
                             />
                             <p className="text-muted-foreground text-xs">
-                                Shown in course lists and cards.
+                                Ditampilkan di daftar dan kartu kelas.
                             </p>
                             <InputError message={form.errors.thumbnail} />
                         </div>
@@ -361,7 +358,7 @@ export function CourseForm({
                                 className="h-auto cursor-pointer px-3 py-2 text-xs"
                             />
                             <p className="text-muted-foreground text-xs">
-                                Used on the course detail header.
+                                Digunakan pada bagian atas detail kelas.
                             </p>
                             <InputError message={form.errors.banner} />
                         </div>
@@ -369,17 +366,16 @@ export function CourseForm({
                 </section>
                 <section className="bg-muted/30 rounded-2xl border border-dashed p-5">
                     <UploadCloud className="text-primary mb-3 size-5" />
-                    <h3 className="font-semibold">Ready for materials?</h3>
+                    <h3 className="font-semibold">Siap menambahkan materi?</h3>
                     <p className="text-muted-foreground mt-1 text-sm leading-6">
-                        After saving, continue to Course Builder to add modules,
-                        videos, and textbooks.
+                        Setelah disimpan, lanjutkan ke Penyusun Kelas untuk menambahkan modul, video, dan bacaan.
                     </p>
                 </section>
                 <Button className="h-11 w-full" disabled={form.processing}>
                     {form.processing && (
                         <LoaderCircle className="animate-spin" />
                     )}{' '}
-                    {course ? 'Save changes' : 'Create course'}
+                    {course ? 'Simpan perubahan': 'Buat kelas'}
                 </Button>
             </aside>
         </form>

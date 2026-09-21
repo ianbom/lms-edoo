@@ -6,10 +6,10 @@ import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import { store } from '@/routes/password/confirm';
 
-export default function ConfirmPassword() {
+export default function KonfirmasiPassword() {
     return (
         <>
-            <Head title="Confirm password" />
+            <Head title='Konfirmasi password' />
 
             <Form {...store.form()} resetOnSuccess={['password']}>
                 {({ processing, errors }) => (
@@ -19,7 +19,7 @@ export default function ConfirmPassword() {
                             <PasswordInput
                                 id="password"
                                 name="password"
-                                placeholder="Password"
+                                placeholder='Password'
                                 autoComplete="current-password"
                                 autoFocus
                             />
@@ -34,7 +34,7 @@ export default function ConfirmPassword() {
                                 data-test="confirm-password-button"
                             >
                                 {processing && <Spinner />}
-                                Confirm password
+                                Konfirmasi password
                             </Button>
                         </div>
                     </div>
@@ -44,8 +44,8 @@ export default function ConfirmPassword() {
     );
 }
 
-ConfirmPassword.layout = {
-    title: 'Confirm password',
+KonfirmasiPassword.layout = {
+    title: 'Konfirmasi password',
     description:
-        'This is a secure area of the application. Please confirm your password before continuing.',
+        'Ini area yang aman. Konfirmasi password sebelum melanjutkan.',
 };

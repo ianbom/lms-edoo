@@ -5,11 +5,14 @@ namespace Tests\Feature\Admin;
 use App\Enums\UserRole;
 use App\Models\Course;
 use App\Models\CourseCategory;
+use App\Models\CourseMaterial;
+use App\Models\LearningContent;
 use App\Models\Teacher;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Inertia\Testing\AssertableInertia as Assert;
 use Tests\TestCase;
 
 class CourseTest extends TestCase
@@ -57,5 +60,40 @@ class CourseTest extends TestCase
     public function test_students_cannot_access_courses(): void
     {
         $this->actingAs(User::factory()->create())->get('/admin/courses')->assertForbidden();
+    }
+
+    public function test_admin_can_view_course_details(): void
+    {
+        $admin = User::factory()->create(['role' => UserRole::Admin]);
+        $category = CourseCategory::create(['name' => 'Web', 'slug' => 'web']);
+        $course = Course::create([
+            'course_category_id' => $category->id,
+            'title' => 'Laravel Basics',
+            'slug' => 'laravel-basics',
+            'status' => 'published',
+        ]);
+        $material = CourseMaterial::create([
+            'course_id' => $course->id,
+            'title' => 'Pengenalan',
+            'position' => 1,
+        ]);
+        LearningContent::create([
+            'course_material_id' => $material->id,
+            'type' => 'video',
+            'title' => 'Video pembuka',
+            'position' => 1,
+        ]);
+
+        $this->actingAs($admin)
+            ->get("/admin/courses/{$course->id}")
+            ->assertOk()
+            ->assertInertia(fn (Assert $page) => $page
+                ->component('admin/courses/show')
+                ->where('course.title', 'Laravel Basics')
+                ->where('course.statistics.materials', 1)
+                ->where('course.statistics.contents', 1)
+                ->where('course.statistics.videos', 1)
+                ->has('course.materials', 1)
+                ->has('course.materials.0.contents', 1));
     }
 }

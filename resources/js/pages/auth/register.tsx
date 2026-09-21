@@ -16,7 +16,7 @@ type Props = {
 export default function Register({ passwordRules }: Props) {
     return (
         <>
-            <Head title="Register" />
+            <Head title='Daftar' />
             <Form
                 {...store.form()}
                 resetOnSuccess={['password', 'password_confirmation']}
@@ -93,7 +93,7 @@ export default function Register({ passwordRules }: Props) {
 
                             <div className="grid gap-2">
                                 <Label htmlFor="password_confirmation">
-                                    Confirm password
+                                    Konfirmasi password
                                 </Label>
                                 <PasswordInput
                                     id="password_confirmation"
@@ -137,5 +137,5 @@ export default function Register({ passwordRules }: Props) {
 Register.layout = {
     title: 'Buat akun baru',
     description:
-        'Daftar untuk mulai mengikuti kelas dan menyimpan progress belajar.',
+        'Daftar untuk mulai mengikuti kelas dan menyimpan progres belajar.',
 };

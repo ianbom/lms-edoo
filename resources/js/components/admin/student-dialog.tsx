@@ -56,15 +56,15 @@ export function StudentDialog({
         >
             <DialogContent className="sm:max-w-lg">
                 <DialogHeader>
-                    <DialogTitle>Add student</DialogTitle>
+                    <DialogTitle>Tambah siswa</DialogTitle>
                     <DialogDescription>
-                        Create a student account with immediate access to login.
+                        Buat akun siswa agar bisa langsung masuk.
                     </DialogDescription>
                 </DialogHeader>
 
                 <form className="space-y-5" onSubmit={submit}>
                     <div className="grid gap-2">
-                        <Label htmlFor="student-name">Name</Label>
+                        <Label htmlFor="student-name">Nama</Label>
                         <Input
                             id="student-name"
                             value={form.data.name}
@@ -78,7 +78,7 @@ export function StudentDialog({
                         <InputError message={form.errors.name} />
                     </div>
                     <div className="grid gap-2">
-                        <Label htmlFor="student-phone">Phone</Label>
+                        <Label htmlFor="student-phone">Nomor telepon</Label>
                         <Input
                             id="student-phone"
                             type="tel"
@@ -92,7 +92,7 @@ export function StudentDialog({
                         <InputError message={form.errors.phone} />
                     </div>
                     <div className="grid gap-2">
-                        <Label htmlFor="student-email">Email (optional)</Label>
+                        <Label htmlFor="student-email">Email (opsional)</Label>
                         <Input
                             id="student-email"
                             type="email"
@@ -120,7 +120,7 @@ export function StudentDialog({
                     </div>
                     <div className="grid gap-2">
                         <Label htmlFor="student-password-confirmation">
-                            Confirm password
+                            Konfirmasi password
                         </Label>
                         <Input
                             id="student-password-confirmation"
@@ -142,13 +142,13 @@ export function StudentDialog({
                             onClick={close}
                             disabled={form.processing}
                         >
-                            Cancel
+                            Batal
                         </Button>
                         <Button disabled={form.processing}>
                             {form.processing && (
                                 <LoaderCircle className="animate-spin" />
                             )}
-                            Create student
+                            Buat siswa
                         </Button>
                     </DialogFooter>
                 </form>

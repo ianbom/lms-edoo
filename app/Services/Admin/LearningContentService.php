@@ -22,7 +22,7 @@ class LearningContentService
                     ->where('title', 'like', "%{$search}%")
                     ->orWhereHas('course', fn ($query) => $query->where('title', 'like', "%{$search}%")))))
             ->orderByDesc('updated_at')
-            ->paginate(15)
+            ->paginate($filters['per_page'] ?? 15)
             ->withQueryString();
     }
 

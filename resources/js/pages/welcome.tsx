@@ -53,7 +53,7 @@ const formatDuration = (minutes: number | null): string => {
 export default function Welcome({ courses }: { courses: Course[] }) {
     return (
         <>
-            <Head title="Eduo - Live Online Training" />
+            <Head title="Eduo - Pelatihan Online Langsung" />
             <section
                 className="relative mx-auto flex aspect-[2048/1148] max-w-[1370px] overflow-hidden bg-[#070B49] max-[1100px]:mx-[18px] max-[760px]:mx-2.5 max-[760px]:aspect-auto max-[760px]:h-[480px]"
                 id="home"
@@ -61,26 +61,27 @@ export default function Welcome({ courses }: { courses: Course[] }) {
                 <img
                     className="block size-full object-cover max-[760px]:object-[34%_center]"
                     src="/welcome/hero-online-training.png"
-                    alt="Expert instructor teaching a live online class"
+                    alt="Instruktur berpengalaman sedang mengajar kelas online langsung"
                 />
                 <h1 className="sr-only">
-                    Our Live Online Training Is Taught By Expert Instructors
+                    Pelatihan online langsung kami dibawakan oleh instruktur
+                    berpengalaman
                 </h1>
                 <Link
                     className="absolute top-[58%] left-[10.3%] z-[4] h-[9%] w-[27%] rounded-full focus-visible:outline-4 focus-visible:outline-offset-4 focus-visible:outline-[#2478E4] max-[760px]:left-[8%] max-[760px]:h-[10%] max-[760px]:w-[52%]"
                     href="#courses"
-                    aria-label="Browse our course catalog"
+                    aria-label="Lihat katalog kelas"
                 />
             </section>
 
             <section
                 className="mx-auto grid max-w-[1370px] grid-cols-3 gap-[35px] bg-[#EEF6FF] px-11 py-[58px] max-[1100px]:mx-[18px] max-[1100px]:px-[25px] max-[1100px]:py-11 max-[760px]:mx-0 max-[760px]:block max-[760px]:px-[22px] max-[760px]:py-[35px]"
-                aria-label="Eduo benefits"
+                aria-label="Keunggulan Eduo"
             >
                 {(
                     [
-                        [CalendarDays, 'Class Schedule'],
-                        [MonitorPlay, 'Interactive Led Online Advantage'],
+                        [CalendarDays, 'Jadwal Kelas'],
+                        [MonitorPlay, 'Keunggulan Kelas online Interaktif'],
                         [UsersRound, '100% Satisfaction Guaranteed'],
                     ] as const
                 ).map(([Icon, title]) => (
@@ -96,9 +97,9 @@ export default function Welcome({ courses }: { courses: Course[] }) {
                                 {title}
                             </h3>
                             <p className="text-xs leading-[1.65] text-[#59648A]">
-                                Eduo provides engaging instructor led content
-                                for people everywhere and of all ages without
-                                having to leave the house.
+                                Eduo menyediakan materi menarik bersama
+                                instruktur untuk siapa saja dan segala usia,
+                                tanpa perlu keluar rumah.
                             </p>
                         </div>
                     </div>
@@ -109,14 +110,14 @@ export default function Welcome({ courses }: { courses: Course[] }) {
                 <section className={`${sectionClass} pb-0`} id="courses">
                     <div className="mb-7 flex items-end justify-between max-[760px]:flex-col max-[760px]:items-start max-[760px]:gap-[17px]">
                         <div>
-                            <span className={kickerClass}>POPULAR CLASSES</span>
+                            <span className={kickerClass}>KELAS POPULER</span>
                             <h2 className="mt-3 text-[clamp(28px,3vw,39px)] leading-[1.16] font-extrabold tracking-[-1.5px]">
-                                Join Our Online Classes
+                                Ikuti Kelas online Kami
                             </h2>
                             <p className="mt-[7px] text-[13px] leading-[1.55] text-[#59648A]">
-                                Learn practical skills through live,
-                                instructor-led classes designed to help you grow
-                                with confidence.
+                                Pelajari keterampilan praktis lewat kelas
+                                langsung bersama instruktur untuk berkembang
+                                dengan percaya diri.
                             </p>
                         </div>
                         <Link href="/courses" className={primaryLinkClass}>
@@ -124,7 +125,7 @@ export default function Welcome({ courses }: { courses: Course[] }) {
                         </Link>
                     </div>
 
-                    <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
+                    <div className="grid grid-cols-1 gap-5 pb-5 md:grid-cols-2 xl:grid-cols-3">
                         {courses.map((course) => (
                             <Link
                                 href={`/courses/${course.slug}`}
@@ -159,9 +160,21 @@ export default function Welcome({ courses }: { courses: Course[] }) {
                                             'Pelajari keterampilan baru melalui materi yang terstruktur dan mudah diikuti.'}
                                     </p>
                                     <div className="flex items-center gap-[9px]">
-                                        <span className="inline-flex size-[37px] shrink-0 items-center justify-center rounded-full bg-[#DCECFC] text-[#1054D0]">
-                                            <UserRound size={18} />
-                                        </span>
+                                        {course.teacher?.photo_url ? (
+                                            <img
+                                                src={course.teacher.photo_url}
+                                                alt={`Foto ${course.teacher.name}`}
+                                                className="size-[37px] shrink-0 rounded-full object-cover"
+                                                onError={(event) => {
+                                                    event.currentTarget.src =
+                                                        '/bri-peduli.webp';
+                                                }}
+                                            />
+                                        ) : (
+                                            <span className="inline-flex size-[37px] shrink-0 items-center justify-center rounded-full bg-[#DCECFC] text-[#1054D0]">
+                                                <UserRound size={18} />
+                                            </span>
+                                        )}
                                         <div>
                                             <strong className="block text-xs">
                                                 {course.teacher?.name ||

@@ -87,17 +87,17 @@ export function EbookCategoryDialog({
                 <DialogHeader>
                     <DialogTitle>
                         {isEditing
-                            ? 'Edit ebook category'
-                            : 'Create ebook category'}
+                            ? 'Ubah kategori e-book'
+                            : 'Buat kategori e-book'}
                     </DialogTitle>
                     <DialogDescription>
-                        Group related ebooks for the library catalog.
+                        Kelompokkan e-book untuk katalog bacaan.
                     </DialogDescription>
                 </DialogHeader>
 
                 <form className="space-y-5" onSubmit={submit}>
                     <div className="grid gap-5 sm:grid-cols-2">
-                        <Field label="Name" error={form.errors.name}>
+                        <Field label="Nama" error={form.errors.name}>
                             <Input
                                 value={form.data.name}
                                 onChange={(event) =>
@@ -117,7 +117,7 @@ export function EbookCategoryDialog({
                                 required
                             />
                         </Field>
-                        <Field label="Position" error={form.errors.position}>
+                        <Field label="Urutan" error={form.errors.position}>
                             <Input
                                 type="number"
                                 min="0"
@@ -130,7 +130,7 @@ export function EbookCategoryDialog({
                         </Field>
                     </div>
 
-                    <Field label="Description" error={form.errors.description}>
+                    <Field label="Deskripsi" error={form.errors.description}>
                         <textarea
                             value={form.data.description}
                             onChange={(event) =>
@@ -147,7 +147,7 @@ export function EbookCategoryDialog({
                                 form.setData('is_active', checked === true)
                             }
                         />
-                        Active category
+                        Kategori aktif
                     </label>
 
                     <DialogFooter>
@@ -157,13 +157,13 @@ export function EbookCategoryDialog({
                             onClick={close}
                             disabled={form.processing}
                         >
-                            Cancel
+                            Batal
                         </Button>
                         <Button disabled={form.processing}>
                             {form.processing && (
                                 <LoaderCircle className="animate-spin" />
                             )}
-                            {isEditing ? 'Save changes' : 'Create category'}
+                            {isEditing ? 'Simpan perubahan' : 'Buat kategori'}
                         </Button>
                     </DialogFooter>
                 </form>

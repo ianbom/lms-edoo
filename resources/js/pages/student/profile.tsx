@@ -104,7 +104,7 @@ export default function StudentProfile({ profile }: { profile: Profile }) {
             icon: CheckCircle2,
         },
         {
-            label: 'Tanggal Bergabung',
+            label: 'Tanggal bergabung',
             value: formatDate(profile.created_at),
             icon: CalendarDays,
         },
@@ -117,7 +117,7 @@ export default function StudentProfile({ profile }: { profile: Profile }) {
 
     return (
         <>
-            <Head title="Profil Student" />
+            <Head title="Profil siswa" />
 
             <section className="px-5 pb-10 sm:px-8 lg:px-10">
                 <div className="mx-auto max-w-6xl">
@@ -127,7 +127,7 @@ export default function StudentProfile({ profile }: { profile: Profile }) {
                         </span>
                         <div className="min-w-0">
                             <p className="text-primary text-sm font-bold">
-                                Profil Student
+                                Profil siswa
                             </p>
                             <h1 className="mt-1 truncate text-3xl font-extrabold tracking-[-0.8px] text-[#071842]">
                                 {profile.name}
@@ -346,7 +346,7 @@ export default function StudentProfile({ profile }: { profile: Profile }) {
                                             <KeyRound />
                                             {passwordForm.processing
                                                 ? 'Memperbarui...'
-                                                : 'Perbarui Password'}
+                                                : 'Perbarui password'}
                                         </Button>
                                     </form>
                                 </CardContent>

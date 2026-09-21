@@ -96,7 +96,7 @@ export default function MyClass({ classes }: { classes: Classes }) {
                                     </div>
                                     <CardContent className="flex min-h-[198px] flex-col p-6 pt-4">
                                         <p className="text-sm font-semibold text-[#365D9C]">
-                                            {item.course.category || 'Kelas Online'}
+                                            {item.course.category || 'Kelas online'}
                                         </p>
                                         <h2 className="mt-1 line-clamp-2 text-[20px] leading-[1.12] font-extrabold tracking-[-0.6px] text-[#071457]">
                                             {item.course.title}
@@ -121,7 +121,7 @@ export default function MyClass({ classes }: { classes: Classes }) {
                                             <div className="mt-4">
                                                 <div className="mb-2 flex justify-between text-[11px]">
                                                     <span className="font-semibold text-[#486491]">
-                                                        Progress Belajar
+                                                Progres Belajar
                                                     </span>
                                                     <span className="font-extrabold text-[#1064db]">
                                                         {Math.round(item.progress)}%

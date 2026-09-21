@@ -1,10 +1,17 @@
-import { Head, Link, router } from '@inertiajs/react';
+import { Head, router } from '@inertiajs/react';
 import { FileText, Pencil, Plus, Search, Video, X } from 'lucide-react';
 import { useState } from 'react';
 import { LearningContentDialog } from '@/components/admin/learning-content-dialog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
 import { index } from '@/routes/admin/learning-contents';
 
 type MaterialOption = { id: number; title: string; course: { title: string } };
@@ -29,7 +36,7 @@ type Pagination = {
     prev_page_url: string | null;
     next_page_url: string | null;
 };
-type Filters = { search?: string };
+type Filters = { search?: string; per_page?: number };
 
 export default function LearningContentsIndex({
     contents,
@@ -40,7 +47,10 @@ export default function LearningContentsIndex({
     materials: MaterialOption[];
     filters: Filters;
 }) {
-    const [query, setQuery] = useState({ search: filters.search ?? '' });
+    const [query, setQuery] = useState({
+        search: filters.search ?? '',
+        per_page: String(filters.per_page ?? 15),
+    });
     const [selected, setSelected] = useState<Content | null>(null);
     const [open, setOpen] = useState(false);
     const openForm = (content: Content | null) => {
@@ -51,34 +61,45 @@ export default function LearningContentsIndex({
         setOpen(nextOpen);
         if (!nextOpen) setSelected(null);
     };
+    const visitPage = (page: number): void => {
+        router.get(
+            index.url(),
+            { ...query, page },
+            { preserveState: true, replace: true },
+        );
+    };
     const applyFilters = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        router.get(index.url(), query, { preserveState: true, replace: true });
+        visitPage(1);
     };
-    const clearFilters = () => {
-        const empty = { search: '' };
+    const clearFilters = (): void => {
+        const empty = { search: '', per_page: '15' };
         setQuery(empty);
         router.get(index.url(), empty, { preserveState: true, replace: true });
     };
+    const pages = Array.from(
+        { length: contents.last_page },
+        (_, pageIndex) => pageIndex + 1,
+    );
 
     return (
         <>
-            <Head title="Learning Contents" />
+            <Head title="Materi Pembelajaran" />
             <div className="space-y-6 p-4 md:p-6">
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                     <div>
                         <p className="text-primary text-xs font-semibold tracking-[0.18em] uppercase">
-                            Curriculum
+                            Kurikulum
                         </p>
                         <h1 className="mt-1 text-2xl font-semibold tracking-tight">
-                            Learning Contents
+                            Materi Pembelajaran
                         </h1>
                         <p className="text-muted-foreground text-sm">
-                            Manage video lessons and textbook chapters.
+                            Kelola video pembelajaran dan bab bacaan.
                         </p>
                     </div>
                     <Button onClick={() => openForm(null)}>
-                        <Plus /> Add content
+                        <Plus /> Tambah materi
                     </Button>
                 </div>
                 <form
@@ -90,36 +111,56 @@ export default function LearningContentsIndex({
                         <Input
                             value={query.search}
                             onChange={(event) =>
-                                setQuery({ search: event.target.value })
+                                setQuery({
+                                    ...query,
+                                    search: event.target.value,
+                                })
                             }
                             className="pl-9"
-                            placeholder="Search contents, materials, or courses"
+                            placeholder="Cari materi, modul, atau kelas"
                         />
                     </div>
-                    <Button type="submit">Filter</Button>
-                    {query.search && (
+                    <Select
+                        value={query.per_page}
+                        onValueChange={(value) =>
+                            setQuery({ ...query, per_page: value })
+                        }
+                    >
+                        <SelectTrigger className="w-full sm:w-36">
+                            <SelectValue placeholder="Per halaman" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {[10, 15, 25].map((value) => (
+                                <SelectItem key={value} value={String(value)}>
+                                    {value} per halaman
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+                    <Button type="submit">Terapkan filter</Button>
+                    {(query.search || query.per_page !== '15') && (
                         <Button
                             type="button"
                             variant="outline"
                             onClick={clearFilters}
                         >
                             <X />
-                            Clear
+                            Bersihkan
                         </Button>
                     )}
                 </form>
-                <div className="bg-card overflow-hidden rounded-2xl border shadow-sm">
+                <div className="bg-card overflow-hidden border">
                     <div className="overflow-x-auto">
                         <table className="w-full min-w-220 text-left text-sm">
-                            <thead className="bg-muted/40 border-b">
+                            <thead className="bg-muted/50 border-b">
                                 <tr>
-                                    <th className="px-5 py-3">No.</th>
-                                    <th>Content</th>
-                                    <th>Course / Material</th>
-                                    <th>Type</th>
-                                    <th>Status</th>
-                                    <th>Position</th>
-                                    <th className="text-right">Action</th>
+                                    <th className="px-5 py-3 font-bold">No.</th>
+                                    <th className="font-bold">Materi</th>
+                                    <th className="font-bold">Kelas / Modul</th>
+                                    <th className="font-bold">Jenis</th>
+                                    <th className="font-bold">Status</th>
+                                    <th className="font-bold">Urutan</th>
+                                    <th className="text-right font-bold">Tindakan</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y">
@@ -134,8 +175,7 @@ export default function LearningContentsIndex({
                                         <td className="py-4">
                                             <div className="flex items-center gap-3">
                                                 <div className="bg-primary/10 text-primary rounded-lg p-2">
-                                                    {content.type ===
-                                                    'video' ? (
+                                                    {content.type === 'video' ? (
                                                         <Video className="size-4" />
                                                     ) : (
                                                         <FileText className="size-4" />
@@ -147,7 +187,7 @@ export default function LearningContentsIndex({
                                                     </p>
                                                     <p className="text-muted-foreground text-xs">
                                                         {content.description ||
-                                                            'No description'}
+                                                            'Belum ada deskripsi'}
                                                     </p>
                                                 </div>
                                             </div>
@@ -172,8 +212,8 @@ export default function LearningContentsIndex({
                                                 }
                                             >
                                                 {content.is_published
-                                                    ? 'Published'
-                                                    : 'Draft'}
+                                                    ? 'Dipublikasikan'
+                                                    : 'Draf'}
                                             </Badge>
                                         </td>
                                         <td>{content.position}</td>
@@ -185,7 +225,7 @@ export default function LearningContentsIndex({
                                                     openForm(content)
                                                 }
                                             >
-                                                <Pencil /> Edit
+                                                <Pencil /> Ubah
                                             </Button>
                                         </td>
                                     </tr>
@@ -197,39 +237,56 @@ export default function LearningContentsIndex({
                         <div className="px-6 py-16 text-center">
                             <FileText className="text-muted-foreground mx-auto size-10" />
                             <h2 className="mt-4 font-semibold">
-                                No learning contents found
+                                Belum ada materi pembelajaran.
                             </h2>
                             <p className="text-muted-foreground mt-1 text-sm">
-                                Create content or change the current search.
+                                Tambah materi atau ubah kata pencarian.
                             </p>
                         </div>
                     )}
                     {contents.last_page > 1 && (
-                        <div className="flex items-center justify-between border-t px-5 py-4 text-sm">
+                        <div className="flex flex-col gap-3 border-t px-5 py-4 text-sm sm:flex-row sm:items-center sm:justify-between">
                             <span className="text-muted-foreground">
-                                Page {contents.current_page} of{' '}
+                                Halaman {contents.current_page} dari{' '}
                                 {contents.last_page}
                             </span>
-                            <div className="flex gap-2">
+                            <div className="flex flex-wrap gap-2">
                                 <Button
-                                    asChild
+                                    type="button"
                                     variant="outline"
                                     size="sm"
                                     disabled={!contents.prev_page_url}
+                                    onClick={() =>
+                                        visitPage(contents.current_page - 1)
+                                    }
                                 >
-                                    <Link href={contents.prev_page_url ?? '#'}>
-                                        Previous
-                                    </Link>
+                                    Sebelumnya
                                 </Button>
+                                {pages.map((page) => (
+                                    <Button
+                                        key={page}
+                                        type="button"
+                                        variant={
+                                            page === contents.current_page
+                                                ? 'default'
+                                                : 'outline'
+                                        }
+                                        size="sm"
+                                        onClick={() => visitPage(page)}
+                                    >
+                                        {page}
+                                    </Button>
+                                ))}
                                 <Button
-                                    asChild
+                                    type="button"
                                     variant="outline"
                                     size="sm"
                                     disabled={!contents.next_page_url}
+                                    onClick={() =>
+                                        visitPage(contents.current_page + 1)
+                                    }
                                 >
-                                    <Link href={contents.next_page_url ?? '#'}>
-                                        Next
-                                    </Link>
+                                    Berikutnya
                                 </Button>
                             </div>
                         </div>
