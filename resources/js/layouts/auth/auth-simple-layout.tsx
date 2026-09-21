@@ -10,42 +10,42 @@ export default function AuthSimpleLayout({
     description,
 }: AuthLayoutProps) {
     return (
-        <main className="h-[100dvh] overflow-hidden bg-[#FBFCFF] lg:grid lg:grid-cols-[minmax(0,1.05fr)_minmax(460px,0.95fr)]">
-            <section
-                className="relative hidden min-h-[100dvh] overflow-hidden lg:block"
-                aria-hidden="true"
-            >
-                <img
-                    src="/login.png"
-                    alt=""
-                    className="absolute inset-0 size-full object-cover"
-                />
-            </section>
-
-            <section className="flex h-[100dvh] min-h-0 items-center justify-center overflow-y-auto px-5 py-5 sm:px-8 sm:py-6">
-                <div className="w-full max-w-[410px]">
-                    <Link href={home()} className="mb-6 inline-flex">
+        <main className="h-dvh max-h-dvh overflow-hidden bg-white lg:grid lg:grid-cols-[minmax(420px,0.9fr)_minmax(0,1.1fr)]">
+            <section className="flex min-h-0 min-w-0 items-center justify-center overflow-y-auto bg-white px-5 py-8 sm:px-10 lg:h-dvh lg:overflow-hidden lg:px-14 lg:py-8 xl:px-20">
+                <div className="w-full max-w-[430px]">
+                    <Link
+                        href={home()}
+                        className="mb-10 inline-flex "
+                    >
                         <AppLogo />
                     </Link>
-                    <div className="mb-5 space-y-1.5">
-                        <p className="text-sm font-medium text-[#1054D0]">
-                            Selamat datang kembali
-                        </p>
-                        <h2 className="text-3xl font-semibold tracking-tight text-[#070B49]">
+                    <div className="mb-8 space-y-2 text-center">
+                        <h2 className="text-4xl font-extrabold tracking-[-1.2px] text-[#071C55] sm:text-[42px]">
                             {title}
                         </h2>
-                        <p className="text-sm leading-6 text-[#59648A]">
+                        <p className="mx-auto max-w-[360px] text-sm leading-5 text-[#59729E]">
                             {description}
                         </p>
                     </div>
                     {children}
                     <Link
                         href={home()}
-                        className="mt-10 inline-flex items-center gap-1 text-xs text-[#7D89A8] transition-colors hover:text-[#1054D0]"
+                        className="mt-8 inline-flex items-center gap-1 text-xs text-[#59729E] transition-colors hover:text-[#1054D0]"
                     >
                         Kembali ke beranda <ArrowUpRight className="size-3.5" />
                     </Link>
                 </div>
+            </section>
+
+            <section
+                className="relative hidden min-h-0 overflow-hidden bg-white lg:flex lg:h-dvh"
+                aria-label="Ilustrasi pembelajaran BRI Peduli"
+            >
+                <img
+                    src="/login.png"
+                    alt="Ilustrasi pembelajaran BRI Peduli"
+                    className="size-full object-contain"
+                />
             </section>
         </main>
     );

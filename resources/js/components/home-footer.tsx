@@ -13,29 +13,29 @@ export default function HomeFooter() {
                     >
                         <AppLogo />
                     </Link>
-                    <p className="text-[11px] text-[#DCEBFF]">
+                    <p className="text-[13px] text-[#DCEBFF]">
                         Belajar Hari Ini, Lebih Baik Esok.
                     </p>
                     <div className="mt-[19px] flex items-center gap-[17px] text-white">
-                        <Linkedin size={16} />
-                        <span className="text-[13px]">♥</span>
-                        <Instagram size={16} />
-                        <Youtube size={16} />
+                        <Linkedin size={18} />
+                        <span className="text-[16px]">♥</span>
+                        <Instagram size={18} />
+                        <Youtube size={18} />
                     </div>
-                    <small className="mt-[22px] block text-[10px] text-[#C8DEFF]">
+                    <small className="mt-[22px] block text-[12px] text-[#C8DEFF]">
                         © 2026 BRI Peduli. Hak cipta dilindungi.
                     </small>
                 </div>
 
                 <div>
-                    <h3 className="mt-[7px] mb-3 text-xs font-bold">
+                    <h3 className="mt-[7px] mb-3 text-sm font-bold">
                         Tautan Cepat
                     </h3>
                     {['Beranda', 'Tentang Kami', 'Kelas', 'Blog', 'Kontak'].map(
                         (item) => (
                             <a
                                 href={`#${item.toLowerCase().replace(' ', '-')}`}
-                                className="block text-[11px] leading-[1.7] text-[#DCEBFF] transition-colors hover:text-white"
+                                className="block text-[13px] leading-[1.7] text-[#DCEBFF] transition-colors hover:text-white"
                                 key={item}
                             >
                                 {item}
@@ -45,7 +45,7 @@ export default function HomeFooter() {
                 </div>
 
                 <div>
-                    <h3 className="mt-[7px] mb-3 text-xs font-bold">
+                    <h3 className="mt-[7px] mb-3 text-sm font-bold">
                         Kelas Populer
                     </h3>
                     {[
@@ -57,7 +57,7 @@ export default function HomeFooter() {
                     ].map((item) => (
                         <a
                             href="#courses"
-                            className="block text-[11px] leading-[1.7] text-[#DCEBFF] transition-colors hover:text-white"
+                            className="block text-[13px] leading-[1.7] text-[#DCEBFF] transition-colors hover:text-white"
                             key={item}
                         >
                             {item}
@@ -66,29 +66,29 @@ export default function HomeFooter() {
                 </div>
 
                 <div className="max-[760px]:col-span-2">
-                    <h3 className="mt-[7px] mb-3 text-xs font-bold">
+                    <h3 className="mt-[7px] mb-3 text-sm font-bold">
                         Berlangganan Newsletter
                     </h3>
-                    <p className="mb-3 text-[11px] text-[#DCEBFF]">
+                    <p className="mb-3 text-[13px] text-[#DCEBFF]">
                         Dapatkan info kelas, tips, dan kabar terbaru.
                     </p>
                     <div className="flex">
                         <input
-                            className="w-full min-w-0 rounded-l-[9px] border border-white bg-white px-[11px] py-[11px] text-[11px] text-[#070B49] outline-none placeholder:text-[#61719B] focus:border-[#BBD8FF] focus:ring-2 focus:ring-[#BBD8FF]"
+                            className="w-full min-w-0 rounded-l-[9px] border border-white bg-white px-[11px] py-[11px] text-[13px] text-[#070B49] outline-none placeholder:text-[#61719B] focus:border-[#BBD8FF] focus:ring-2 focus:ring-[#BBD8FF]"
                             type="email"
                             placeholder="Alamat email kamu"
                             aria-label="Alamat email"
                         />
                         <button
-                            className="rounded-r-[9px] bg-[#071F66] px-[17px] text-[11px] font-bold text-white hover:bg-[#06194F] active:bg-[#04133D]"
+                            className="rounded-r-[9px] bg-[#071F66] px-[17px] text-[13px] font-bold text-white hover:bg-[#06194F] active:bg-[#04133D]"
                             type="button"
                         >
                             Berlangganan
                         </button>
                     </div>
-                    <small className="mt-[22px] block text-[10px] text-[#C8DEFF]">
+                    <small className="mt-[22px] block text-[12px] text-[#C8DEFF]">
                         Membuat pendidikan lebih mudah diakses untuk masa depan yang
-                        lebih cerah. <b className="text-[15px] text-white">♥</b>
+                        lebih cerah. <b className="text-[16px] text-white">♥</b>
                     </small>
                 </div>
             </div>

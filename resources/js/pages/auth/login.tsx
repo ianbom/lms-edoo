@@ -22,13 +22,15 @@ export default function Login({ status }: Props) {
             <Form
                 {...store.form()}
                 resetOnSuccess={['password']}
-                className="flex flex-col gap-4"
+                className="flex flex-col gap-6"
             >
                 {({ processing, errors }) => (
                     <>
-                        <div className="grid gap-5">
+                        <div className="grid gap-4">
                             <div className="grid gap-1.5">
-                                <Label htmlFor="phone">Nomor telepon</Label>
+                                <Label htmlFor="phone" className="sr-only">
+                                    Nomor telepon
+                                </Label>
                                 <Input
                                     id="phone"
                                     type="tel"
@@ -38,15 +40,15 @@ export default function Login({ status }: Props) {
                                     tabIndex={1}
                                     autoComplete="tel"
                                     placeholder="Masukkan nomor telepon"
-                                    className="h-10 rounded-lg bg-white"
+                                    className="h-12 rounded-full border-[#CFE2FF] bg-[#F7FBFF] px-5 text-sm text-[#071C55] shadow-none placeholder:text-[#7290BC] focus-visible:border-[#1054D0] focus-visible:ring-[#1054D0]/20"
                                 />
                                 <InputError message={errors.phone} />
                             </div>
 
                             <div className="grid gap-1.5">
-                                <div className="flex items-center">
-                                    <Label htmlFor="password">Password</Label>
-                                </div>
+                                <Label htmlFor="password" className="sr-only">
+                                    Password
+                                </Label>
                                 <PasswordInput
                                     id="password"
                                     name="password"
@@ -54,23 +56,26 @@ export default function Login({ status }: Props) {
                                     tabIndex={2}
                                     autoComplete="current-password"
                                     placeholder="Masukkan password"
-                                    className="h-10 rounded-lg bg-white"
+                                    className="h-12 rounded-full border-[#CFE2FF] bg-[#F7FBFF] px-5 text-sm text-[#071C55] shadow-none placeholder:text-[#7290BC] focus-visible:border-[#1054D0] focus-visible:ring-[#1054D0]/20"
                                 />
                                 <InputError message={errors.password} />
                             </div>
 
-                            <div className="flex items-center space-x-3">
+                            <div className="flex items-center space-x-2 px-1">
                                 <Checkbox
                                     id="remember"
                                     name="remember"
                                     tabIndex={3}
+                                    className="border-[#9BC5FF] bg-white data-[state=checked]:border-[#1054D0] data-[state=checked]:bg-[#1054D0] data-[state=checked]:text-white"
                                 />
-                                <Label htmlFor="remember">Ingat saya</Label>
+                                <Label htmlFor="remember" className="text-xs text-[#59729E]">
+                                    Ingat saya
+                                </Label>
                             </div>
 
                             <Button
                                 type="submit"
-                                className="mt-1 h-10 w-full rounded-lg active:scale-[0.98]"
+                                className="mt-2 h-12 w-full rounded-full bg-[#1054D0] text-sm font-semibold text-white shadow-none hover:bg-[#0C46B8] active:scale-[0.98]"
                                 tabIndex={4}
                                 disabled={processing}
                                 data-test="login-button"
@@ -80,9 +85,13 @@ export default function Login({ status }: Props) {
                             </Button>
                         </div>
 
-                        <div className="text-muted-foreground text-center text-sm">
+                        <div className="text-center text-sm text-[#59729E]">
                             Belum punya akun?{' '}
-                            <TextLink href={register()} tabIndex={5}>
+                            <TextLink
+                                href={register()}
+                                tabIndex={5}
+                                className="text-[#1054D0] decoration-[#9BC5FF]"
+                            >
                                 Daftar sekarang
                             </TextLink>
                         </div>
@@ -101,5 +110,5 @@ export default function Login({ status }: Props) {
 
 Login.layout = {
     title: 'Masuk ke akun Anda',
-    description: 'Masukkan email dan password untuk melanjutkan pembelajaran.',
+    description: 'Masukkan nomor telepon dan password untuk melanjutkan pembelajaran.',
 };

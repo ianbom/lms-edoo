@@ -21,13 +21,15 @@ export default function Register({ passwordRules }: Props) {
                 {...store.form()}
                 resetOnSuccess={['password', 'password_confirmation']}
                 disableWhileProcessing
-                className="flex flex-col gap-4"
+                className="flex flex-col gap-6"
             >
                 {({ processing, errors }) => (
                     <>
                         <div className="grid gap-4">
                             <div className="grid gap-1.5">
-                                <Label htmlFor="name">Nama lengkap</Label>
+                                <Label htmlFor="name" className="sr-only">
+                                    Nama lengkap
+                                </Label>
                                 <Input
                                     id="name"
                                     type="text"
@@ -37,7 +39,7 @@ export default function Register({ passwordRules }: Props) {
                                     autoComplete="name"
                                     name="name"
                                     placeholder="Nama lengkap"
-                                    className="h-10 rounded-lg bg-white"
+                                    className="h-12 rounded-full border-[#CFE2FF] bg-[#F7FBFF] px-5 text-sm text-[#071C55] shadow-none placeholder:text-[#7290BC] focus-visible:border-[#1054D0] focus-visible:ring-[#1054D0]/20"
                                 />
                                 <InputError
                                     message={errors.name}
@@ -46,7 +48,9 @@ export default function Register({ passwordRules }: Props) {
                             </div>
 
                             <div className="grid gap-1.5">
-                                <Label htmlFor="phone">Nomor telepon</Label>
+                                <Label htmlFor="phone" className="sr-only">
+                                    Nomor telepon
+                                </Label>
                                 <Input
                                     id="phone"
                                     type="tel"
@@ -55,13 +59,13 @@ export default function Register({ passwordRules }: Props) {
                                     autoComplete="tel"
                                     name="phone"
                                     placeholder="Masukkan nomor telepon"
-                                    className="h-10 rounded-lg bg-white"
+                                    className="h-12 rounded-full border-[#CFE2FF] bg-[#F7FBFF] px-5 text-sm text-[#071C55] shadow-none placeholder:text-[#7290BC] focus-visible:border-[#1054D0] focus-visible:ring-[#1054D0]/20"
                                 />
                                 <InputError message={errors.phone} />
                             </div>
 
                             <div className="grid gap-1.5">
-                                <Label htmlFor="email">
+                                <Label htmlFor="email" className="sr-only">
                                     Alamat email (opsional)
                                 </Label>
                                 <Input
@@ -70,14 +74,16 @@ export default function Register({ passwordRules }: Props) {
                                     tabIndex={3}
                                     autoComplete="email"
                                     name="email"
-                                    placeholder="nama@email.com"
-                                    className="h-10 rounded-lg bg-white"
+                                    placeholder="Alamat email (opsional)"
+                                    className="h-12 rounded-full border-[#CFE2FF] bg-[#F7FBFF] px-5 text-sm text-[#071C55] shadow-none placeholder:text-[#7290BC] focus-visible:border-[#1054D0] focus-visible:ring-[#1054D0]/20"
                                 />
                                 <InputError message={errors.email} />
                             </div>
 
                             <div className="grid gap-1.5">
-                                <Label htmlFor="password">Password</Label>
+                                <Label htmlFor="password" className="sr-only">
+                                    Password
+                                </Label>
                                 <PasswordInput
                                     id="password"
                                     required
@@ -85,14 +91,17 @@ export default function Register({ passwordRules }: Props) {
                                     autoComplete="new-password"
                                     name="password"
                                     placeholder="Buat password"
-                                    className="h-10 rounded-lg bg-white"
+                                    className="h-12 rounded-full border-[#CFE2FF] bg-[#F7FBFF] px-5 text-sm text-[#071C55] shadow-none placeholder:text-[#7290BC] focus-visible:border-[#1054D0] focus-visible:ring-[#1054D0]/20"
                                     passwordrules={passwordRules}
                                 />
                                 <InputError message={errors.password} />
                             </div>
 
                             <div className="grid gap-1.5">
-                                <Label htmlFor="password_confirmation">
+                                <Label
+                                    htmlFor="password_confirmation"
+                                    className="sr-only"
+                                >
                                     Konfirmasi password
                                 </Label>
                                 <PasswordInput
@@ -102,7 +111,7 @@ export default function Register({ passwordRules }: Props) {
                                     autoComplete="new-password"
                                     name="password_confirmation"
                                     placeholder="Ulangi password"
-                                    className="h-10 rounded-lg bg-white"
+                                    className="h-12 rounded-full border-[#CFE2FF] bg-[#F7FBFF] px-5 text-sm text-[#071C55] shadow-none placeholder:text-[#7290BC] focus-visible:border-[#1054D0] focus-visible:ring-[#1054D0]/20"
                                     passwordrules={passwordRules}
                                 />
                                 <InputError
@@ -112,7 +121,7 @@ export default function Register({ passwordRules }: Props) {
 
                             <Button
                                 type="submit"
-                                className="mt-1 h-10 w-full rounded-lg active:scale-[0.98]"
+                                className="mt-2 h-12 w-full rounded-full bg-[#1054D0] text-sm font-semibold text-white shadow-none hover:bg-[#0C46B8] active:scale-[0.98]"
                                 tabIndex={6}
                                 data-test="register-user-button"
                             >
@@ -121,9 +130,13 @@ export default function Register({ passwordRules }: Props) {
                             </Button>
                         </div>
 
-                        <div className="text-muted-foreground text-center text-sm">
+                        <div className="text-center text-sm text-[#59729E]">
                             Sudah punya akun?{' '}
-                            <TextLink href={login()} tabIndex={7}>
+                            <TextLink
+                                href={login()}
+                                tabIndex={7}
+                                className="text-[#1054D0] decoration-[#9BC5FF]"
+                            >
                                 Masuk
                             </TextLink>
                         </div>

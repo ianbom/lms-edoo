@@ -208,7 +208,7 @@ export default function Welcome({ courses }: { courses: Course[] }) {
                                     <h3 className="mb-[7px] text-base font-bold">
                                         {course.title}
                                     </h3>
-                                    <p className="mb-4 min-h-[36px] text-xs leading-[1.5] text-[#59648A]">
+                                    <p className="mb-4 min-h-[36px] text-sm leading-[1.5] text-[#59648A]">
                                         {course.short_description ||
                                             'Pelajari keterampilan baru melalui materi yang terstruktur dan mudah diikuti.'}
                                     </p>
