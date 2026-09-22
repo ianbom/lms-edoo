@@ -87,7 +87,7 @@ export default function HomeNavbar() {
                 {auth.user ? (
                     <Link
                         href="/dashboard"
-                        className="hidden shrink-0 text-[14px] font-bold text-[#071457] lg:block"
+                        className="hidden shrink-0 rounded-lg bg-[#105BDD] px-5 py-2.5 text-center text-[14px] font-bold text-white shadow-[0_4px_8px_rgba(16,91,221,0.18)] transition hover:bg-[#0B4FC2] lg:block"
                     >
                         Dasbor
                     </Link>
@@ -95,7 +95,7 @@ export default function HomeNavbar() {
                     <>
                         <Link
                             href="/login"
-                            className="hidden shrink-0 text-[14px] font-bold text-[#071457] lg:block"
+                            className="hidden shrink-0 rounded-lg border border-[#BFD7FF] bg-[#F1F7FF] px-5 py-2.5 text-center text-[14px] font-bold text-[#1054D0] transition hover:bg-[#E5F0FF] lg:block"
                         >
                             Masuk
                         </Link>
@@ -193,7 +193,7 @@ export default function HomeNavbar() {
                                         <SheetClose asChild>
                                             <Link
                                                 href="/login"
-                                                className="block rounded-lg border border-[#DCE6F5] px-4 py-3 text-center text-[14px] font-bold text-[#071457] transition hover:bg-[#F8FBFF]"
+                                                className="block rounded-lg border border-[#BFD7FF] bg-[#F1F7FF] px-4 py-3 text-center text-[14px] font-bold text-[#1054D0] transition hover:bg-[#E5F0FF]"
                                             >
                                                 Masuk
                                             </Link>

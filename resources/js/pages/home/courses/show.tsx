@@ -1,15 +1,12 @@
 import { Head, router } from '@inertiajs/react';
 import { useState } from 'react';
 import {
-    BookOpen,
     CalendarDays,
-    CheckCircle2,
     Clock3,
     FileText,
     LayoutGrid,
     PlayCircle,
     UserRound,
-    Video,
 } from 'lucide-react';
 import { VideoPlayer } from '@/components/video-player';
 import {
@@ -45,11 +42,12 @@ type Course = {
     estimated_duration_minutes: number | null;
     published_at: string | null;
     category: { name: string; slug: string };
-    teacher: {
+    teachers: {
+        id: number;
         name: string;
         photo_url: string | null;
         expertise: string | null;
-    } | null;
+    }[];
     modules_count: number;
     videos_count: number;
     preview_video_id: string | null;
@@ -59,10 +57,10 @@ type Course = {
 const formatDate = (value: string | null): string =>
     value
         ? new Intl.DateTimeFormat('id-ID', {
-            day: 'numeric',
-            month: 'long',
-            year: 'numeric',
-        }).format(new Date(value))
+              day: 'numeric',
+              month: 'long',
+              year: 'numeric',
+          }).format(new Date(value))
         : 'Tanggal belum tersedia';
 
 const formatDuration = (seconds: number | null): string => {
@@ -166,7 +164,8 @@ export default function CourseDetail({ course }: { course: Course }) {
                                                         className="flex items-center gap-2 text-[12px] text-[#16316B]"
                                                     >
                                                         <span className="bg-secondary text-primary grid size-5 shrink-0 place-items-center rounded-full">
-                                                            {content.type === 'video' ? (
+                                                            {content.type ===
+                                                            'video' ? (
                                                                 <PlayCircle
                                                                     size={13}
                                                                 />
@@ -179,13 +178,14 @@ export default function CourseDetail({ course }: { course: Course }) {
                                                         <span className="min-w-0 flex-1 truncate">
                                                             {content.title}
                                                         </span>
-                                                        {content.type === 'video' && (
-                                                                <span className="text-[11px] text-[#6980A5]">
-                                                                    {formatDuration(
-                                                                        content.video_duration_seconds,
-                                                                    )}
-                                                                </span>
-                                                            )}
+                                                        {content.type ===
+                                                            'video' && (
+                                                            <span className="text-[11px] text-[#6980A5]">
+                                                                {formatDuration(
+                                                                    content.video_duration_seconds,
+                                                                )}
+                                                            </span>
+                                                        )}
                                                     </div>
                                                 ),
                                             )}
@@ -259,28 +259,50 @@ export default function CourseDetail({ course }: { course: Course }) {
                                     Instruktur kelas
                                 </CardDescription>
                             </CardHeader>
-                            <CardContent className="flex items-center gap-3 px-5 pb-4">
-                                {course.teacher?.photo_url ? (
-                                    <img
-                                        src={course.teacher.photo_url}
-                                        alt={course.teacher.name}
-                                        className="size-10 rounded-full object-cover"
-                                    />
+                            <CardContent className="space-y-3 px-5 pb-4">
+                                {course.teachers.length ? (
+                                    course.teachers.map((teacher) => (
+                                        <div
+                                            key={teacher.id}
+                                            className="flex items-center gap-3"
+                                        >
+                                            {teacher.photo_url ? (
+                                                <img
+                                                    src={teacher.photo_url}
+                                                    alt={teacher.name}
+                                                    className="size-10 rounded-full object-cover"
+                                                />
+                                            ) : (
+                                                <span className="grid size-10 shrink-0 place-items-center rounded-full bg-[#E6EEF9] text-[#1A5FD0]">
+                                                    <UserRound size={20} />
+                                                </span>
+                                            )}
+                                            <div className="min-w-0">
+                                                <p className="truncate text-[12px] font-bold text-[#1B2742]">
+                                                    {teacher.name}
+                                                </p>
+                                                <p className="truncate text-[10px] text-[#71809A]">
+                                                    {teacher.expertise ||
+                                                        'Trainer kelas BRI Peduli'}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    ))
                                 ) : (
-                                    <span className="grid size-10 place-items-center rounded-full bg-[#E6EEF9] text-[#1A5FD0]">
-                                        <UserRound size={20} />
-                                    </span>
+                                    <div className="flex items-center gap-3">
+                                        <span className="grid size-10 shrink-0 place-items-center rounded-full bg-[#E6EEF9] text-[#1A5FD0]">
+                                            <UserRound size={20} />
+                                        </span>
+                                        <div>
+                                            <p className="text-[12px] font-bold text-[#1B2742]">
+                                                Instruktur belum ditentukan
+                                            </p>
+                                            <p className="text-[10px] text-[#71809A]">
+                                                Trainer kelas BRI Peduli
+                                            </p>
+                                        </div>
+                                    </div>
                                 )}
-                                <div>
-                                    <p className="text-[12px] font-bold text-[#1B2742]">
-                                        {course.teacher?.name ||
-                                            'Instruktur belum ditentukan'}
-                                    </p>
-                                    <p className="text-[10px] text-[#71809A]">
-                                        {course.teacher?.expertise ||
-                                            'Trainer kelas BRI Peduli'}
-                                    </p>
-                                </div>
                             </CardContent>
                         </Card>
                     </aside>

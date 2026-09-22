@@ -30,7 +30,9 @@ class CourseDetailTest extends TestCase
             'published_at' => '2026-04-13 00:00:00',
         ]);
         $teacher = Teacher::create(['name' => 'Rizky Widya', 'expertise' => 'Impact Specialist']);
+        $secondTeacher = Teacher::create(['name' => 'Nadia Putri', 'expertise' => 'Program Designer']);
         $course->teachers()->attach($teacher->id, ['position' => 0]);
+        $course->teachers()->attach($secondTeacher->id, ['position' => 1]);
         $material = CourseMaterial::create([
             'course_id' => $course->id,
             'title' => 'Logical Framework Approach',
@@ -69,7 +71,9 @@ class CourseDetailTest extends TestCase
                 ->where('course.preview_video_id', 'dQw4w9WgXcQ')
                 ->where('course.modules_count', 1)
                 ->where('course.videos_count', 1)
-                ->where('course.teacher.name', 'Rizky Widya')
+                ->has('course.teachers', 2)
+                ->where('course.teachers.0.name', 'Rizky Widya')
+                ->where('course.teachers.1.name', 'Nadia Putri')
                 ->has('course.materials', 1)
                 ->has('course.materials.0.contents', 1)
                 ->where('course.materials.0.contents.0.video_duration_seconds', 168)

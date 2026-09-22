@@ -52,7 +52,7 @@ class CourseDetailController extends Controller
                 'estimated_duration_minutes' => $course->estimated_duration_minutes,
                 'published_at' => $course->published_at?->toISOString(),
                 'category' => $course->category,
-                'teacher' => $course->teachers->first(),
+                'teachers' => $course->teachers,
                 'modules_count' => $materials->count(),
                 'videos_count' => $contents->where('type', ContentType::Video->value)->count(),
                 'preview_video_id' => $preview['youtube_video_id'] ?? null,
