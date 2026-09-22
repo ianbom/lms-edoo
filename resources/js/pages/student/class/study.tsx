@@ -1,6 +1,8 @@
 import { Head, Link, router } from '@inertiajs/react';
 import {
     CheckCircle2,
+    ChevronLeft,
+    ChevronRight,
     Circle,
     Clock3,
     FileText,
@@ -199,6 +201,19 @@ export default function Study({
     const selectedMaterial = materials.find((material) =>
         material.contents.some((content) => content.id === selectedContent?.id),
     );
+    const orderedContents = materials.flatMap((material) => material.contents);
+    const selectedContentIndex = orderedContents.findIndex(
+        (content) => content.id === selectedContent?.id,
+    );
+    const previousContent =
+        selectedContentIndex > 0
+            ? orderedContents[selectedContentIndex - 1]
+            : null;
+    const nextContent =
+        selectedContentIndex >= 0 &&
+        selectedContentIndex < orderedContents.length - 1
+            ? orderedContents[selectedContentIndex + 1]
+            : null;
 
     const complete = () => {
         if (!selectedContent || selectedContent.progress.status === 'completed')
@@ -262,32 +277,108 @@ export default function Study({
                                 />
                             )}
 
-                            <Button
-                                type="button"
-                                size="sm"
-                                onClick={complete}
-                                disabled={
-                                    completing ||
-                                    selectedContent.progress.status ===
-                                        'completed'
-                                }
-                                className="bg-primary text-primary-foreground mt-4 shadow-[0_5px_12px_rgba(17,103,232,.18)] hover:bg-[#075ad0]"
-                            >
-                                <CheckCircle2 size={16} />
-                                {selectedContent.progress.status === 'completed'
-                                    ? 'Materi Selesai'
-                                    : completing
-                                      ? 'Menyimpan...'
-                                      : selectedContent.type === 'video'
-                                        ? 'Selesaikan Video'
-                                        : 'Selesaikan Materi'}
-                            </Button>
+                            <div className="mt-4 flex flex-wrap items-center gap-4">
+                                <Button
+                                    type="button"
+                                    size="sm"
+                                    onClick={complete}
+                                    disabled={
+                                        completing ||
+                                        selectedContent.progress.status ===
+                                            'completed'
+                                    }
+                                    className="bg-primary text-primary-foreground shadow-[0_5px_12px_rgba(17,103,232,.18)] hover:bg-[#075ad0]"
+                                >
+                                    <CheckCircle2 size={16} />
+                                    {selectedContent.progress.status ===
+                                    'completed'
+                                        ? 'Materi Selesai'
+                                        : completing
+                                          ? 'Menyimpan...'
+                                          : selectedContent.type === 'video'
+                                            ? 'Selesaikan Video'
+                                            : 'Selesaikan Materi'}
+                                </Button>
+                                {selectedContent.attachment_url && (
+                                    <a
+                                        href={selectedContent.attachment_url}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        className="text-primary text-sm font-semibold underline underline-offset-4 hover:text-[#075ad0]"
+                                    >
+                                        File Lampiran
+                                    </a>
+                                )}
+                            </div>
 
                             {selectedContent.description && (
                                 <p className="mt-5 max-w-4xl text-[16px] leading-7 text-[#627395]">
                                     {selectedContent.description}
                                 </p>
                             )}
+
+                            <div className="mt-8 flex items-center justify-between gap-3 border-t border-[#e3eaf5] pt-5">
+                                {previousContent ? (
+                                    <Button
+                                        variant="outline"
+                                        asChild
+                                        className="hover:text-primary max-w-[48%] min-w-0 justify-start border-[#cfdded] text-[#173566]"
+                                    >
+                                        <Link
+                                            href={studyUrl(
+                                                course.slug,
+                                                previousContent.id,
+                                            )}
+                                            aria-label={`Materi sebelumnya: ${previousContent.title}`}
+                                        >
+                                            <ChevronLeft />
+                                            <span className="truncate">
+                                                {/* <span className="hidden text-xs text-[#8090ac] sm:inline">
+                                                    Sebelumnya ·{' '}
+                                                </span> */}
+                                                {previousContent.title}
+                                            </span>
+                                        </Link>
+                                    </Button>
+                                ) : (
+                                    <Button
+                                        variant="outline"
+                                        disabled
+                                        className="border-[#e3eaf5] text-[#a7b4c9]"
+                                    >
+                                        <ChevronLeft />
+                                        Sebelumnya
+                                    </Button>
+                                )}
+
+                                {nextContent ? (
+                                    <Button
+                                        asChild
+                                        className="bg-primary text-primary-foreground max-w-[48%] min-w-0 justify-end shadow-[0_5px_12px_rgba(17,103,232,.18)] hover:bg-[#075ad0]"
+                                    >
+                                        <Link
+                                            href={studyUrl(
+                                                course.slug,
+                                                nextContent.id,
+                                            )}
+                                            aria-label={`Materi berikutnya: ${nextContent.title}`}
+                                        >
+                                            <span className="truncate text-right">
+                                                {/* <span className="hidden text-xs text-white/70 sm:inline">
+                                                    Berikutnya ·{' '}
+                                                </span> */}
+                                                {nextContent.title}
+                                            </span>
+                                            <ChevronRight />
+                                        </Link>
+                                    </Button>
+                                ) : (
+                                    <Button disabled>
+                                        Berikutnya
+                                        <ChevronRight />
+                                    </Button>
+                                )}
+                            </div>
                         </div>
                     ) : (
                         <div className="flex min-h-[70vh] flex-col items-center justify-center px-6 text-center">
@@ -316,7 +407,7 @@ export default function Study({
                 <div className="fixed inset-0 z-60 xl:hidden">
                     <button
                         type="button"
-                        aria-label='Tutup daftar materi'
+                        aria-label="Tutup daftar materi"
                         className="absolute inset-0 bg-[#071750]/40"
                         onClick={() => setMobileCurriculumOpen(false)}
                     />
@@ -326,7 +417,7 @@ export default function Study({
                                 variant="ghost"
                                 size="icon"
                                 onClick={() => setMobileCurriculumOpen(false)}
-                                aria-label='Tutup daftar materi'
+                                aria-label="Tutup daftar materi"
                             >
                                 <X />
                             </Button>

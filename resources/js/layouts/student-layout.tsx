@@ -128,7 +128,7 @@ export default function StudentLayout({
                                 key={item.label}
                                 href={item.href}
                                 aria-current={active ? 'page' : undefined}
-                                className={`flex min-w-0 flex-col items-center justify-center gap-1 rounded-xl px-1 py-2 text-[10px] font-medium transition ${active ? 'bg-[#e8f3ff] font-bold text-[#075bd5]' : 'text-[#7183a2] hover:bg-[#f1f6fc] hover:text-[#075bd5]'}`}
+                                className={`flex min-w-0 flex-col items-center justify-center gap-1 rounded-xl px-1 py-2 text-[10px] font-medium transition ${active ? 'bg-transparent font-bold text-[#075bd5]' : 'text-[#7183a2] hover:bg-[#f1f6fc] hover:text-[#075bd5]'}`}
                             >
                                 <item.icon
                                     size={20}

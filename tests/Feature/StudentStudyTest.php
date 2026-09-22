@@ -31,6 +31,7 @@ class StudentStudyTest extends TestCase
                 ->component('student/class/study')
                 ->where('course.slug', $course->slug)
                 ->where('selectedContent.id', $content->id)
+                ->where('selectedContent.attachment_url', 'https://example.com/material.pdf')
                 ->has('materials', 1)
                 ->has('materials.0.contents', 1));
     }
@@ -120,6 +121,7 @@ class StudentStudyTest extends TestCase
             'youtube_url' => 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
             'youtube_video_id' => 'dQw4w9WgXcQ',
             'video_duration_seconds' => 180,
+            'attachment_url' => 'https://example.com/material.pdf',
             'is_published' => true,
         ]);
         $enrollment = CourseEnrollment::create([
